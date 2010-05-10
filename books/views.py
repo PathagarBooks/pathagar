@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.core.files.base import ContentFile
+from django.contrib.auth.decorators import login_required
+
 
 from opds import get_catalog
 from forms import AddBookForm
@@ -10,6 +12,7 @@ def catalogs(request):
     return HttpResponse(get_catalog(request), mimetype='application/atom+xml')
 
 
+@login_required
 def add_book(request):
     book = None
     if request.method == 'POST':

@@ -18,6 +18,8 @@ urlpatterns = patterns('',
     # to INSTALLED_APPS to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^addbook/','pathagar.books.views.add_book'),
+    (r'^accounts/login/$', 'django.contrib.auth.views.login'),
+
 
     # Uncomment the next line to enable the admin:
     (r'^admin/', include(admin.site.urls)),
