@@ -1,0 +1,20 @@
+<html>
+<head>
+<title>
+Add a new book to the pathagar
+</title>
+</head>
+<body>
+{% if book %}
+
+<div class="addedbook">Book Addeded with id {{ book }}</div>
+
+{% endif %}
+<form  enctype="multipart/form-data" action="/addbook/" method="POST">
+<table>
+{{ form.as_table }}
+</table>
+<p><input type="submit" value="Submit"></p>
+</form>
+</body>
+</html>
