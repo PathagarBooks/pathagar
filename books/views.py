@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 from opds import get_catalog
 from forms import AddBookForm
+from langlist import langs as LANG_CHOICES
 from models import *
 
 def catalogs(request):
@@ -21,13 +22,13 @@ def add_book(request):
         author = form['a_author']
         if not form.is_valid():
             form = AddBookForm()
-            return render_to_response('addbook.html', {'form': form})
+            return render_to_response('addbook.html', {'langs': LANG_CHOICES})
 
         book = form.save()
 
 
     form = AddBookForm()
     if book:
-        return render_to_response('addbook.html', {'form': form,'book':book.id})
-    return render_to_response('addbook.html', {'form': form})
+        return render_to_response('addbook.html', {'langs': LANG_CHOICES,'book':book.id})
+    return render_to_response('addbook.html', {'langs': LANG_CHOICES})
 

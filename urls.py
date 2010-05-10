@@ -2,6 +2,7 @@ import os
 
 from django.conf.urls.defaults import *
 from django.views.static import serve
+from settings import MEDIA_ROOT
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -19,6 +20,8 @@ urlpatterns = patterns('',
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^addbook/','pathagar.books.views.add_book'),
     (r'^accounts/login/$', 'django.contrib.auth.views.login'),
+    (r'^static_media/(?P<path>.*)$', 'django.views.static.serve',
+        {'document_root': MEDIA_ROOT, 'show_indexes': True}),
 
 
     # Uncomment the next line to enable the admin:
