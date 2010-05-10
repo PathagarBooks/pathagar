@@ -1,0 +1,7 @@
+Pathagar is a simple bookserver serving OPDS feeds.
+One can add books via the admin interface, as well as
+via CSV files, through the command 'manage.py addbooks'
+
+The format of the CSV file is like:
+"Path to ebook file","Title","Author","Description"
+
