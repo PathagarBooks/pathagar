@@ -13,6 +13,8 @@ urlpatterns = patterns('',
     # Example:
     # (r'^pathagar/', include('pathagar.foo.urls')),
 
+    (r'^$', 'pathagar.books.views.page'),
+
     (r'^catalogs/', 'pathagar.books.views.catalogs'),
     (r'^books/(?P<path>.*)$', serve, {'document_root': os.path.join(settings.MEDIA_ROOT, 'books')}),
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 

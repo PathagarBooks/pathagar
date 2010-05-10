@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.core.files.base import ContentFile
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 
 from opds import get_catalog
@@ -31,4 +32,21 @@ def add_book(request):
     if book:
         return render_to_response('addbook.html', {'langs': LANG_CHOICES,'book':book.id})
     return render_to_response('addbook.html', {'langs': LANG_CHOICES})
+
+def page(request):
+    books = Book.objects.all().order_by('a_title')
+    paginator = Paginator(books, 2)
+    try:
+        page = int(request.GET.get('page', '1'))
+    except ValueError:
+        page = 1
+
+    # If page request (9999) is out of range, deliver last page of results.
+    try:
+        books = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        books = paginator.page(paginator.num_pages)
+
+    return render_to_response('index.html', {'books': books})
+
 
