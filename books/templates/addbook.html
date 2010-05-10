@@ -9,32 +9,60 @@
 {% endif %}
 <form  enctype="multipart/form-data" action="/addbook/" method="POST">
 <fieldset>
+<legend>Add Book</legend>
+<p>
+<label for="id_file">File: </label><br/> <input type="file" name="file" id="id_file" />
+<br/>
+</p>
 
-<p><label for="id_file">File:</label><br>
-<input type="file" name="file" id="id_file" />
-<p><label for="id_a_title">Atom:title:</label><br>
-<input class="title" id="id_a_title" type="text" name="a_title" maxlength="200" />
-<p><label for="id_a_author">Atom:author:</label><br>
-<input id="id_a_author" type="text" name="a_author" maxlength="200" />
-<p><label for="id_a_summary">Atom:summary:</label><br>
-<textarea id="id_a_summary" rows="10" cols="40" name="a_summary"></textarea>
-<p><label for="id_a_category">Atom:category:</label><br>
-<input id="id_a_category" type="text" name="a_category" maxlength="200" />
-<p><label for="id_a_rights">Atom:rights:</label><br>
-<input id="id_a_rights" type="text" name="a_rights" maxlength="200" />
-<p><label for="id_dc_language">Dc:language:</label><br>
-<select name="dc_language" id="id_dc_language">
+<p>
+<label for="id_a_title">atom:title: </label><input id="id_a_title" type="text" name="a_title" maxlength="200" />
+<br/>
+</p>
+
+<p>
+<label for="id_a_author">atom:author: </label><input id="id_a_author" type="text" name="a_author" maxlength="200" />
+<br/>
+</p>
+
+<p>
+<label for="id_a_summary">atom:summary: </label><br/><textarea id="id_a_summary" rows="10" cols="40" name="a_summary"></textarea>
+<br/>
+</p>
+
+<p>
+<label for="id_a_category">atom:category: </label><input id="id_a_category" type="text" name="a_category" maxlength="200" />
+<br/>
+</p>
+
+<p>
+<label for="id_a_rights">atom:rights: </label><input id="id_a_rights" type="text" name="a_rights" maxlength="200" />
+<br/>
+</p>
+
+<p>
+<label for="id_dc_language">dc:language: </label><select name="dc_language" id="id_dc_language">
 {% for item in langs %}
 <option value=" {{ item.0  }}"> {{ item.1 }}</option>
 {% endfor %}
 </select>
-<p><label for="id_dc_publisher">Dc:publisher:</label><br>
-<input id="id_dc_publisher" type="text" name="dc_publisher" maxlength="200" />
+<br/>
+</p>
 
-<p><label for="id_dc_issued">Dc:issued:</label><br>
-<input id="id_dc_issued" type="text" name="dc_issued" maxlength="100" />
-<p><label for="id_dc_identifier">Dc:identifier:</label><br>
-<input id="id_dc_identifier" type="text" name="dc_identifier" maxlength="50" /><br />Use ISBN for this
+<p>
+<label for="id_dc_publisher">dc:publisher: </label><input id="id_dc_publisher" type="text" name="dc_publisher" maxlength="200" />
+<br/>
+</p>
+
+<p>
+<label for="id_dc_issued">dc:issued: </label><input id="id_dc_issued" type="text" name="dc_issued" maxlength="100" />
+<br/>
+</p>
+
+<p>
+<label for="id_dc_identifier">dc:identifier: </label><input id="id_dc_identifier" type="text" name="dc_identifier" maxlength="50" value="Use ISBN"/>
+<br/>
+</p>
 
 <p><input type="submit" value="Submit"></p>
 </fieldset>
