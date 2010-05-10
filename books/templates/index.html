@@ -1,12 +1,15 @@
 {% extends "base.html" %}
 
+
 {% block content %}
+<div class="container">
 {% for book in books.object_list %}
 
-{{ book.a_title }} <br>
-{{ book.a_author }} <br>
-{{ book.a_summary }}<br>
-
+<h1>{{ book.a_title }}</h1>
+<h2 class="alt">{{ book.a_author }}</h2>
+<p>{{ book.a_summary }}</p>
+<div class="span-4 prepend-21 last"><em><a href="{{book.file.url}}">Download</a></em></div>
+<hr/>
 {%  endfor %}
 
 <div class="pagination">
@@ -23,6 +26,8 @@
             <a href="?page={{ books.next_page_number }}">next</a>
         {% endif %}
     </span>
+</div>
+
 </div>
 {%  endblock %}
 
