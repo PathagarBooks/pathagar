@@ -10,6 +10,7 @@ $(document).ready(function()
   {
     $(this).next(".hidden_body").slideToggle(100);
   });
+  $('#id_dc_identifier').example('ISBN');
 });
 {% endblock %}
 
@@ -61,7 +62,7 @@ $(document).ready(function()
 <div class="span-4"><input id="id_dc_issued" type="text" name="dc_issued" maxlength="100" /></div>
 <hr class="space">
 <div class="span-3"><label for="id_dc_identifier">dc:identifier: </label></div>
-<div class="span-4"><input id="id_dc_identifier" type="text" name="dc_identifier" maxlength="50" value="Use ISBN"/></div>
+<div class="span-4"><input id="id_dc_identifier" type="text" name="dc_identifier" maxlength="50"/></div>
 <hr class="space">
 </div>
 </div>
