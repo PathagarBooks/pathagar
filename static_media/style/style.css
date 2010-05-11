@@ -2,3 +2,16 @@ footer {
     text-align:center;
     padding-top: 20px;
 }
+
+p.hidden_head {
+padding: 5px 10px;
+cursor: pointer;
+position: relative;
+background-color:#A9A4A4;
+margin:1px;
+}
+
+div.hidden_body {
+padding: 5px 10px 15px;
+background-color:#BFBFBF;
+}
