@@ -11,18 +11,18 @@
 <hr/>
 {%  endfor %}
 
-<div class="pagination">
+<div class="prepend-12 pagination">
     <span class="step-links">
         {% if books.has_previous %}
-            <a href="?page={{ books.previous_page_number }}">previous</a>
+            <a href="?page={{ books.previous_page_number }}"><img src="/static_media/images/go-previous.png" alt="previous"></a>
         {% endif %}
 
-        <span class="current">
-            Page {{ books.number }} of {{ books.paginator.num_pages }}.
+        <span class="current-page">
+            &nbsp;{{ books.number }} of {{ books.paginator.num_pages }}&nbsp;
         </span>
 
         {% if books.has_next %}
-            <a href="?page={{ books.next_page_number }}">next</a>
+            <a href="?page={{ books.next_page_number }}"><img src="/static_media/images/go-next.png" alt="next"></a>
         {% endif %}
     </span>
 </div>
