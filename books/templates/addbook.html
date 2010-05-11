@@ -15,13 +15,12 @@ $(document).ready(function()
 
 
 {% block content %}
-
+<div class="container">
 {% if book %}
 
-<div class="addedbook">Book Addded with id {{ book }}</div>
+<div class="success">Book Addded with id {{ book.id }}</div>
 
 {% endif %}
-<div class="container">
 <form  enctype="multipart/form-data" action="/addbook/" method="POST">
 <fieldset>
 <legend>Add Book</legend>
