@@ -23,15 +23,15 @@ def add_book(request):
         author = form['a_author']
         if not form.is_valid():
             form = AddBookForm()
-            return render_to_response('addbook.html', {'langs': LANG_CHOICES})
+            return render_to_response('addbook.html', {'form': form})
 
         book = form.save()
 
 
     form = AddBookForm()
     if book:
-        return render_to_response('addbook.html', {'langs': LANG_CHOICES,'book':book.id})
-    return render_to_response('addbook.html', {'langs': LANG_CHOICES})
+        return render_to_response('addbook.html', {'form': form,'book':book.id})
+    return render_to_response('addbook.html', {'form': form})
 
 def page(request):
     books = Book.objects.all().order_by('a_title')
