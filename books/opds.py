@@ -79,7 +79,9 @@ def generate_catalog(books):
             content=book.a_summary, links = [{'rel': \
             'http://opds-spec.org/acquisition', 'href': \
             book.file.url, 'type': __get_mimetype(book)}], \
-            authors = [{'name' : book.a_author}])
+            authors = [{'name' : book.a_author}], dc_language=book.dc_language, \
+            dc_publisher=book.dc_publisher, dc_issued=book.dc_issued, \
+            dc_identifier=book.dc_identifier)
 
     s = StringIO()
     feed.write(s, 'UTF-8')
