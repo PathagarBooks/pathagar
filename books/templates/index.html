@@ -2,7 +2,7 @@
 
 {% block title %}Welcome to the Pathagar book server{% endblock %}
 
-% block content %}
+{% block content %}
 <div class="container">
 {% for book in books.object_list %}
 <h1>{{ book.a_title }}</h1>
