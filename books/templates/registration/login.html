@@ -3,7 +3,6 @@
 {% block title %}Log in{% endblock %}
 
 {% block content %}
-<div class="container">
 {% if form.errors %}
 <p>Your username and password didn't match. Please try again.</p>
 {% endif %}
@@ -23,7 +22,6 @@
 <input type="submit" value="login" />
 <input type="hidden" name="next" value="{{ next }}" />
 </form>
-</div>
 
 {% endblock %}
 
