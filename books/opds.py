@@ -1,13 +1,13 @@
 from cStringIO import StringIO
 
 from django.db.models import Q
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from models import Book
 from atom import AtomFeed
 
 import logging
 
-#XXX: Implement pagination
 
 def __get_mimetype(item):
     if item.file.url.endswith('pdf'):
@@ -16,8 +16,11 @@ def __get_mimetype(item):
         return 'Unknown'
 
 def get_catalog(request):
-    if not len(request.GET):
-        return get_full_catalog()
+    q = None
+    try:
+        q = request.GET['q']
+    except:
+        return get_full_catalog(request)
     else:
         q_objects = []
         results = Book.objects.all()
@@ -40,7 +43,7 @@ def get_catalog(request):
             else:
                 word = subterm
                 try:
-                    results = results.get(Q(a_title__icontains = word) | \
+                    results = results.filter(Q(a_title__icontains = word) | \
                         Q(a_author__icontains = word) | \
                         Q(dc_publisher__icontains = word) | \
                         Q(dc_identifier__icontains = word) | \
@@ -51,30 +54,74 @@ def get_catalog(request):
         for q_object in q_objects:
             results = results.filter(q_object)
 
-        return generate_catalog(results)
+
+    paginator = Paginator(results, 2)
+    try:
+        page = int(request.GET.get('page', '1'))
+    except ValueError:
+        page = 1
+
+    try:
+        books = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        books = paginator.page(paginator.num_pages)
+
+    return generate_catalog(books,q)
 
 
-def get_full_catalog():
-    books = Book.objects.order_by('a_title')
+def get_full_catalog(request):
+    results = Book.objects.order_by('a_title')
+    paginator = Paginator(results, 2)
+    try:
+        page = int(request.GET.get('page', '1'))
+    except ValueError:
+        page = 1
+
+
+    try:
+        books = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        books = paginator.page(paginator.num_pages)
+
     return generate_catalog(books)
 
 
-def generate_catalog(books):
+def generate_catalog(books,q=None):
     attrs = {}
     attrs[u'xmlns:dcterms'] = u'http://purl.org/dc/terms/'
     attrs[u'xmlns:opds'] = u'http://opds-spec.org/'
     attrs[u'xmlns:dc'] = u'http://purl.org/dc/elements/1.1/'
     attrs[u'xmlns:opensearch'] = 'http://a9.com/-/spec/opensearch/1.1/'
 
+    links = []
+
+    if books.has_previous():
+        if q:
+            links.append({'title':'Previous results','type':'application/atom+xml',\
+            'rel':'previous','href':'?page=' + str(books.previous_page_number()) + '&q=' + q })
+        else:
+            links.append({'title':'Previous results','type':'application/atom+xml',\
+            'rel':'previous','href':'?page=' + str(books.previous_page_number())})
+
+
+    if books.has_next():
+        if q:
+            links.append({'title':'Next results','type':'application/atom+xml',\
+            'rel':'next','href':'?page=' + str(books.next_page_number()) + '&q=' + q })
+        else:
+            links.append({'title':'Next results','type':'application/atom+xml',\
+            'rel':'next','href':'?page=' + str(books.next_page_number())})
+
+
+
+
     feed = AtomFeed(title = 'Pathagar Bookserver OPDS feed', \
         atom_id = 'pathagar:full-catalog', subtitle = \
         'OPDS catalog for the Pathagar book server', \
-        extra_attrs = attrs, hide_generator=True)
+        extra_attrs = attrs, hide_generator=True, links=links)
 
-    if isinstance(books, Book):
-        books = [books] ###FIXME 
 
-    for book in books:
+    for book in books.object_list:
         feed.add_item(book.a_id, book.a_title, book.a_updated, \
             content=book.a_summary, links = [{'rel': \
             'http://opds-spec.org/acquisition', 'href': \
