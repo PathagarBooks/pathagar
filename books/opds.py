@@ -17,8 +17,6 @@
 
 from cStringIO import StringIO
 
-from django.db.models import Q
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from models import Book
 from atom import AtomFeed
@@ -31,62 +29,6 @@ def __get_mimetype(item):
         return 'application/pdf'
     else:
         return 'Unknown'
-
-def get_catalog(request, qtype='feed'):
-    q = None
-    q_objects = []
-    results = Book.objects.all()
-    try:
-        q = request.GET['q']
-    except:
-        pass
-    else:
-        searchterms = request.GET['q']
-        subterms = searchterms.split('AND')
-        for subterm in subterms:
-            if ':' in subterm:
-                key, word = subterm.split(':')
-                key = key.strip()
-                if key == 'title':
-                    q_objects.append(Q(a_title__icontains = word))
-                if key == 'author':
-                    q_objects.append(Q(a_author__icontains = word))
-                if key == 'publisher':
-                    q_objects.append(Q(dc_publisher__icontains = word))
-                if key == 'identifier':
-                    q_objects.append(Q(dc_identifier__icontains = word))
-                if key == 'summary':
-                    q_objects.append(Q(a_summary__icontains = word))
-            else:
-                word = subterm
-                try:
-                    results = results.filter(Q(a_title__icontains = word) | \
-                        Q(a_author__icontains = word) | \
-                        Q(dc_publisher__icontains = word) | \
-                        Q(dc_identifier__icontains = word) | \
-                        Q(a_summary__icontains = word))
-                except Book.DoesNotExist:
-                    results = Book.objects.none()
-
-        for q_object in q_objects:
-            results = results.filter(q_object)
-
-
-    paginator = Paginator(results, 2)
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-
-    try:
-        books = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        books = paginator.page(paginator.num_pages)
-
-    if qtype == 'feed':
-        return generate_catalog(books,q)
-
-    return (books,q)
 
 
 def generate_catalog(books,q=None):
