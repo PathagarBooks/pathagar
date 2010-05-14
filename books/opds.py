@@ -32,7 +32,7 @@ def __get_mimetype(item):
     else:
         return 'Unknown'
 
-def get_catalog(request):
+def get_catalog(request, qtype='feed'):
     q = None
     q_objects = []
     results = Book.objects.all()
@@ -83,7 +83,10 @@ def get_catalog(request):
     except (EmptyPage, InvalidPage):
         books = paginator.page(paginator.num_pages)
 
-    return generate_catalog(books,q)
+    if qtype == 'feed':
+        return generate_catalog(books,q)
+
+    return (books,q)
 
 
 def generate_catalog(books,q=None):
