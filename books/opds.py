@@ -29,6 +29,8 @@ import logging
 def __get_mimetype(item):
     if item.file.url.endswith('pdf'):
         return 'application/pdf'
+    elif item.file.url.endswith('epub'):
+        return 'application/epub+zip'
     else:
         return 'Unknown'
 
