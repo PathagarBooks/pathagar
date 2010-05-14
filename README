@@ -1,7 +1,40 @@
+Introduction
+============
 Pathagar is a simple bookserver serving OPDS feeds.
 One can add books via the admin interface, as well as
-via CSV files, through the command 'manage.py addbooks'
+via CSV files, through the command
+  python manage.py addbooks
 
+Format of CSV file
+==================
 The format of the CSV file is like:
 "Path to ebook file","Title","Author","Description"
+We are working on adding support for more fields in the CSV
+file - feedback on this would be very welcome :-).
+
+Quickstart
+==========
+* Install Django (we are primarily using 1.1 to develop Pathagar.
+  YMMV with other versions)
+
+* In the Pathagar folder edit settings.py to suite your needs and
+  environment.
+
+* In the Pathagar folder, run
+    python manage.py syncdb
+  You will be asked to create an admin user during this stage.
+
+* To run the server, run
+   python manage.py runserver
+  This starts a server listening on localhost, port 8000
+
+* With your browser, access http://localhost:8000 and see if the index
+  page comes up. If it comes up, click on "Add books" in the footer to
+  start adding books. You will be asked for a username/password. This is
+  the admin username/password you supplied while running syncdb.
+
+  NOTE: You can also mass add books via the command line through CSV files
+
+* To run the server in a production environment, look at Django deployment
+  docs at : http://docs.djangoproject.com/en/1.1/howto/deployment/
 
