@@ -22,7 +22,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 
-from opds import get_catalog
+from catalog import get_catalog
 from forms import AddBookForm
 from langlist import langs as LANG_CHOICES
 from models import *
