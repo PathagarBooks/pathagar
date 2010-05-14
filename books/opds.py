@@ -34,13 +34,13 @@ def __get_mimetype(item):
 
 def get_catalog(request):
     q = None
+    q_objects = []
+    results = Book.objects.all()
     try:
         q = request.GET['q']
     except:
-        return get_full_catalog(request)
+        pass
     else:
-        q_objects = []
-        results = Book.objects.all()
         searchterms = request.GET['q']
         subterms = searchterms.split('AND')
         for subterm in subterms:
@@ -84,23 +84,6 @@ def get_catalog(request):
         books = paginator.page(paginator.num_pages)
 
     return generate_catalog(books,q)
-
-
-def get_full_catalog(request):
-    results = Book.objects.order_by('a_title')
-    paginator = Paginator(results, 2)
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-
-
-    try:
-        books = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        books = paginator.page(paginator.num_pages)
-
-    return generate_catalog(books)
 
 
 def generate_catalog(books,q=None):
