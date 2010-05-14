@@ -17,11 +17,13 @@ $(document).ready(function()
 {% endblock %}
 
 {% block content %}
+
+<div class="span-17 colborder" id="content">
 {% for book in books.object_list %}
 <h1>{{ book.a_title }}</h1>
 <h2 class="alt">{{ book.a_author }}</h2>
 <p>{{ book.a_summary }}</p>
-<div class="span-4 prepend-21 last"><em><a href="{{book.file.url}}">Download</a></em></div>
+<div class="span-2 prepend-15 last"><em><a href="{{book.file.url}}">Download</a></em></div>
 <hr/>
 {%  endfor %}
 
@@ -39,6 +41,29 @@ $(document).ready(function()
             <a href="?page={{ books.next_page_number }} {% if q %}&q={{ q }} {% endif %}"><img src="/static_media/images/go-next.png" alt="next"></a>
         {% endif %}
     </span>
+</div>
+</div>
+
+<div class="span-6 last" id="sidebar">
+        <hr class="space">
+        <div class="linkbox">
+        <h3 class="caps">Statistics</h3>
+        <div class="box">
+        <ul>
+            <li>Number of ebooks in this server: <em>{{ total_books }}</em></li>
+        </ul>
+            {% ifnotequal books.paginator.count total_books %}
+            <hr>
+            <ul>
+            <li>Number of ebooks in search result: <em>{{ books.paginator.count }}</em></li>
+            <li>Showing matches <em>{{ books.start_index }}</em> to <em>{{ books.end_index }}</em></li>
+            {% else %}
+            <ul>
+            <li>Showing entire collection.</li>
+            {% endifnotequal %}
+            </ul>
+        </div>
+        </div>
 </div>
 
 {%  endblock %}

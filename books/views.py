@@ -65,7 +65,8 @@ def page(request):
     except (EmptyPage, InvalidPage):
         books = paginator.page(paginator.num_pages)
     """
+    all_books = Book.objects.all()
     books, q = get_catalog(request,'html')
-    return render_to_response('index.html', {'books': books, 'q':q})
+    return render_to_response('index.html', {'books': books, 'q':q, 'total_books':len(all_books)})
 
 
