@@ -2,6 +2,20 @@
 
 {% block title %}Welcome to the Pathagar book server{% endblock %}
 
+{% block script %}
+$(document).ready(function()
+{
+  $('#search').example('Search...');
+});
+{% endblock %}
+
+{%block searchform %}
+<form action="{% url pathagar.books.views.page %}" method="get">
+<input id="search" type="text" name="q" />
+<input id="submit" type="submit" value="Submit" />
+</form>
+{% endblock %}
+
 {% block content %}
 {% for book in books.object_list %}
 <h1>{{ book.a_title }}</h1>
