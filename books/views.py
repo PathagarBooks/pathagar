@@ -51,6 +51,7 @@ def add_book(request):
     return render_to_response('addbook.html', {'form': form})
 
 def page(request):
+    """
     books = Book.objects.all().order_by('a_title')
     paginator = Paginator(books, 2)
     try:
@@ -63,7 +64,8 @@ def page(request):
         books = paginator.page(page)
     except (EmptyPage, InvalidPage):
         books = paginator.page(paginator.num_pages)
-
-    return render_to_response('index.html', {'books': books})
+    """
+    books, q = get_catalog(request,'html')
+    return render_to_response('index.html', {'books': books, 'q':q})
 
 
