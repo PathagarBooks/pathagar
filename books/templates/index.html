@@ -30,7 +30,7 @@ $(document).ready(function()
 <div class="prepend-12 pagination">
     <span class="step-links">
         {% if books.has_previous %}
-            <a href="?page={{ books.previous_page_number }} {% if q %}&q={{ q }} {% endif %}"><img src="/static_media/images/go-previous.png" alt="previous"></a>
+            <a href="?page={{ books.previous_page_number }}{% if q %}&q={{ q }} {% endif %}"><img src="/static_media/images/go-previous.png" alt="previous"></a>
         {% endif %}
 
         <span class="current-page">
@@ -38,7 +38,7 @@ $(document).ready(function()
         </span>
 
         {% if books.has_next %}
-            <a href="?page={{ books.next_page_number }} {% if q %}&q={{ q }} {% endif %}"><img src="/static_media/images/go-next.png" alt="next"></a>
+            <a href="?page={{ books.next_page_number }}{% if q %}&q={{ q }} {% endif %}"><img src="/static_media/images/go-next.png" alt="next"></a>
         {% endif %}
     </span>
 </div>
