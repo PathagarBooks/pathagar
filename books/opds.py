@@ -17,12 +17,7 @@
 
 from cStringIO import StringIO
 
-
-from models import Book
 from atom import AtomFeed
-
-import logging
-
 
 def __get_mimetype(item):
     if item.file.url.endswith('pdf'):
@@ -33,7 +28,7 @@ def __get_mimetype(item):
         return 'Unknown'
 
 
-def generate_catalog(books,q=None):
+def generate_catalog(books, q=None):
     attrs = {}
     attrs[u'xmlns:dcterms'] = u'http://purl.org/dc/terms/'
     attrs[u'xmlns:opds'] = u'http://opds-spec.org/'
@@ -44,19 +39,19 @@ def generate_catalog(books,q=None):
 
     if books.has_previous():
         if q:
-            links.append({'title':'Previous results','type':'application/atom+xml',\
+            links.append({'title':'Previous results', 'type':'application/atom+xml', \
             'rel':'previous','href':'?page=' + str(books.previous_page_number()) + '&q=' + q })
         else:
-            links.append({'title':'Previous results','type':'application/atom+xml',\
+            links.append({'title':'Previous results', 'type':'application/atom+xml', \
             'rel':'previous','href':'?page=' + str(books.previous_page_number())})
 
 
     if books.has_next():
         if q:
-            links.append({'title':'Next results','type':'application/atom+xml',\
+            links.append({'title':'Next results', 'type':'application/atom+xml', \
             'rel':'next','href':'?page=' + str(books.next_page_number()) + '&q=' + q })
         else:
-            links.append({'title':'Next results','type':'application/atom+xml',\
+            links.append({'title':'Next results', 'type':'application/atom+xml', \
             'rel':'next','href':'?page=' + str(books.next_page_number())})
 
 

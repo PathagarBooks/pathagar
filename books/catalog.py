@@ -15,15 +15,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from cStringIO import StringIO
-
 from django.db.models import Q
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from models import Book
 from opds import generate_catalog
-
-import logging
 
 
 def get_catalog(request, qtype='feed'):
@@ -78,7 +74,7 @@ def get_catalog(request, qtype='feed'):
         books = paginator.page(paginator.num_pages)
 
     if qtype == 'feed':
-        return generate_catalog(books,q)
+        return generate_catalog(books, q)
 
-    return (books,q)
+    return (books, q)
 
