@@ -1,5 +1,7 @@
 # Django settings for pathagar project.
 
+ITEMS_PER_PAGE = 2      # Number of books shown per page in the OPDS catalog and in the HTML page
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 

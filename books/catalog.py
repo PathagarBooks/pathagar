@@ -21,6 +21,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from models import Book
 from opds import generate_catalog
 
+from django.conf import settings
 
 def get_catalog(request, qtype='feed'):
     q = None
@@ -62,7 +63,7 @@ def get_catalog(request, qtype='feed'):
             results = results.filter(q_object)
 
 
-    paginator = Paginator(results, 2)
+    paginator = Paginator(results, settings.ITEMS_PER_PAGE)
     try:
         page = int(request.GET.get('page', '1'))
     except ValueError:
