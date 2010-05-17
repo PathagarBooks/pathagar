@@ -19,7 +19,28 @@ from django.db import models
 
 import datetime
 from uuidfield import UUIDField
-from langlist import langs as LANG_CHOICES
+from langlist import langs
+
+class Language(models.Model):
+    label = models.CharField('language name', max_length=50, blank=False, unique=True)
+    code = models.CharField(max_length=4, blank=True)
+
+    def __unicode__(self):
+        return self.label
+
+    def save(self, *args, **kwargs):
+        '''
+        This method automatically tries to assign the right language code
+        to the specified language. If a code cannot be found, it assigns
+        'xx'
+        '''
+        code = 'xx'
+        for lang in langs:
+            if self.label.lower() == lang[1].lower():
+                code = lang[0]
+                break
+        self.code = code
+        super(Language, self).save(*args, **kwargs)
 
 class Book(models.Model):
     file = models.FileField(blank=False, upload_to='books')
@@ -30,7 +51,7 @@ class Book(models.Model):
     a_summary = models.TextField('atom:summary', blank=True)
     a_category = models.CharField('atom:category', max_length=200, blank=True)
     a_rights = models.CharField('atom:rights', max_length=200, blank=True)
-    dc_language = models.CharField('dc:language', max_length=10, blank=True, choices=LANG_CHOICES)
+    dc_language = models.ForeignKey(Language)
     dc_publisher = models.CharField('dc:publisher', max_length=200, blank=True)
     dc_issued = models.CharField('dc:issued', max_length=100, blank=True)
     dc_identifier = models.CharField('dc:identifier', max_length=50, \
@@ -38,4 +59,3 @@ class Book(models.Model):
 
     def __unicode__(self):
         return self.a_title
-
