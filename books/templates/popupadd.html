@@ -1,0 +1,16 @@
+<html>
+    <head>
+        <title>Add {{ field }}</title>
+        <script type="text/javascript" src="/media/js/admin/RelatedObjectLookups.js"></script>
+    </head>
+    <body>
+        <h1>Add {{ field }}</h1>
+
+        <form method="POST" action="/add/{{ field }}">
+            <table>
+                {{ form }}
+            </table>
+            <p><input type="submit" /> | <a href="javascript:window.close()">Cancel</a></p>
+        </form>
+    </body>
+</html>

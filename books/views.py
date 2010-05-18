@@ -22,14 +22,17 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from catalog import get_catalog
-from forms import AddBookForm
+from forms import AddBookForm, AddLanguageForm
 from langlist import langs as LANG_CHOICES
 from models import *
-
+from popuphandler import handlePopAdd
 
 def catalogs(request):
     return HttpResponse(get_catalog(request), mimetype='application/atom+xml')
 
+@login_required
+def add_language(request):
+    return handlePopAdd(request, AddLanguageForm, 'language')
 
 @login_required
 def add_book(request):
