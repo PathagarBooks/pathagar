@@ -51,7 +51,7 @@ class Book(models.Model):
     a_summary = models.TextField('atom:summary', blank=True)
     a_category = models.CharField('atom:category', max_length=200, blank=True)
     a_rights = models.CharField('atom:rights', max_length=200, blank=True)
-    dc_language = models.ForeignKey(Language)
+    dc_language = models.ForeignKey(Language, blank=True, null=True)
     dc_publisher = models.CharField('dc:publisher', max_length=200, blank=True)
     dc_issued = models.CharField('dc:issued', max_length=100, blank=True)
     dc_identifier = models.CharField('dc:identifier', max_length=50, \
