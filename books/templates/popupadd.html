@@ -1,16 +1,26 @@
 <html>
     <head>
+        <meta charset=utf-8 />
         <title>Add {{ field }}</title>
+      <link rel="stylesheet" href="/static_media/style/blueprint/screen.css" type="text/css" media="screen, projection">
+      <link rel="stylesheet" href="/static_media/style/blueprint/print.css" type="text/css" media="print"> 
+      <link rel="stylesheet" href="/static_media/style/blueprint/plugins/fancy-type/screen.css" type="text/css" media="screen, projection">
+      <!--[if lt IE 8]>
+        <link rel="stylesheet" href="/static_media/blueprint/ie.css" type="text/css" media="screen, projection">
+      <![endif]-->
+
+      <link rel="stylesheet" href="/static_media/style/style.css" type="text/css">
         <script type="text/javascript" src="/media/js/admin/RelatedObjectLookups.js"></script>
     </head>
     <body>
-        <h1>Add {{ field }}</h1>
-
         <form method="POST" action="/add/{{ field }}">
+            <fieldset>
+            <legend> Add {{ field }} </legend>
             <table>
                 {{ form }}
             </table>
             <p><input type="submit" /> | <a href="javascript:window.close()">Cancel</a></p>
+            </fieldset>
         </form>
     </body>
 </html>
