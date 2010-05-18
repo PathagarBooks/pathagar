@@ -20,7 +20,7 @@ urlpatterns = patterns('',
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    (r'^addbook/','pathagar.books.views.add_book'),
+    (r'^add/book/?$', 'pathagar.books.views.add_book'),
     (r'^accounts/login/$', 'django.contrib.auth.views.login'),
     (r'^static_media/(?P<path>.*)$', 'django.views.static.serve',
         {'document_root': MEDIA_ROOT, 'show_indexes': True}),

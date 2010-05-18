@@ -31,11 +31,11 @@
     {% block footer %}{% endblock %}
     <div class="span-12 prepend-6 footer">
         <small>
-        This is the <em>Pathagar</em> book server. A list of books in the server can be found <a href="/">here</a>.
+        This is the <em>Pathagar</em> book server. A list of books in the server can be found <a href="{% url pathagar.books.views.page %}">here</a>.
         <br>
-        Books can be added to this server via this <a href="/addbook">page</a>.
+        Books can be added to this server via this <a href="{% url pathagar.books.views.add_book %}">page</a>.
         <br>
-        An <acronym title="Open Publication Distribution System">OPDS</acronym> feed is also <a href="/catalogs">available</a>.
+        An <acronym title="Open Publication Distribution System">OPDS</acronym> feed is also <a href="{% url pathagar.books.views.catalogs %}">available</a>.
         </small>
     </div>
 <div>
