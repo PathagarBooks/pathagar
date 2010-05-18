@@ -64,3 +64,17 @@ div.hidden_body {
     padding: 5px 10px 15px;
     background-color:#BFBFBF;
 }
+
+.bookname a {
+    font-weight:normal;
+    color:gray;
+    line-height:1;
+    text-decoration: none;
+    font-size: 90%;
+    font-family: serif;
+}
+
+.bookname a:hover {
+    color: white;
+    background: gray;
+}

@@ -72,4 +72,6 @@ def page(request):
     books, q = get_catalog(request,'html')
     return render_to_response('index.html', {'books': books, 'q':q, 'total_books':len(all_books)})
 
-
+def book_details(request, book_id):
+    book = Book.objects.get(pk=book_id)
+    return render_to_response('book.html', {'book': book,})

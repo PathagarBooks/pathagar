@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     # (r'^pathagar/', include('pathagar.foo.urls')),
 
     (r'^$', 'pathagar.books.views.page'),
+    (r'^view/book/(?P<book_id>\d+)/$', 'pathagar.books.views.book_details'),
 
     (r'^catalogs/', 'pathagar.books.views.catalogs'),
     (r'^books/(?P<path>.*)$', serve, {'document_root': os.path.join(settings.MEDIA_ROOT, 'books')}),
