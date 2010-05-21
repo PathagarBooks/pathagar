@@ -27,7 +27,7 @@ def get_epubs(path):
 
 
 class Command(BaseCommand):
-    help = "Adds a book collection (via a directory full of EPUB fili(s))"
+    help = "Adds a book collection (via a directory containing EPUB file(s))"
     args = 'Absolute path to directory of EPUB files'
 
     def handle(self, dirpath='', *args, **options):
