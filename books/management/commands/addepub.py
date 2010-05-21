@@ -3,8 +3,6 @@ from django.core.files.storage import default_storage
 from django.core.files import File
 
 import os
-import csv
-import glob
 
 from books.models import *
 from books.epub import *
@@ -12,7 +10,7 @@ from books.langlist import *
 
 import settings
 
-
+import sys
 
 def get_epubs(path):
     """Returns a list of EPUB(s)"""
@@ -55,10 +53,24 @@ class Command(BaseCommand):
                             break
                 else:
                     lang = lang[0]
+
+                #XXX: Hacks below
+                if not info.title:
+                    info.title = ''
+                if not info.summary:
+                    info.summary = ''
+                if not info.creator:
+                    info.creator = ''
+                if not info.rights:
+                    info.rights = ''
+
                 f = open(name)
                 book = Book(file=File(f), a_title = info.title, \
                         a_author = info.creator, a_summary = info.summary, \
                         a_rights = info.rights, dc_identifier = info.identifier['value'].strip('urn:uuid:'), \
                         dc_issued = info.date)
-                book.save()
+                try:
+                    book.save()
+                except:
+                    raise CommandError('Error adding file %s: %s' % (name, sys.exc_info()[1]))
 
