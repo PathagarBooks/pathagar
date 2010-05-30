@@ -56,6 +56,7 @@ class Book(models.Model):
     dc_issued = models.CharField('dc:issued', max_length=100, blank=True)
     dc_identifier = models.CharField('dc:identifier', max_length=50, \
         help_text='Use ISBN for this', blank=True)
+    cover_img = models.FileField(blank=True, upload_to='covers')
 
     def __unicode__(self):
         return self.a_title

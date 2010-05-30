@@ -18,6 +18,7 @@ urlpatterns = patterns('',
 
     (r'^catalogs/', 'pathagar.books.views.catalogs'),
     (r'^books/(?P<path>.*)$', serve, {'document_root': os.path.join(settings.MEDIA_ROOT, 'books')}),
+    (r'^covers/(?P<path>.*)$', serve, {'document_root': os.path.join(settings.MEDIA_ROOT, 'covers')}),
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),

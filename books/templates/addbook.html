@@ -19,10 +19,10 @@ $(document).ready(function()
 {% block content %}
 {% if book %}
 
-<div class="success">Book Addded with id {{ book }}</div>
+<div class="success">Book addded with id {{ book }}</div>
 
 {% endif %}
-<form  enctype="multipart/form-data" action="/addbook/" method="POST">
+<form  enctype="multipart/form-data" action="/add/book/" method="POST">
 <fieldset>
 <legend>Add Book</legend>
 <div class="span-3"><label for="id_file">File:</label></div>
@@ -60,6 +60,9 @@ $(document).ready(function()
 <hr class="space">
 <div class="span-3"><label for="id_dc_identifier">dc:identifier: </label></div>
 <div class="span-4">{{  form.dc_identifier }}</div>
+<hr class="space">
+<div class="span-3"><label for="id_dc_identifier">Cover image: </label></div>
+<div class="span-4">{{  form.cover_img }}</div>
 <hr class="space">
 </div>
 </div>

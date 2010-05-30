@@ -22,7 +22,7 @@ class BookAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': ['file']}),
         ('Basic Information', {'fields': ['a_title', 'a_author']}),
-        ('Extended information', {'fields': ['a_summary', 'a_category', 'a_rights', 'dc_language', 'dc_publisher', 'dc_issued', 'dc_identifier'], 'classes': ['collapse']}),
+        ('Extended information', {'fields': ['a_summary', 'a_category', 'a_rights', 'dc_language', 'dc_publisher', 'dc_issued', 'dc_identifier', 'cover_img'], 'classes': ['collapse']}),
     ]
 
 class LanguageAdmin(admin.ModelAdmin):

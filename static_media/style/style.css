@@ -1,3 +1,8 @@
+
+.cover {
+    margin-top:5em
+}
+
 a[href$=".epub"]   {
     background-image: url(blueprint/plugins/link-icons/icons/epub.png);
 }

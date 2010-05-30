@@ -67,10 +67,11 @@ def generate_catalog(books, q=None):
         feed.add_item(book.a_id, book.a_title, book.a_updated, \
             content=book.a_summary, links = [{'rel': \
             'http://opds-spec.org/acquisition', 'href': \
-            book.file.url, 'type': __get_mimetype(book)}], \
-            authors = [{'name' : book.a_author}], dc_language=book.dc_language, \
-            dc_publisher=book.dc_publisher, dc_issued=book.dc_issued, \
-            dc_identifier=book.dc_identifier)
+            book.file.url, 'type': __get_mimetype(book)}, {'rel': \
+            'http://opds-spec.org/cover', 'href': \
+            book.cover_img.url } ], authors = [{'name' : book.a_author}], \
+            dc_language=book.dc_language, dc_publisher=book.dc_publisher, \
+            dc_issued=book.dc_issued, dc_identifier=book.dc_identifier)
 
     s = StringIO()
     feed.write(s, 'UTF-8')
