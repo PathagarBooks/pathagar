@@ -64,12 +64,20 @@ def generate_catalog(books, q=None):
 
 
     for book in books.object_list:
+        if book.cover_img:
+            linklist = [{'rel': \
+                    'http://opds-spec.org/acquisition', 'href': \
+                    book.file.url, 'type': __get_mimetype(book)}, {'rel': \
+                    'http://opds-spec.org/cover', 'href': \
+                    book.cover_img.url }]
+        else:
+           linklist = [{'rel': \
+                    'http://opds-spec.org/acquisition', 'href': \
+                    book.file.url, 'type': __get_mimetype(book)}]
+
         feed.add_item(book.a_id, book.a_title, book.a_updated, \
-            content=book.a_summary, links = [{'rel': \
-            'http://opds-spec.org/acquisition', 'href': \
-            book.file.url, 'type': __get_mimetype(book)}, {'rel': \
-            'http://opds-spec.org/cover', 'href': \
-            book.cover_img.url } ], authors = [{'name' : book.a_author}], \
+            content=book.a_summary, links = linklist, \
+            authors = [{'name' : book.a_author}], \
             dc_language=book.dc_language.code, dc_publisher=book.dc_publisher, \
             dc_issued=book.dc_issued, dc_identifier=book.dc_identifier)
 

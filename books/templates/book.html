@@ -50,11 +50,11 @@ $(document).ready(function()
 </div>
 
 <div class="span-6 last" id="sidebar">
-{% ifnotequal book.cover_img None %}
-<img src="{{book.cover_img.url}}" alt="Cover" width=100px/>
+{% if  book.cover_img %}
+<img src="{{book.cover_img.url}}" alt="Cover" width=150px/>
 {% else %}
-<img src="/static_media/images/generic_cover.png" alt="Cover" width=100px/>
-{% endifnotequal %}
+<img src="/static_media/images/generic_cover.png" alt="Cover" width=150px/>
+{% endif %}
 <hr class="space">
 <a href="{{book.file.url}}">Download book</a>
 </div>
