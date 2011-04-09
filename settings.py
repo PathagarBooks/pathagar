@@ -1,5 +1,9 @@
 # Django settings for pathagar project.
 
+# Get current directory to get media and templates while developing:
+import os
+CUR_DIR = u'' + os.path.dirname(__file__)
+
 ITEMS_PER_PAGE = 2      # Number of books shown per page in the OPDS catalog and in the HTML page
 
 DEBUG = True
@@ -37,7 +41,7 @@ USE_I18N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = './static_media'
+MEDIA_ROOT = os.path.join(CUR_DIR, 'static_media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -74,7 +78,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/home/sayamindu/Work/Devel/pathagar/templates'
+    os.path.join(os.path.dirname(__file__), 'templates'),
 )
 
 INSTALLED_APPS = (
@@ -100,3 +104,4 @@ DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.logger.LoggingPanel',
 )
 
+INTERNAL_IPS = ("127.0.0.1",)
