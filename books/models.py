@@ -43,6 +43,9 @@ class Language(models.Model):
         super(Language, self).save(*args, **kwargs)
 
 class Book(models.Model):
+    
+    # TODO: 'file' can't be an attribute name, because it's a Python
+    # keyword!
     file = models.FileField(blank=False, upload_to='books')
     a_id = UUIDField('atom:id')
     a_title = models.CharField('atom:title', max_length=200, blank=False)
@@ -51,6 +54,8 @@ class Book(models.Model):
     a_summary = models.TextField('atom:summary', blank=True)
     a_category = models.CharField('atom:category', max_length=200, blank=True)
     a_rights = models.CharField('atom:rights', max_length=200, blank=True)
+    
+    # TODO: if dc_language is None, the /catalogs/ url fails
     dc_language = models.ForeignKey(Language, blank=True, null=True)
     dc_publisher = models.CharField('dc:publisher', max_length=200, blank=True)
     dc_issued = models.CharField('dc:issued', max_length=100, blank=True)
