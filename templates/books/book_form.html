@@ -17,12 +17,13 @@ $(document).ready(function()
 {% block head %}<script type="text/javascript" src="/media/js/admin/RelatedObjectLookups.js"></script>{% endblock %}
 
 {% block content %}
-{% if book %}
-
-<div class="success">Book addded with id {{ book }}</div>
-
+<form  enctype="multipart/form-data"
+{% if action = 'add' %}
+  action="/add/book/"
+{% else %}
+  action="/edit/book/{{ book.pk }}"
 {% endif %}
-<form  enctype="multipart/form-data" action="/add/book/" method="POST">
+method="POST">
 <fieldset>
 <legend>Add Book</legend>
 <div class="span-3"><label for="id_file">File:</label></div>
@@ -67,7 +68,14 @@ $(document).ready(function()
 </div>
 </div>
 
-<div class="span-4 prepend-21 last"><input type="submit" value="Submit"></div>
+<div class="span-4 prepend-21 last">
+<input type="submit"
+{% if action = 'add' %}
+  value="Add">
+{% else %}
+  value="Edit">
+{% endif %}
+</div>
 </fieldset>
 </form>
 {% endblock %}

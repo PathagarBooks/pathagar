@@ -22,6 +22,8 @@ from django.core.files.base import ContentFile
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic.simple import redirect_to
+from django.views.generic.create_update import create_object, update_object, \
+  delete_object
 
 from catalog import get_catalog
 from forms import BookForm, AddLanguageForm
@@ -38,41 +40,40 @@ def add_language(request):
 
 @login_required
 def add_book(request):
-    book = None
-    if request.method == 'POST':
-        form = BookForm(request.POST, request.FILES)
-        title = form['a_title']
-        author = form['a_author']
-        if not form.is_valid():
-            form = BookForm()
-            return render_to_response('addbook.html', {'form': form})
-        book = form.save()
-
-    form = BookForm()
-    if book:
-        return render_to_response('addbook.html', {'form': form, 'book': book.id})
-    return render_to_response('addbook.html', {'form': form})
+    extra_context = {'action': 'add'}
+    return create_object(
+        request,
+        form_class = BookForm,
+        template_object_name = 'book',
+        extra_context = extra_context,
+        #TODO: do book.get_absolute_url and remove this:
+        post_save_redirect = '/',
+    )
 
 @login_required
 def edit_book(request, book_id):
-    book = get_object_or_404(Book, pk=book_id)
-    if request.method == 'POST':
-        form = BookForm(request.POST, request.FILES)
-        title = form['a_title']
-        author = form['a_author']
-        if not form.is_valid():
-            form = BookForm()
-            return render_to_response('addbook.html', {'form': form})
-        book = form.save()
-
-    form = BookForm(instance=book)
-    return render_to_response('addbook.html', {'form': form, 'book': book.id})
+    extra_context = {'action': 'edit'}
+    return update_object(
+        request,
+        form_class = BookForm,
+        object_id = book_id,
+        template_object_name = 'book',
+        extra_context = extra_context,
+        #TODO: do book.get_absolute_url and remove this:
+        post_save_redirect = '/',
+    )
 
 @login_required
 def remove_book(request, book_id):
-    book = get_object_or_404(Book, pk=book_id)
-    book.delete()
-    return redirect_to(request, '/')
+    return delete_object(
+        request,
+        model = Book,
+        object_id = book_id,
+        template_object_name = 'book',
+        #TODO: do book.get_absolute_url and remove this:
+        post_delete_redirect = '/',
+    )
+
 
 def page(request):
     """
