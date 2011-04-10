@@ -17,9 +17,11 @@
 
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
+from django.shortcuts import get_object_or_404
 from django.core.files.base import ContentFile
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.views.generic.simple import redirect_to
 
 from catalog import get_catalog
 from forms import AddBookForm, AddLanguageForm
@@ -44,14 +46,33 @@ def add_book(request):
         if not form.is_valid():
             form = AddBookForm()
             return render_to_response('addbook.html', {'form': form})
-
         book = form.save()
-
 
     form = AddBookForm()
     if book:
-        return render_to_response('addbook.html', {'form': form, 'book':book.id})
+        return render_to_response('addbook.html', {'form': form, 'book': book.id})
     return render_to_response('addbook.html', {'form': form})
+
+@login_required
+def edit_book(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+    if request.method == 'POST':
+        form = AddBookForm(request.POST, request.FILES)
+        title = form['a_title']
+        author = form['a_author']
+        if not form.is_valid():
+            form = AddBookForm()
+            return render_to_response('addbook.html', {'form': form})
+        book = form.save()
+
+    form = AddBookForm(instance=book)
+    return render_to_response('addbook.html', {'form': form, 'book': book.id})
+
+@login_required
+def remove_book(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+    book.delete()
+    return redirect_to(request, '/')
 
 def page(request):
     """
@@ -73,5 +94,5 @@ def page(request):
     return render_to_response('index.html', {'books': books, 'q':q, 'total_books':len(all_books)})
 
 def book_details(request, book_id):
-    book = Book.objects.get(pk=book_id)
+    book = get_object_or_404(Book, pk=book_id)
     return render_to_response('book.html', {'book': book,})
