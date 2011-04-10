@@ -44,10 +44,7 @@ def add_book(request):
     return create_object(
         request,
         form_class = BookForm,
-        template_object_name = 'book',
         extra_context = extra_context,
-        #TODO: do book.get_absolute_url and remove this:
-        post_save_redirect = '/',
     )
 
 @login_required
@@ -59,8 +56,6 @@ def edit_book(request, book_id):
         object_id = book_id,
         template_object_name = 'book',
         extra_context = extra_context,
-        #TODO: do book.get_absolute_url and remove this:
-        post_save_redirect = '/',
     )
 
 @login_required
@@ -70,7 +65,6 @@ def remove_book(request, book_id):
         model = Book,
         object_id = book_id,
         template_object_name = 'book',
-        #TODO: do book.get_absolute_url and remove this:
         post_delete_redirect = '/',
     )
 
