@@ -44,9 +44,7 @@ class Language(models.Model):
 
 class Book(models.Model):
     
-    # TODO: 'file' can't be an attribute name, because it's a Python
-    # keyword!
-    file = models.FileField(blank=False, upload_to='books')
+    book_file = models.FileField(blank=False, upload_to='books')
     a_id = UUIDField('atom:id')
     a_title = models.CharField('atom:title', max_length=200, blank=False)
     a_author = models.CharField('atom:author', max_length=200, blank=False)

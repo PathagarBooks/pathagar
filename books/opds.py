@@ -20,9 +20,9 @@ from cStringIO import StringIO
 from atom import AtomFeed
 
 def __get_mimetype(item):
-    if item.file.url.endswith('pdf'):
+    if item.book_file.url.endswith('pdf'):
         return 'application/pdf'
-    elif item.file.url.endswith('epub'):
+    elif item.book_file.url.endswith('epub'):
         return 'application/epub+zip'
     else:
         return 'Unknown'
@@ -67,13 +67,13 @@ def generate_catalog(books, q=None):
         if book.cover_img:
             linklist = [{'rel': \
                     'http://opds-spec.org/acquisition', 'href': \
-                    book.file.url, 'type': __get_mimetype(book)}, {'rel': \
+                    book.book_file.url, 'type': __get_mimetype(book)}, {'rel': \
                     'http://opds-spec.org/cover', 'href': \
                     book.cover_img.url }]
         else:
            linklist = [{'rel': \
                     'http://opds-spec.org/acquisition', 'href': \
-                    book.file.url, 'type': __get_mimetype(book)}]
+                    book.book_file.url, 'type': __get_mimetype(book)}]
 
         feed.add_item(book.a_id, book.a_title, book.a_updated, \
             content=book.a_summary, links = linklist, \

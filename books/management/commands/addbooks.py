@@ -46,7 +46,7 @@ class Command(BaseCommand):
             summary =  row[3]
 
             f = open(path)
-            book = Book(file = File(f), a_title = title, a_author = author, a_summary = summary)
+            book = Book(book_file = File(f), a_title = title, a_author = author, a_summary = summary)
             book.save()
 
 
