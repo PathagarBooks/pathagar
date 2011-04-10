@@ -24,7 +24,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic.simple import redirect_to
 
 from catalog import get_catalog
-from forms import AddBookForm, AddLanguageForm
+from forms import BookForm, AddLanguageForm
 from langlist import langs as LANG_CHOICES
 from models import *
 from popuphandler import handlePopAdd
@@ -40,15 +40,15 @@ def add_language(request):
 def add_book(request):
     book = None
     if request.method == 'POST':
-        form = AddBookForm(request.POST, request.FILES)
+        form = BookForm(request.POST, request.FILES)
         title = form['a_title']
         author = form['a_author']
         if not form.is_valid():
-            form = AddBookForm()
+            form = BookForm()
             return render_to_response('addbook.html', {'form': form})
         book = form.save()
 
-    form = AddBookForm()
+    form = BookForm()
     if book:
         return render_to_response('addbook.html', {'form': form, 'book': book.id})
     return render_to_response('addbook.html', {'form': form})
@@ -57,15 +57,15 @@ def add_book(request):
 def edit_book(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     if request.method == 'POST':
-        form = AddBookForm(request.POST, request.FILES)
+        form = BookForm(request.POST, request.FILES)
         title = form['a_title']
         author = form['a_author']
         if not form.is_valid():
-            form = AddBookForm()
+            form = BookForm()
             return render_to_response('addbook.html', {'form': form})
         book = form.save()
 
-    form = AddBookForm(instance=book)
+    form = BookForm(instance=book)
     return render_to_response('addbook.html', {'form': form, 'book': book.id})
 
 @login_required
