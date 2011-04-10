@@ -1,7 +1,6 @@
 import os
 
 from django.conf.urls.defaults import *
-from django.views.static import serve
 from django.contrib import admin
 admin.autodiscover()
 
@@ -33,9 +32,10 @@ urlpatterns = patterns('',
 
 
 if settings.DEBUG:
+    from django.views.static import serve
     # Serve static media:
     urlpatterns += patterns('',
-       url(r'^static_media/(?P<path>.*)$', 'django.views.static.serve',
+       url(r'^static_media/(?P<path>.*)$', serve,
            {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
 
        # Book files and covers:
