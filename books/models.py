@@ -45,6 +45,8 @@ class Language(models.Model):
 class Book(models.Model):
     
     book_file = models.FileField(blank=False, upload_to='books')
+    time_added = models.DateTimeField(auto_now_add=True)
+    time_updated = models.DateTimeField(auto_now=True)
     a_id = UUIDField('atom:id')
     a_title = models.CharField('atom:title', max_length=200, blank=False)
     a_author = models.CharField('atom:author', max_length=200, blank=False)
@@ -60,6 +62,10 @@ class Book(models.Model):
     dc_identifier = models.CharField('dc:identifier', max_length=50, \
         help_text='Use ISBN for this', blank=True)
     cover_img = models.FileField(blank=True, upload_to='covers')
+    
+    class Meta:
+        ordering = ('-time_added',)
+        get_latest_by = "time_added"
     
     def __unicode__(self):
         return self.a_title
