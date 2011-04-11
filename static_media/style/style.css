@@ -46,6 +46,19 @@ a[href$=".epub"]   {
     top: 25px;
 }
 
+.header .loginbox {
+    position: absolute;
+    right: 25px;
+    top: 0px;
+    color: white;
+}
+
+.header .loginbox a {
+    color: white;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
 .header a {
     text-decoration: none;
 }
