@@ -41,11 +41,13 @@ $(document).ready(function()
 <div class="span-2"><label>Rights:</label></div>
 <div class="span-3">{{ book.dc_rights }}</div>
 <hr class="space">
+{% if is_logged_in %}
 <div class="span-2">
 <a href="{% url pathagar.books.views.edit_book book.pk %}">Edit</a>
 <a href="{% url pathagar.books.views.remove_book book.pk %}">Remove</a>
 </div>
 <hr class="space">
+{% endif %}
 <div class="span-16">
 <p>
 {{ book.a_summary }}
