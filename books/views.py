@@ -22,6 +22,7 @@ from django.core.files.base import ContentFile
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic.simple import redirect_to
+from django.views.generic.list_detail import object_list, object_detail
 from django.views.generic.create_update import create_object, update_object, \
   delete_object
 
@@ -89,5 +90,9 @@ def page(request):
     return render_to_response('index.html', {'books': books, 'q':q, 'total_books':len(all_books)})
 
 def book_details(request, book_id):
-    book = get_object_or_404(Book, pk=book_id)
-    return render_to_response('book.html', {'book': book,})
+    return object_detail(
+        request,
+        queryset = Book.objects.all(),
+        object_id = book_id,
+        template_object_name = 'book',
+    )
