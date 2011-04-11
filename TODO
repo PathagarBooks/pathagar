@@ -1,6 +1,7 @@
 TODO
 ----
 
-* restore book search
+* review book search, add tests
+* show query instead of "Book Search..." in book search result
 
 

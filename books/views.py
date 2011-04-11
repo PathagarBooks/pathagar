@@ -28,7 +28,7 @@ from django.views.generic.create_update import create_object, update_object, \
 
 from django.conf import settings
 
-from catalog import get_catalog
+from catalog import get_catalog, search_books
 from forms import BookForm, AddLanguageForm
 from langlist import langs as LANG_CHOICES
 from models import *
@@ -73,16 +73,17 @@ def remove_book(request, book_id):
 
 
 def page(request):
-    """
-    """
-    # all_books = Book.objects.all()
-    # books, q = get_catalog(request,'html')
-    # return render_to_response('index.html', {'books': books, 'q':q, 'total_books':len(all_books)})
+    q = request.GET.get('q')
+    if q is not None:
+        queryset = search_books(q)
+    else:
+        queryset = Book.objects.all()
+    
     all_books = Book.objects.all()
-    extra_context = {'total_books': len(all_books)}
+    extra_context = {'total_books': len(all_books), 'q': q}
     return object_list(
         request,
-        queryset = Book.objects.all(),
+        queryset = queryset,
         paginate_by = settings.ITEMS_PER_PAGE,
         template_object_name = 'book',
         extra_context = extra_context,
