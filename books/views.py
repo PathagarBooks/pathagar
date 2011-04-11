@@ -26,6 +26,8 @@ from django.views.generic.list_detail import object_list, object_detail
 from django.views.generic.create_update import create_object, update_object, \
   delete_object
 
+from django.conf import settings
+
 from catalog import get_catalog
 from forms import BookForm, AddLanguageForm
 from langlist import langs as LANG_CHOICES
@@ -72,22 +74,19 @@ def remove_book(request, book_id):
 
 def page(request):
     """
-    books = Book.objects.all().order_by('a_title')
-    paginator = Paginator(books, 2)
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-
-    # If page request (9999) is out of range, deliver last page of results.
-    try:
-        books = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        books = paginator.page(paginator.num_pages)
     """
+    # all_books = Book.objects.all()
+    # books, q = get_catalog(request,'html')
+    # return render_to_response('index.html', {'books': books, 'q':q, 'total_books':len(all_books)})
     all_books = Book.objects.all()
-    books, q = get_catalog(request,'html')
-    return render_to_response('index.html', {'books': books, 'q':q, 'total_books':len(all_books)})
+    extra_context = {'total_books': len(all_books)}
+    return object_list(
+        request,
+        queryset = Book.objects.all(),
+        paginate_by = settings.ITEMS_PER_PAGE,
+        template_object_name = 'book',
+        extra_context = extra_context,
+    )
 
 def book_details(request, book_id):
     return object_detail(
