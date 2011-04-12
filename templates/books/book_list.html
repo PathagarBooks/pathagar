@@ -9,9 +9,6 @@
   {% else %}
   $('#search').example('Book Search...');
   {% endif %}
-  {% if list_by != None %}
-  $(".navbar a[data-name='{{ list_by }}']").addClass("active");
-  {% endif %}
 {% endblock %}
 
 {% block content %}

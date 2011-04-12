@@ -28,6 +28,9 @@ function() { $('.search-ops').show(); },
 // handle out:
 function() { $('.search-ops').hide(); }
 );
+{% if list_by != None %}
+$(".navbar a[data-name='{{ list_by }}']").addClass("active");
+{% endif %}
 {% block script %}{% endblock %}
 });
 </script>

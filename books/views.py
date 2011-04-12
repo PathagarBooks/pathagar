@@ -72,6 +72,7 @@ def remove_book(request, book_id):
     )
 
 def _book_list(request, queryset, list_by='latest'):
+    print request.GET.keys()
     q = request.GET.get('q')
     if q is not None:
         queryset = search_books(queryset, q)
@@ -93,11 +94,11 @@ def book_list(request):
 
 def by_title(request):
     queryset = Book.objects.all().order_by('a_title')
-    return _book_list(request, queryset, list_by='by_title')
+    return _book_list(request, queryset, list_by='by-title')
 
 def by_author(request):
     queryset = Book.objects.all().order_by('a_author')
-    return _book_list(request, queryset, list_by='by_author')
+    return _book_list(request, queryset, list_by='by-author')
 
 def book_detail(request, book_id):
     return object_detail(
