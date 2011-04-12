@@ -58,16 +58,19 @@ method="get">
     <input id="submit" type="submit" value="Submit" />
     <ul class="search-ops">
       <li>
-	<input id="cbx-all" type="checkbox" />
-	<label for="cbx-all">Search All</label>
+	<input name="search-all" id="search-all" type="checkbox"
+	       {% if search_all %}checked{% endif %} />
+	<label for="search-all">Search All</label>
       </li>
       <li>
-	<input id="cbx-title" type="checkbox" />
-	<label for="cbx-title">Search Title</label>
+	<input name="search-title" id="search-title" type="checkbox"
+	       {% if search_title %}checked{% endif %} />
+	<label for="search-title">Search Title</label>
       </li>
       <li>
-	<input id="cbx-author" type="checkbox" />
-	<label for="cbx-author">Search Author</label>
+	<input name="search-author" id="search-author" type="checkbox"
+	       {% if search_author %}checked{% endif %} />
+	<label for="search-author">Search Author</label>
       </li>
     </ul>
   </li>

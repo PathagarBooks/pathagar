@@ -28,7 +28,7 @@ from django.views.generic.create_update import create_object, update_object, \
 
 from django.conf import settings
 
-from catalog import get_catalog, search_books
+from catalog import get_catalog, simple_search, advanced_search
 from forms import BookForm, AddLanguageForm
 from langlist import langs as LANG_CHOICES
 from models import *
@@ -72,14 +72,21 @@ def remove_book(request, book_id):
     )
 
 def _book_list(request, queryset, list_by='latest'):
-    print request.GET.keys()
     q = request.GET.get('q')
+    search_all = request.GET.get('search-all') == 'on'
+    search_title = request.GET.get('search-title') == 'on'
+    search_author = request.GET.get('search-author') == 'on'
     if q is not None:
-        queryset = search_books(queryset, q)
+        if search_all:
+            queryset = advanced_search(queryset, q)
+        else:
+            queryset = simple_search(queryset, q,
+                                     search_title, search_author)
     
     all_books = Book.objects.all()
     extra_context = {'total_books': len(all_books), 'q': q,
-                      'list_by': list_by}
+                     'search_all': search_all, 'search_title': search_title,
+                     'search_author': search_author, 'list_by': list_by}
     return object_list(
         request,
         queryset = queryset,

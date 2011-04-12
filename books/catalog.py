@@ -23,7 +23,28 @@ from opds import generate_catalog
 
 from django.conf import settings
 
-def search_books(queryset, searchterms):
+
+def simple_search(queryset, searchterms,
+                  search_title=False, search_author=False):
+    q_objects = []
+    results = queryset
+    
+    subterms = searchterms.split(' ')
+    for subterm in subterms:
+        word = subterm
+        if search_title:
+            q_objects.append(Q(a_title__icontains = word))
+        if search_author:
+            q_objects.append(Q(a_author__icontains = word))
+    
+    for q_object in q_objects:
+        results = results.filter(q_object)
+    return results
+
+def advanced_search(queryset, searchterms):
+    """
+    Does an advanced search in several fields of the books.
+    """
     q_objects = []
     results = queryset
     
@@ -52,7 +73,7 @@ def search_books(queryset, searchterms):
                     Q(a_summary__icontains = word))
             except Book.DoesNotExist:
                 results = Book.objects.none()
-
+    
     for q_object in q_objects:
         results = results.filter(q_object)
     return results
@@ -61,7 +82,7 @@ def get_catalog(request, qtype='feed'):
     results = Book.objects.all()
     q = request.GET.get('q')
     if q is not None:
-        results = search_books(results, q)
+        results = advanced_search(results, q)
     
     paginator = Paginator(results, settings.ITEMS_PER_PAGE)
     try:
