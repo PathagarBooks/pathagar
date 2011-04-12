@@ -22,7 +22,7 @@
 </head>
 <body>
 <div class="header">
-<a href="{% url pathagar.books.views.page %}"><h1><em>Pathagar</em> Book Server</h1></a>
+<a href="{% url pathagar.books.views.book_list %}"><h1><em>Pathagar</em> Book Server</h1></a>
 <div class="searchbox">
     {% block searchform %}{% endblock %}
 </div>
@@ -40,7 +40,7 @@
     {% block footer %}{% endblock %}
     <div class="span-12 prepend-6 footer">
         <small>
-        This is the <em>Pathagar</em> book server. A list of books in the server can be found <a href="{% url pathagar.books.views.page %}">here</a>.
+        This is the <em>Pathagar</em> book server. A list of books in the server can be found <a href="{% url pathagar.books.views.book_list %}">here</a>.
 {% if user.is_authenticated %}
         <br>
         Books can be added to this server via this <a href="{% url pathagar.books.views.add_book %}">page</a>.

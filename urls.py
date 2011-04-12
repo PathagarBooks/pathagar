@@ -9,13 +9,13 @@ import settings
 urlpatterns = patterns('',
     
     # Index page:
-    (r'^$', 'pathagar.books.views.page'),
+    (r'^$', 'pathagar.books.views.book_list'),
     # (r'^by_tittle/$', 'pathagar.books.views.by_title'),
     # (r'^by_author/$', 'pathagar.books.views.by_author'),
     
     # Add, view, edit and remove books:
     (r'^add/book/?$', 'pathagar.books.views.add_book'),
-    (r'^view/book/(?P<book_id>\d+)/$', 'pathagar.books.views.book_details'),
+    (r'^view/book/(?P<book_id>\d+)/$', 'pathagar.books.views.book_detail'),
     (r'^edit/book/(?P<book_id>\d+)/?$', 'pathagar.books.views.edit_book'),
     (r'^remove/book/(?P<book_id>\d+)/?$', 'pathagar.books.views.remove_book'),
     

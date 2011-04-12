@@ -10,7 +10,7 @@ $(document).ready(function()
 {% endblock %}
 
 {%block searchform %}
-<form action="{% url pathagar.books.views.page %}" method="get">
+<form action="{% url pathagar.books.views.book_list %}" method="get">
 <input id="search" type="text" name="q" />
 <input id="submit" type="submit" value="Submit" />
 </form>
@@ -65,7 +65,7 @@ $(document).ready(function()
             <hr>
             <ul>
             <li>Number of ebooks in search result: <em>{{ paginator.count }}</em></li>
-            <li>Showing matches <em>{{ books.start_index }}</em> to <em>{{ books.end_index }}</em></li>
+            <li>Showing matches <em>{{ page_obj.start_index }}</em> to <em>{{ page_obj.end_index }}</em></li>
             {% else %}
             <ul>
             <li>Showing entire collection.</li>

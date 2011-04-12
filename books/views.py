@@ -72,7 +72,7 @@ def remove_book(request, book_id):
     )
 
 
-def page(request):
+def book_list(request):
     q = request.GET.get('q')
     if q is not None:
         queryset = search_books(q)
@@ -89,7 +89,7 @@ def page(request):
         extra_context = extra_context,
     )
 
-def book_details(request, book_id):
+def book_detail(request, book_id):
     return object_detail(
         request,
         queryset = Book.objects.all(),
