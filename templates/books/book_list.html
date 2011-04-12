@@ -3,10 +3,15 @@
 {% block title %}Welcome to the Pathagar book server{% endblock %}
 
 {% block script %}
-$(document).ready(function()
-{
+  {{ block.super }}
+  {% if q != None %}
+  $('#search').val('{{ q }}');
+  {% else %}
   $('#search').example('Book Search...');
-});
+  {% endif %}
+  {% if list_by != None %}
+  $(".navbar a[data-name='{{ list_by }}']").addClass("active");
+  {% endif %}
 {% endblock %}
 
 {%block searchform %}

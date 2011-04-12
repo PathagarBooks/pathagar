@@ -3,10 +3,8 @@
 {% block title %}{{ book.a_title }} :: Pathagar Book Server{% endblock %}
 
 {% block script %}
-$(document).ready(function()
-{
+  {{ block.super }}
   $('#search').example('Book Search...');
-});
 {% endblock %}
 
 {%block searchform %}

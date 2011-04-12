@@ -17,12 +17,21 @@
 
   <script type="text/javascript" src="/static_media/js/jquery-1.4.2.min.js"></script>
   <script type="text/javascript" src="/static_media/js/jquery.example.min.js"></script>
-  <script type="text/javascript">{% block script %}{% endblock %}</script>
   {% block head %}{% endblock %}
 </head>
 <body>
+<script type="text/javascript">
+$(document).ready(function() {
+{% block script %}{% endblock %}
+});
+</script>
 <div class="header">
 <a href="{% url pathagar.books.views.book_list %}"><h1><em>Pathagar</em> Book Server</h1></a>
+<ul class="navbar">
+  <li><a data-name="latest" href="{% url pathagar.books.views.book_list %}">Latest</a></li>
+  <li><a data-name="by-title" href="{% url pathagar.books.views.by_title %}">By Title</a></li>
+  <li><a data-name="by-author" href="{% url pathagar.books.views.by_author %}">By Author</a></li>
+</ul>
 <div class="searchbox">
     {% block searchform %}{% endblock %}
 </div>

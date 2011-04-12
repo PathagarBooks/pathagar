@@ -79,7 +79,8 @@ def book_list(request):
         queryset = Book.objects.all()
     
     all_books = Book.objects.all()
-    extra_context = {'total_books': len(all_books), 'q': q}
+    extra_context = {'total_books': len(all_books), 'q': q,
+                      'list_by': 'latest'}
     return object_list(
         request,
         queryset = queryset,
@@ -91,7 +92,7 @@ def book_list(request):
 def by_title(request):
     queryset = Book.objects.all().order_by('a_title')
     all_books = Book.objects.all()
-    extra_context = {'total_books': len(all_books)}
+    extra_context = {'total_books': len(all_books), 'list_by': 'by-title'}
     return object_list(
         request,
         queryset = queryset,
@@ -103,7 +104,7 @@ def by_title(request):
 def by_author(request):
     queryset = Book.objects.all().order_by('a_author')
     all_books = Book.objects.all()
-    extra_context = {'total_books': len(all_books)}
+    extra_context = {'total_books': len(all_books), 'list_by': 'by-author'}
     return object_list(
         request,
         queryset = queryset,
