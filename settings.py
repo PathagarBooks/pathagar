@@ -87,6 +87,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin',
+    'tagging',
 #    'debug_toolbar',
     'pathagar.books'
 )

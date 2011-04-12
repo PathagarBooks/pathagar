@@ -17,7 +17,8 @@
 
 from django.db import models
 
-import datetime
+from tagging.fields import TagField
+
 from uuidfield import UUIDField
 from langlist import langs
 
@@ -46,11 +47,11 @@ class Book(models.Model):
     
     book_file = models.FileField(blank=False, upload_to='books')
     time_added = models.DateTimeField(auto_now_add=True)
-    time_updated = models.DateTimeField(auto_now=True)
+    tags = TagField()
     a_id = UUIDField('atom:id')
     a_title = models.CharField('atom:title', max_length=200, blank=False)
     a_author = models.CharField('atom:author', max_length=200, blank=False)
-    a_updated = models.DateTimeField('atom:updated', default=datetime.datetime.now())
+    a_updated = models.DateTimeField('atom:updated', auto_now=True)
     a_summary = models.TextField('atom:summary', blank=True)
     a_category = models.CharField('atom:category', max_length=200, blank=True)
     a_rights = models.CharField('atom:rights', max_length=200, blank=True)
