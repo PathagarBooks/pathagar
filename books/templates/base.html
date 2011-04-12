@@ -28,7 +28,7 @@
 </div>
 <div class="loginbox">
 {% if user.is_authenticated %}
-<span>Welcome, {{ user.username }}</span>
+<span>Welcome, {{ user.username }}&nbsp;&nbsp;</span>
 <a href="{% url django.contrib.auth.views.logout %}?next=/">Log Out</a>
 {% else %}
 <a href="{% url django.contrib.auth.views.login %}?next=/">Log In</a>

@@ -49,13 +49,17 @@ a[href$=".epub"]   {
 .header .loginbox {
     position: absolute;
     right: 25px;
-    top: 0px;
+    top: 5px;
     color: white;
 }
 
 .header .loginbox a {
     color: white;
     font-weight: bold;
+    text-decoration: none;
+}
+
+.header .loginbox a:hover {
     text-decoration: underline;
 }
 
@@ -88,6 +92,7 @@ div.hidden_body {
 }
 
 .bookname a {
+    margin-left: -0.4em; 
     padding: 0.2em 0.4em;
     -moz-border-radius: 10px;
     border-radius: 10px;
