@@ -72,11 +72,10 @@ def remove_book(request, book_id):
     )
 
 def book_list(request):
+    queryset = Book.objects.all()
     q = request.GET.get('q')
     if q is not None:
-        queryset = search_books(q)
-    else:
-        queryset = Book.objects.all()
+        queryset = search_books(queryset, q)
     
     all_books = Book.objects.all()
     extra_context = {'total_books': len(all_books), 'q': q,
@@ -91,8 +90,13 @@ def book_list(request):
 
 def by_title(request):
     queryset = Book.objects.all().order_by('a_title')
+    q = request.GET.get('q')
+    if q is not None:
+        queryset = search_books(queryset, q)
+    
     all_books = Book.objects.all()
-    extra_context = {'total_books': len(all_books), 'list_by': 'by-title'}
+    extra_context = {'total_books': len(all_books), 'q': q,
+                     'list_by': 'by-title'}
     return object_list(
         request,
         queryset = queryset,
@@ -103,8 +107,13 @@ def by_title(request):
 
 def by_author(request):
     queryset = Book.objects.all().order_by('a_author')
+    q = request.GET.get('q')
+    if q is not None:
+        queryset = search_books(queryset, q)
+    
     all_books = Book.objects.all()
-    extra_context = {'total_books': len(all_books), 'list_by': 'by-author'}
+    extra_context = {'total_books': len(all_books), 'q': q,
+                     'list_by': 'by-author'}
     return object_list(
         request,
         queryset = queryset,

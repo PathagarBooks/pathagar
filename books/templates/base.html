@@ -27,7 +27,19 @@ $(document).ready(function() {
 </script>
 <div class="header">
 <a href="{% url pathagar.books.views.book_list %}"><h1><em>Pathagar</em> Book Server</h1></a>
-<form action="{% url pathagar.books.views.book_list %}" method="get">
+<form
+{% if list_by %}
+    {% if list_by == 'by-title' %}
+    action="{% url pathagar.books.views.by_title %}"
+    {% endif %}
+    {% if list_by == 'by-author' %}
+    action="{% url pathagar.books.views.by_author %}"
+    {% endif %}
+{% else %}
+    action="{% url pathagar.books.views.book_list %}"
+{% endif %}
+method="get">
+
 <ul class="navbar">
   <li><a data-name="latest" href="{% url pathagar.books.views.book_list %}">Latest</a></li>
   <li><a data-name="by-title" href="{% url pathagar.books.views.by_title %}">By Title</a></li>

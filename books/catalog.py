@@ -23,9 +23,9 @@ from opds import generate_catalog
 
 from django.conf import settings
 
-def search_books(searchterms):
+def search_books(queryset, searchterms):
     q_objects = []
-    results = Book.objects.all()
+    results = queryset
     
     subterms = searchterms.split('AND')
     for subterm in subterms:
@@ -58,11 +58,10 @@ def search_books(searchterms):
     return results
 
 def get_catalog(request, qtype='feed'):
+    results = Book.objects.all()
     q = request.GET.get('q')
     if q is not None:
-        results = search_books(q)
-    else:
-        results = Book.objects.all()
+        results = search_books(results, q)
     
     paginator = Paginator(results, settings.ITEMS_PER_PAGE)
     try:
