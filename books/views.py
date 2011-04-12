@@ -71,15 +71,14 @@ def remove_book(request, book_id):
         post_delete_redirect = '/',
     )
 
-def book_list(request):
-    queryset = Book.objects.all()
+def _book_list(request, queryset, list_by='latest'):
     q = request.GET.get('q')
     if q is not None:
         queryset = search_books(queryset, q)
     
     all_books = Book.objects.all()
     extra_context = {'total_books': len(all_books), 'q': q,
-                      'list_by': 'latest'}
+                      'list_by': list_by}
     return object_list(
         request,
         queryset = queryset,
@@ -87,40 +86,18 @@ def book_list(request):
         template_object_name = 'book',
         extra_context = extra_context,
     )
+
+def book_list(request):
+    queryset = Book.objects.all()
+    return _book_list(request, queryset, list_by='latest')
 
 def by_title(request):
     queryset = Book.objects.all().order_by('a_title')
-    q = request.GET.get('q')
-    if q is not None:
-        queryset = search_books(queryset, q)
-    
-    all_books = Book.objects.all()
-    extra_context = {'total_books': len(all_books), 'q': q,
-                     'list_by': 'by-title'}
-    return object_list(
-        request,
-        queryset = queryset,
-        paginate_by = settings.ITEMS_PER_PAGE,
-        template_object_name = 'book',
-        extra_context = extra_context,
-    )
+    return _book_list(request, queryset, list_by='by_title')
 
 def by_author(request):
     queryset = Book.objects.all().order_by('a_author')
-    q = request.GET.get('q')
-    if q is not None:
-        queryset = search_books(queryset, q)
-    
-    all_books = Book.objects.all()
-    extra_context = {'total_books': len(all_books), 'q': q,
-                     'list_by': 'by-author'}
-    return object_list(
-        request,
-        queryset = queryset,
-        paginate_by = settings.ITEMS_PER_PAGE,
-        template_object_name = 'book',
-        extra_context = extra_context,
-    )
+    return _book_list(request, queryset, list_by='by_author')
 
 def book_detail(request, book_id):
     return object_detail(
