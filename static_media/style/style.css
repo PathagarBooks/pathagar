@@ -88,6 +88,9 @@ div.hidden_body {
 }
 
 .bookname a {
+    padding: 0.2em 0.4em;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
     font-weight:normal;
     color:gray;
     line-height:1;
@@ -96,7 +99,28 @@ div.hidden_body {
     font-family: serif;
 }
 
+
+
 .bookname a:hover {
     color: white;
     background: gray;
+}
+
+.button {
+    padding: 0.2em 0.4em;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    font-weight:normal;
+    line-height:1;
+    text-decoration: none;
+    font-family: serif;
+    color: white;
+    background: gray;
+}
+
+
+
+.button:hover {
+    color: white;
+    background: #555;
 }
