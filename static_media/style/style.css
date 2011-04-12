@@ -36,15 +36,15 @@ a[href$=".epub"]   {
     size: 120%;
     font-weight: bold;
     position: relative;
-    top: 18px;
+    top: 20px;
     left: 20px;
     display: inline;
 }
 
 .header .navbar {
     position: absolute;
-    right: 295px;
-    top: 32px;
+    right: 35px;
+    top: 25px;
 }
 
 .header .navbar li {
@@ -68,12 +68,6 @@ a[href$=".epub"]   {
 .header .navbar a:hover {
     color: gray;
     background: white;
-}
-
-.header .searchbox {
-    position: absolute;
-    right: 15px;
-    top: 25px;
 }
 
 .header .loginbox {
@@ -102,11 +96,14 @@ a[href$=".epub"]   {
 }
 
 .searchbox #search {
+    padding: 0.2em 0.4em;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
     color: gray;
 }
 
 .searchbox #submit {
-    visibility: hidden;
+    display: none;
 }
 
 p.hidden_head {

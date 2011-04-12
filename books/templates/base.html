@@ -27,14 +27,18 @@ $(document).ready(function() {
 </script>
 <div class="header">
 <a href="{% url pathagar.books.views.book_list %}"><h1><em>Pathagar</em> Book Server</h1></a>
+<form action="{% url pathagar.books.views.book_list %}" method="get">
 <ul class="navbar">
   <li><a data-name="latest" href="{% url pathagar.books.views.book_list %}">Latest</a></li>
   <li><a data-name="by-title" href="{% url pathagar.books.views.by_title %}">By Title</a></li>
   <li><a data-name="by-author" href="{% url pathagar.books.views.by_author %}">By Author</a></li>
+  <li class="searchbox">
+<input id="search" type="text" name="q" />
+<input id="submit" type="submit" value="Submit" />
+  </li>
 </ul>
-<div class="searchbox">
-    {% block searchform %}{% endblock %}
-</div>
+</form>
+
 <div class="loginbox">
 {% if user.is_authenticated %}
 <span>Welcome, {{ user.username }}&nbsp;&nbsp;</span>

@@ -14,13 +14,6 @@
   {% endif %}
 {% endblock %}
 
-{%block searchform %}
-<form action="{% url pathagar.books.views.book_list %}" method="get">
-<input id="search" type="text" name="q" />
-<input id="submit" type="submit" value="Submit" />
-</form>
-{% endblock %}
-
 {% block content %}
 
 <div class="span-17 colborder" id="content">
