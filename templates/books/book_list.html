@@ -28,7 +28,7 @@ $(document).ready(function()
 {% endif %}
 </div>
 <div class="prepend-3">
-<h1 class="bookname"><a href="view/book/{{ book.pk }}">{{ book.a_title }}</a></h1>
+<h1 class="bookname"><a href="{% url pathagar.books.views.book_detail book.pk %}">{{ book.a_title }}</a></h1>
 <h2>by <span class="alt">{{ book.a_author }}</span></h2>
 <p>{{ book.a_summary }}</p>
 </div>

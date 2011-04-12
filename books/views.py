@@ -71,7 +71,6 @@ def remove_book(request, book_id):
         post_delete_redirect = '/',
     )
 
-
 def book_list(request):
     q = request.GET.get('q')
     if q is not None:
@@ -81,6 +80,30 @@ def book_list(request):
     
     all_books = Book.objects.all()
     extra_context = {'total_books': len(all_books), 'q': q}
+    return object_list(
+        request,
+        queryset = queryset,
+        paginate_by = settings.ITEMS_PER_PAGE,
+        template_object_name = 'book',
+        extra_context = extra_context,
+    )
+
+def by_title(request):
+    queryset = Book.objects.all().order_by('a_title')
+    all_books = Book.objects.all()
+    extra_context = {'total_books': len(all_books)}
+    return object_list(
+        request,
+        queryset = queryset,
+        paginate_by = settings.ITEMS_PER_PAGE,
+        template_object_name = 'book',
+        extra_context = extra_context,
+    )
+
+def by_author(request):
+    queryset = Book.objects.all().order_by('a_author')
+    all_books = Book.objects.all()
+    extra_context = {'total_books': len(all_books)}
     return object_list(
         request,
         queryset = queryset,

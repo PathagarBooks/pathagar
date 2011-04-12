@@ -10,8 +10,8 @@ urlpatterns = patterns('',
     
     # Index page:
     (r'^$', 'pathagar.books.views.book_list'),
-    # (r'^by_tittle/$', 'pathagar.books.views.by_title'),
-    # (r'^by_author/$', 'pathagar.books.views.by_author'),
+    (r'^by-title/$', 'pathagar.books.views.by_title'),
+    (r'^by-author/$', 'pathagar.books.views.by_author'),
     
     # Add, view, edit and remove books:
     (r'^add/book/?$', 'pathagar.books.views.add_book'),
