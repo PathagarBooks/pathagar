@@ -28,6 +28,9 @@ from django.views.generic.create_update import create_object, update_object, \
 
 from django.conf import settings
 
+from tagging.utils import get_tag
+from tagging.models import TaggedItem
+
 from catalog import get_catalog, simple_search, advanced_search
 from forms import BookForm, AddLanguageForm
 from langlist import langs as LANG_CHOICES
@@ -106,6 +109,15 @@ def by_title(request):
 def by_author(request):
     queryset = Book.objects.all().order_by('a_author')
     return _book_list(request, queryset, list_by='by-author')
+
+def book_list_tag(request, tag):
+    tag_instance = get_tag(tag)
+    if tag_instance is None:
+        raise Http404()
+    queryset = Book.objects.all()
+    queryset = TaggedItem.objects.get_by_model(queryset, tag_instance)
+    # TODO pass tag_instance as extra context
+    return _book_list(request, queryset, list_by='latest')
 
 def book_detail(request, book_id):
     return object_detail(

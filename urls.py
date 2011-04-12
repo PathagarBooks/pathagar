@@ -12,7 +12,8 @@ urlpatterns = patterns('',
     (r'^$', 'pathagar.books.views.book_list'),
     (r'^by-title/$', 'pathagar.books.views.by_title'),
     (r'^by-author/$', 'pathagar.books.views.by_author'),
-    
+    (r'^tags/(?P<tag>[-\w]+)/$', 'pathagar.books.views.book_list_tag'),
+        
     # Add, view, edit and remove books:
     (r'^add/book/?$', 'pathagar.books.views.add_book'),
     (r'^view/book/(?P<book_id>\d+)/$', 'pathagar.books.views.book_detail'),
