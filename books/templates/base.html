@@ -22,6 +22,12 @@
 <body>
 <script type="text/javascript">
 $(document).ready(function() {
+$('.searchbox').hover(
+// handle in:
+function() { $('.search-ops').show(); },
+// handle out:
+function() { $('.search-ops').hide(); }
+);
 {% block script %}{% endblock %}
 });
 </script>
@@ -45,8 +51,22 @@ method="get">
   <li><a data-name="by-title" href="{% url pathagar.books.views.by_title %}">By Title</a></li>
   <li><a data-name="by-author" href="{% url pathagar.books.views.by_author %}">By Author</a></li>
   <li class="searchbox">
-<input id="search" type="text" name="q" />
-<input id="submit" type="submit" value="Submit" />
+    <input id="search" type="text" name="q" />
+    <input id="submit" type="submit" value="Submit" />
+    <ul class="search-ops">
+      <li>
+	<input id="cbx-all" type="checkbox" />
+	<label for="cbx-all">Search All</label>
+      </li>
+      <li>
+	<input id="cbx-title" type="checkbox" />
+	<label for="cbx-title">Search Title</label>
+      </li>
+      <li>
+	<input id="cbx-author" type="checkbox" />
+	<label for="cbx-author">Search Author</label>
+      </li>
+    </ul>
   </li>
 </ul>
 </form>
