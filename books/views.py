@@ -100,11 +100,14 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
         page_obj = paginator.page(paginator.num_pages)
     
     # Build the query string:
-    qstring = '&'.join(('?%s=%s' % (k, v) for k, v in request.GET.items()))
+    if len(request.GET) > 0:
+        qstring = '?'+'&'.join(('%s=%s' % (k, v) for k, v in request.GET.items()))
+    else:
+        qstring = ''
     
     # Return OPDS Atom Feed:
     if qtype == 'feed':
-        catalog = generate_catalog(page_obj, q)
+        catalog = generate_catalog(page_obj, qstring, q)
         return HttpResponse(catalog, mimetype='application/atom+xml')
     
     # Return HTML page:

@@ -27,7 +27,7 @@ def __get_mimetype(item):
     else:
         return 'Unknown'
 
-def generate_catalog(books, q=None):
+def generate_catalog(page_obj, qstring, q=None):
     attrs = {}
     attrs[u'xmlns:dcterms'] = u'http://purl.org/dc/terms/'
     attrs[u'xmlns:opds'] = u'http://opds-spec.org/'
@@ -36,33 +36,20 @@ def generate_catalog(books, q=None):
 
     links = []
 
-    if books.has_previous():
-        if q:
-            links.append({'title':'Previous results', 'type':'application/atom+xml', \
-            'rel':'previous','href':'?page=' + str(books.previous_page_number()) + '&q=' + q })
-        else:
-            links.append({'title':'Previous results', 'type':'application/atom+xml', \
-            'rel':'previous','href':'?page=' + str(books.previous_page_number())})
+    if page_obj.has_previous():
+        links.append({'title': 'Previous results', 'type': 'application/atom+xml',
+                      'rel': 'previous','href': qstring})
 
-
-    if books.has_next():
-        if q:
-            links.append({'title':'Next results', 'type':'application/atom+xml', \
-            'rel':'next','href':'?page=' + str(books.next_page_number()) + '&q=' + q })
-        else:
-            links.append({'title':'Next results', 'type':'application/atom+xml', \
-            'rel':'next','href':'?page=' + str(books.next_page_number())})
-
-
-
-
+    if page_obj.has_next():
+        links.append({'title': 'Next results', 'type': 'application/atom+xml',
+                      'rel': 'next', 'href': qstring})
+    
     feed = AtomFeed(title = 'Pathagar Bookserver OPDS feed', \
         atom_id = 'pathagar:full-catalog', subtitle = \
         'OPDS catalog for the Pathagar book server', \
         extra_attrs = attrs, hide_generator=True, links=links)
 
-
-    for book in books.object_list:
+    for book in page_obj.object_list:
         if book.cover_img:
             linklist = [{'rel': \
                     'http://opds-spec.org/acquisition', 'href': \
