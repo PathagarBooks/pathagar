@@ -27,22 +27,44 @@ def __get_mimetype(item):
     else:
         return 'Unknown'
 
-def generate_catalog(page_obj, qstring, q=None):
+def page_qstring(request, page_number=None):
+    """
+    Return the query string for the URL.
+    
+    If page_number is given, modify the query for that page.
+    """
+    qdict = dict(request.GET.items())
+    if page_number is not None:
+        qdict['page'] = str(page_number)
+    
+    if len(qdict) > 0:
+        qstring = '?'+'&'.join(('%s=%s' % (k, v) for k, v in qdict.items()))
+    else:
+        qstring = ''
+    
+    return qstring
+    
+
+def generate_catalog(request, page_obj):
     attrs = {}
     attrs[u'xmlns:dcterms'] = u'http://purl.org/dc/terms/'
     attrs[u'xmlns:opds'] = u'http://opds-spec.org/'
     attrs[u'xmlns:dc'] = u'http://purl.org/dc/elements/1.1/'
     attrs[u'xmlns:opensearch'] = 'http://a9.com/-/spec/opensearch/1.1/'
-
+    
     links = []
-
+    
     if page_obj.has_previous():
+        previous_page = page_obj.previous_page_number()
         links.append({'title': 'Previous results', 'type': 'application/atom+xml',
-                      'rel': 'previous','href': qstring})
-
+                      'rel': 'previous',
+                      'href': page_qstring(request, previous_page)})
+    
     if page_obj.has_next():
+        next_page = page_obj.next_page_number()
         links.append({'title': 'Next results', 'type': 'application/atom+xml',
-                      'rel': 'next', 'href': qstring})
+                      'rel': 'next',
+                      'href': page_qstring(request, next_page)})
     
     feed = AtomFeed(title = 'Pathagar Bookserver OPDS feed', \
         atom_id = 'pathagar:full-catalog', subtitle = \

@@ -37,7 +37,7 @@ from forms import BookForm, AddLanguageForm
 from langlist import langs as LANG_CHOICES
 from models import *
 from popuphandler import handlePopAdd
-from opds import generate_catalog
+from opds import page_qstring, generate_catalog
 
 @login_required
 def add_language(request):
@@ -79,9 +79,13 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     search_title = request.GET.get('search-title') == 'on'
     search_author = request.GET.get('search-author') == 'on'
     
+    # If no search options are specified, assumes search all, the
+    # advanced search will be used:
     if not search_all and not search_title and not search_author:
         search_all = True
     
+    # If search queried, modify the queryset with the result of the
+    # search:
     if q is not None:
         if search_all:
             queryset = advanced_search(queryset, q)
@@ -100,14 +104,11 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
         page_obj = paginator.page(paginator.num_pages)
     
     # Build the query string:
-    if len(request.GET) > 0:
-        qstring = '?'+'&'.join(('%s=%s' % (k, v) for k, v in request.GET.items()))
-    else:
-        qstring = ''
+    qstring = page_qstring(request)
     
     # Return OPDS Atom Feed:
     if qtype == 'feed':
-        catalog = generate_catalog(page_obj, qstring, q)
+        catalog = generate_catalog(request, page_obj)
         return HttpResponse(catalog, mimetype='application/atom+xml')
     
     # Return HTML page:
