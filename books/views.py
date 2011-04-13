@@ -78,6 +78,10 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     search_all = request.GET.get('search-all') == 'on'
     search_title = request.GET.get('search-title') == 'on'
     search_author = request.GET.get('search-author') == 'on'
+    
+    if not search_all and not search_title and not search_author:
+        search_all = True
+    
     if q is not None:
         if search_all:
             queryset = advanced_search(queryset, q)
