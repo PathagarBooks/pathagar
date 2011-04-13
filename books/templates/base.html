@@ -87,6 +87,7 @@ method="get">
 <div class="loginbox">
 {% if user.is_authenticated %}
 <span>Welcome, {{ user.username }}&nbsp;&nbsp;</span>
+<a href="{% url pathagar.books.views.add_book %}">Add Book</a>&nbsp;&nbsp;
 <a href="{% url django.contrib.auth.views.logout %}?next=/">Log Out</a>
 {% else %}
 <a href="{% url django.contrib.auth.views.login %}?next=/">Log In</a>
@@ -102,13 +103,7 @@ method="get">
     {% block footer %}{% endblock %}
     <div class="span-12 prepend-6 footer">
         <small>
-        This is the <em>Pathagar</em> book server. A list of books in the server can be found <a href="{% url pathagar.books.views.latest %}">here</a>.
-{% if user.is_authenticated %}
-        <br>
-        Books can be added to this server via this <a href="{% url pathagar.books.views.add_book %}">page</a>.
-{% endif %}
-        <br>
-        An <acronym title="Open Publication Distribution System">OPDS</acronym> feed is also <a href="{% url latest_feed %}">available</a>.
+        This is the <em>Pathagar</em> book server..
         </small>
     </div>
 <div>
