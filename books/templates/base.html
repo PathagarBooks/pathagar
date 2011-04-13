@@ -59,13 +59,7 @@ method="get">
   <li><a data-name="latest" href="{% url latest %}">Latest</a></li>
   <li><a data-name="by-title" href="{% url by_title %}">By Title</a></li>
   <li><a data-name="by-author" href="{% url by_author %}">By Author</a></li>
-  <li><a data-name="by-tag"
-        {% if tag %}
-            href="{% url by_tag tag.name %}"
-        {% else %}
-            href="#"
-        {% endif %}
-      >By Tag</a></li>
+  <li><a data-name="by-tag" href="#">Tags</a></li>
   <li class="searchbox">
     <input id="search" type="text" name="q" />
     <input id="submit" type="submit" value="Submit" />
@@ -87,26 +81,6 @@ method="get">
       </li>
     </ul>
   </li>
-  <li><a
-{% if list_by %}
-    {% if list_by == 'latest' %}
-    href="{% url latest_feed %}{{ qstring }}"
-    {% endif %}
-    {% if list_by == 'by-title' %}
-    href="{% url by_title_feed %}{{ qstring }}"
-    {% endif %}
-    {% if list_by == 'by-author' %}
-    href="{% url by_author_feed %}{{ qstring }}"
-    {% endif %}
-    {% if list_by == 'by-tag' %}
-        {% if tag %}
-	    href="{% url by_tag_feed tag.name %}{{ qstring }}"
-        {% else %}
-	    href="#"
-        {% endif %}
-    {% endif %}
-{% endif %}
->Subscribe to Feed</a></li>
 </ul>
 </form>
 
@@ -118,7 +92,11 @@ method="get">
 <a href="{% url django.contrib.auth.views.login %}?next=/">Log In</a>
 {% endif %}
 </div> 
-</div>
+
+{% block feed_link %}{% endblock %}
+
+</div> <!-- header -->
+
 <div class="container">
     {% block content %}{% endblock %}
     {% block footer %}{% endblock %}

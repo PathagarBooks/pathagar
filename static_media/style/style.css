@@ -36,9 +36,46 @@ a[href$=".epub"]   {
     font-size: 200%;
     font-weight: bold;
     position: relative;
-    top: 20px;
+    top: 15px;
     left: 20px;
     display: inline;
+}
+
+.header .feed-link {
+    position: absolute;
+    top: 45px;
+    left: 20px;
+    font-size: 130%;
+    padding: 0.2em 0.4em;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.header .feed-link:hover {
+    color: gray;
+    background: white;
+}
+
+.header .feed-link {
+    position: absolute;
+    top: 45px;
+    left: 20px;
+    font-size: 130%;
+    padding: 2px 4px 2px 30px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.header .feed-link img {
+    position: absolute;
+    top: 4px;
+    left: 4px;
 }
 
 .header .navbar {
@@ -53,7 +90,7 @@ a[href$=".epub"]   {
 
 .header .navbar a {
     font-size: 130%;
-    padding: 0.2em 0.4em;
+    padding: 2px 4px;
     -moz-border-radius: 5px;
     border-radius: 5px;
     color: white;
@@ -96,7 +133,7 @@ a[href$=".epub"]   {
 }
 
 .searchbox #search {
-    padding: 0.2em 0.4em;
+    padding: 2px 4px;
     -moz-border-radius: 5px;
     border-radius: 5px;
     color: gray;
@@ -109,11 +146,11 @@ a[href$=".epub"]   {
 .search-ops {
     display: none;
     margin: 0;
-    padding: 1.2em;
+    padding: 12px;
     color: white;
     background-color: gray;
     position: absolute;
-    right: 185px;
+    right: 0;
     top: 35px;
     width: 150px;
     -moz-border-radius-bottomright: 10px;
@@ -131,7 +168,6 @@ a[href$=".epub"]   {
 }
 
 p.hidden_head {
-    /* padding: 5px 10px; */
     cursor: pointer;
     position: relative;
     background-color:#A9A4A4;
@@ -145,7 +181,7 @@ div.hidden_body {
 .bookname a {
     display: inline-block;
     margin-left: -0.4em; 
-    padding: 0.2em 0.4em;
+    padding: 5px 10px;
     -moz-border-radius: 10px;
     border-radius: 10px;
     font-weight:normal;
@@ -164,7 +200,7 @@ div.hidden_body {
 }
 
 .button {
-    padding: 0.2em 0.4em;
+    padding: 2px 4px;
     -moz-border-radius: 5px;
     border-radius: 5px;
     font-weight:normal;
