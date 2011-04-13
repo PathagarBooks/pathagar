@@ -25,7 +25,6 @@ class BookForm(ModelForm):
 
     class Meta:
         model = Book
-        exclude = ('a_updated',)
 
 class AddLanguageForm(ModelForm):
     class Meta:
