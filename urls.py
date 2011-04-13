@@ -12,8 +12,7 @@ urlpatterns = patterns('',
     (r'^$', 'pathagar.books.views.latest', {}, 'latest'),
     (r'^by-title/$', 'pathagar.books.views.by_title', {}, 'by_title'),
     (r'^by-author/$', 'pathagar.books.views.by_author', {}, 'by_author'),
-    (r'^tags/(?P<tag>[-\w]+)/$', 'pathagar.books.views.book_list_tag',
-     {}, 'book_list_tag'),
+    (r'^tags/(?P<tag>[-\w]+)/$', 'pathagar.books.views.by_tag', {}, 'by_tag'),
     
     # Book list Atom:
     (r'^feed.atom', 'pathagar.books.views.latest',
@@ -22,8 +21,8 @@ urlpatterns = patterns('',
      {'qtype': u'feed'}, 'by_title_feed'),
     (r'^by-author.atom$', 'pathagar.books.views.by_author',
      {'qtype': u'feed'}, 'by_author_feed'),
-    (r'^tags/(?P<tag>[-\w]+).atom$', 'pathagar.books.views.book_list_tag',
-     {'qtype': u'feed'}, 'book_list_tag_feed'),
+    (r'^tags/(?P<tag>[-\w]+).atom$', 'pathagar.books.views.by_tag',
+     {'qtype': u'feed'}, 'by_tag_feed'),
         
     # Add, view, edit and remove books:
     (r'^add/book/?$', 'pathagar.books.views.add_book'),

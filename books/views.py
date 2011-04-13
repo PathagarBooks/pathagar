@@ -73,7 +73,7 @@ def remove_book(request, book_id):
         post_delete_redirect = '/',
     )
 
-def _book_list(request, queryset, qtype=None, list_by='latest'):
+def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     q = request.GET.get('q')
     search_all = request.GET.get('search-all') == 'on'
     search_title = request.GET.get('search-title') == 'on'
@@ -100,14 +100,16 @@ def _book_list(request, queryset, qtype=None, list_by='latest'):
         catalog = generate_catalog(page_obj, q)
         return HttpResponse(catalog, mimetype='application/atom+xml')
     
-    extra_context = {
+    # Return HTML page:
+    extra_context = dict(kwargs)
+    extra_context.update({
         'book_list': page_obj.object_list,
         'total_books': len(all_books), 'q': q,
         'paginator': paginator,
         'page_obj': page_obj,
         'search_all': search_all, 'search_title': search_title,
         'search_author': search_author, 'list_by': list_by,
-    }
+    })
     return render_to_response(
         'books/book_list.html',
         extra_context,
@@ -126,14 +128,14 @@ def by_author(request, qtype=None):
     queryset = Book.objects.all().order_by('a_author')
     return _book_list(request, queryset, qtype, list_by='by-author')
 
-def book_list_tag(request, tag, qtype=None):
+def by_tag(request, tag, qtype=None):
     tag_instance = get_tag(tag)
     if tag_instance is None:
         raise Http404()
     queryset = Book.objects.all()
     queryset = TaggedItem.objects.get_by_model(queryset, tag_instance)
-    # TODO pass tag_instance as extra context
-    return _book_list(request, queryset, qtype, list_by='latest')
+    return _book_list(request, queryset, qtype, list_by='by-tag',
+                      tag=tag_instance)
 
 def book_detail(request, book_id):
     return object_detail(

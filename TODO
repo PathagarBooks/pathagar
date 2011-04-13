@@ -1,10 +1,9 @@
 TODO
 ----
 
-* since tags added, edit is broken in site (not in admin)
 * add get items to feed url
-* "subscribe to feed" link for tags
+* tag cloud page
+* "by tag" menu item links to tag cloud page when no tag
+* since tags added, edit is broken in site (not in admin)
 * "subscribe to feed" link for search
 * remove "subscribe to feed" in book detail
-
-

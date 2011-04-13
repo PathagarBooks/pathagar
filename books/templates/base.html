@@ -38,14 +38,20 @@ $(".navbar a[data-name='{{ list_by }}']").addClass("active");
 <a href="{% url latest %}"><h1><em>Pathagar</em> Book Server</h1></a>
 <form
 {% if list_by %}
+    {% if list_by == 'latest' %}
+    action="{% url latest %}"
+    {% endif %}
     {% if list_by == 'by-title' %}
     action="{% url by_title %}"
     {% endif %}
     {% if list_by == 'by-author' %}
     action="{% url by_author %}"
     {% endif %}
-{% else %}
-    action="{% url latest %}"
+    {% if list_by == 'by-tag' %}
+        {% if tag %}
+            action="{% url by_tag tag.name %}"
+        {% endif %}
+    {% endif %}
 {% endif %}
 method="get">
 
@@ -53,6 +59,13 @@ method="get">
   <li><a data-name="latest" href="{% url latest %}">Latest</a></li>
   <li><a data-name="by-title" href="{% url by_title %}">By Title</a></li>
   <li><a data-name="by-author" href="{% url by_author %}">By Author</a></li>
+  <li><a data-name="by-tag"
+        {% if tag %}
+            href="{% url by_tag tag.name %}"
+        {% else %}
+            href="#"
+        {% endif %}
+      >By Tag</a></li>
   <li class="searchbox">
     <input id="search" type="text" name="q" />
     <input id="submit" type="submit" value="Submit" />
@@ -76,14 +89,22 @@ method="get">
   </li>
   <li><a
 {% if list_by %}
+    {% if list_by == 'latest' %}
+    href="{% url latest_feed %}"
+    {% endif %}
     {% if list_by == 'by-title' %}
     href="{% url by_title_feed %}"
     {% endif %}
     {% if list_by == 'by-author' %}
     href="{% url by_author_feed %}"
     {% endif %}
-{% else %}
-    href="{% url latest_feed %}"
+    {% if list_by == 'by-tag' %}
+        {% if tag %}
+	    href="{% url by_tag_feed tag.name %}"
+        {% else %}
+	    href="#"
+        {% endif %}
+    {% endif %}
 {% endif %}
 >Subscribe to Feed</a></li>
 </ul>
