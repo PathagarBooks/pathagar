@@ -16,12 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from django.db.models import Q
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
-
 from models import Book
-from opds import generate_catalog
-
-from django.conf import settings
 
 
 def simple_search(queryset, searchterms,
@@ -77,26 +72,3 @@ def advanced_search(queryset, searchterms):
     for q_object in q_objects:
         results = results.filter(q_object)
     return results
-
-def get_catalog(request, qtype='feed'):
-    results = Book.objects.all()
-    q = request.GET.get('q')
-    if q is not None:
-        results = advanced_search(results, q)
-    
-    paginator = Paginator(results, settings.ITEMS_PER_PAGE)
-    try:
-        page = int(request.GET.get('page', '1'))
-    except ValueError:
-        page = 1
-    
-    try:
-        books = paginator.page(page)
-    except (EmptyPage, InvalidPage):
-        books = paginator.page(paginator.num_pages)
-    
-    if qtype == 'feed':
-        return generate_catalog(books, q)
-    
-    return (books, q)
-

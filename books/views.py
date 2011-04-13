@@ -32,7 +32,7 @@ from django.conf import settings
 from tagging.utils import get_tag
 from tagging.models import TaggedItem
 
-from catalog import get_catalog, simple_search, advanced_search
+from search import simple_search, advanced_search
 from forms import BookForm, AddLanguageForm
 from langlist import langs as LANG_CHOICES
 from models import *
