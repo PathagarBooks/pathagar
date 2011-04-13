@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load tagging_tags %}
+
+{% block title %}{{ book.a_title }} :: Pathagar Book Server{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  $('#search').example('Book Search...');
+{% endblock %}
+
+{% block content %}
+
+<div id="content">
+
+<h1 class="alt">Tags</h1>
+<hr class="space">
+
+{% tags_for_model books.Book as tag_list %}
+{% if tag_list %}
+<div class="span-2"><label>Tags:</label></div>
+<div class="span-10">
+{% for tag in tag_list %}
+<a class="button" href="{% url by_tag tag.name %}">{{ tag.name }}</a>
+{% endfor %}
+</div>
+<hr class="space">
+{% endif %}
+{%  endblock %}
+
