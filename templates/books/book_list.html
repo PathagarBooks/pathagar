@@ -77,16 +77,22 @@
         <ul>
             <li>Number of ebooks in this server: <em>{{ total_books }}</em></li>
         </ul>
-            {% ifnotequal paginator.count total_books %}
-            <hr>
-            <ul>
+        <hr>
+        {% if tag %}
+        <ul>
+            <li>Showing books with tag <em>{{ tag.name }}</em></li>  
+        </ul>
+        <hr>
+        {% endif %}
+        {% ifnotequal paginator.count total_books %}
+        <ul>
             <li>Number of ebooks in search result: <em>{{ paginator.count }}</em></li>
             <li>Showing matches <em>{{ page_obj.start_index }}</em> to <em>{{ page_obj.end_index }}</em></li>
-            {% else %}
-            <ul>
+        {% else %}
+        <ul>
             <li>Showing entire collection.</li>
-            {% endifnotequal %}
-            </ul>
+        {% endifnotequal %}
+        </ul>
         </div>
         </div>
 </div>

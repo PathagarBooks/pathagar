@@ -73,6 +73,13 @@ def remove_book(request, book_id):
         post_delete_redirect = '/',
     )
 
+def tags(request):
+    return render_to_response(
+        'books/tag_list.html',
+        {'list_by': 'by-tag'},
+        context_instance = RequestContext(request),
+    )
+
 def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     q = request.GET.get('q')
     search_all = request.GET.get('search-all') == 'on'

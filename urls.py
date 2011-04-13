@@ -24,17 +24,19 @@ urlpatterns = patterns('',
     (r'^tags/(?P<tag>[-\w]+).atom$', 'pathagar.books.views.by_tag',
      {'qtype': u'feed'}, 'by_tag_feed'),
         
+    # Tag list:
+    (r'^tags/', 'pathagar.books.views.tags', {}, 'tags'),
+    
     # Add, view, edit and remove books:
     (r'^add/book/?$', 'pathagar.books.views.add_book'),
     (r'^view/book/(?P<book_id>\d+)/$', 'pathagar.books.views.book_detail'),
     (r'^edit/book/(?P<book_id>\d+)/?$', 'pathagar.books.views.edit_book'),
     (r'^remove/book/(?P<book_id>\d+)/?$', 'pathagar.books.views.remove_book'),
     
-    
     # Add language:
     (r'^add/dc_language|language/?$', 'pathagar.books.views.add_language'),
     
-    # Auth:
+    # Auth login and logout:
     (r'^accounts/login/$', 'django.contrib.auth.views.login'),
     (r'^accounts/logout/$', 'django.contrib.auth.views.logout'),
     

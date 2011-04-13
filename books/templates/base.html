@@ -59,7 +59,7 @@ method="get">
   <li><a data-name="latest" href="{% url latest %}">Latest</a></li>
   <li><a data-name="by-title" href="{% url by_title %}">By Title</a></li>
   <li><a data-name="by-author" href="{% url by_author %}">By Author</a></li>
-  <li><a data-name="by-tag" href="#">Tags</a></li>
+  <li><a data-name="by-tag" href="{% url tags %}">Tags</a></li>
   <li class="searchbox">
     <input id="search" type="text" name="q" />
     <input id="submit" type="submit" value="Submit" />
