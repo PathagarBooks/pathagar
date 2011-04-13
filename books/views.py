@@ -99,6 +99,9 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     except (EmptyPage, InvalidPage):
         page_obj = paginator.page(paginator.num_pages)
     
+    # Build the query string:
+    qstring = '&'.join(('?%s=%s' % (k, v) for k, v in request.GET.items()))
+    
     # Return OPDS Atom Feed:
     if qtype == 'feed':
         catalog = generate_catalog(page_obj, q)
@@ -111,8 +114,9 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
         'total_books': len(all_books), 'q': q,
         'paginator': paginator,
         'page_obj': page_obj,
-        'search_all': search_all, 'search_title': search_title,
+        'search_title': search_title,
         'search_author': search_author, 'list_by': list_by,
+        'qstring': qstring,
     })
     return render_to_response(
         'books/book_list.html',

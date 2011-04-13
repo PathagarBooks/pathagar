@@ -90,17 +90,17 @@ method="get">
   <li><a
 {% if list_by %}
     {% if list_by == 'latest' %}
-    href="{% url latest_feed %}"
+    href="{% url latest_feed %}{{ qstring }}"
     {% endif %}
     {% if list_by == 'by-title' %}
-    href="{% url by_title_feed %}"
+    href="{% url by_title_feed %}{{ qstring }}"
     {% endif %}
     {% if list_by == 'by-author' %}
-    href="{% url by_author_feed %}"
+    href="{% url by_author_feed %}{{ qstring }}"
     {% endif %}
     {% if list_by == 'by-tag' %}
         {% if tag %}
-	    href="{% url by_tag_feed tag.name %}"
+	    href="{% url by_tag_feed tag.name %}{{ qstring }}"
         {% else %}
 	    href="#"
         {% endif %}
