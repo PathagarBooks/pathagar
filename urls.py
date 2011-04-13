@@ -8,11 +8,17 @@ import settings
 
 urlpatterns = patterns('',
     
-    # Index page:
-    (r'^$', 'pathagar.books.views.book_list'),
+    # Book list:
+    (r'^$', 'pathagar.books.views.latest'),
     (r'^by-title/$', 'pathagar.books.views.by_title'),
     (r'^by-author/$', 'pathagar.books.views.by_author'),
     (r'^tags/(?P<tag>[-\w]+)/$', 'pathagar.books.views.book_list_tag'),
+
+    # Book list Atom:
+    (r'^feed.atom', 'pathagar.books.views.latest_atom'),
+    # (r'^by-title/feed.atom$', 'pathagar.books.views.by_title_atom'),
+    # (r'^by-author/feed.atom$', 'pathagar.books.views.by_author_atom'),
+    # (r'^tags/(?P<tag>[-\w]+)/feed.atom$', 'pathagar.books.views.book_list_tag_atom'),
         
     # Add, view, edit and remove books:
     (r'^add/book/?$', 'pathagar.books.views.add_book'),
@@ -20,8 +26,6 @@ urlpatterns = patterns('',
     (r'^edit/book/(?P<book_id>\d+)/?$', 'pathagar.books.views.edit_book'),
     (r'^remove/book/(?P<book_id>\d+)/?$', 'pathagar.books.views.remove_book'),
     
-    # Atom books catalogs:
-    (r'^catalogs/', 'pathagar.books.views.catalogs'),
     
     # Add language:
     (r'^add/dc_language|language/?$', 'pathagar.books.views.add_language'),

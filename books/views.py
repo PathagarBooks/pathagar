@@ -25,6 +25,7 @@ from django.views.generic.simple import redirect_to
 from django.views.generic.list_detail import object_list, object_detail
 from django.views.generic.create_update import create_object, update_object, \
   delete_object
+from django.template import RequestContext
 
 from django.conf import settings
 
@@ -36,9 +37,6 @@ from forms import BookForm, AddLanguageForm
 from langlist import langs as LANG_CHOICES
 from models import *
 from popuphandler import handlePopAdd
-
-def catalogs(request):
-    return HttpResponse(get_catalog(request), mimetype='application/atom+xml')
 
 @login_required
 def add_language(request):
@@ -87,20 +85,35 @@ def _book_list(request, queryset, list_by='latest'):
                                      search_title, search_author)
     
     all_books = Book.objects.all()
-    extra_context = {'total_books': len(all_books), 'q': q,
-                     'search_all': search_all, 'search_title': search_title,
-                     'search_author': search_author, 'list_by': list_by}
-    return object_list(
-        request,
-        queryset = queryset,
-        paginate_by = settings.ITEMS_PER_PAGE,
-        template_object_name = 'book',
-        extra_context = extra_context,
+    
+    paginator = Paginator(queryset, settings.ITEMS_PER_PAGE)
+    page = int(request.GET.get('page', '1'))
+    
+    try:
+        page_obj = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        page_obj = paginator.page(paginator.num_pages)
+    
+    extra_context = {
+        'book_list': page_obj.object_list,
+        'total_books': len(all_books), 'q': q,
+        'paginator': paginator,
+        'page_obj': page_obj,
+        'search_all': search_all, 'search_title': search_title,
+        'search_author': search_author, 'list_by': list_by,
+    }
+    return render_to_response(
+        'books/book_list.html',
+        extra_context,
+        context_instance = RequestContext(request),
     )
 
-def book_list(request):
+def latest(request):
     queryset = Book.objects.all()
     return _book_list(request, queryset, list_by='latest')
+
+def latest_atom(request):
+    return HttpResponse(get_catalog(request), mimetype='application/atom+xml')
 
 def by_title(request):
     queryset = Book.objects.all().order_by('a_title')

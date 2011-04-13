@@ -74,12 +74,20 @@ def generate_catalog(books, q=None):
            linklist = [{'rel': \
                     'http://opds-spec.org/acquisition', 'href': \
                     book.book_file.url, 'type': __get_mimetype(book)}]
+        
+        add_kwargs = {
+            'content': book.a_summary,
+            'links': linklist,
+            'authors': [{'name' : book.a_author}],
+            'dc_publisher': book.dc_publisher,
+            'dc_issued': book.dc_issued,
+            'dc_identifier': book.dc_identifier,
+        }
+           
+        if book.dc_language is not None:
+            add_kwargs['dc_language'] = book.dc_language.code
 
-        feed.add_item(book.a_id, book.a_title, book.a_updated, \
-            content=book.a_summary, links = linklist, \
-            authors = [{'name' : book.a_author}], \
-            dc_language=book.dc_language.code, dc_publisher=book.dc_publisher, \
-            dc_issued=book.dc_issued, dc_identifier=book.dc_identifier)
+        feed.add_item(book.a_id, book.a_title, book.a_updated, **add_kwargs)
 
     s = StringIO()
     feed.write(s, 'UTF-8')
