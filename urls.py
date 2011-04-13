@@ -9,16 +9,21 @@ import settings
 urlpatterns = patterns('',
     
     # Book list:
-    (r'^$', 'pathagar.books.views.latest'),
-    (r'^by-title/$', 'pathagar.books.views.by_title'),
-    (r'^by-author/$', 'pathagar.books.views.by_author'),
-    (r'^tags/(?P<tag>[-\w]+)/$', 'pathagar.books.views.book_list_tag'),
-
+    (r'^$', 'pathagar.books.views.latest', {}, 'latest'),
+    (r'^by-title/$', 'pathagar.books.views.by_title', {}, 'by_title'),
+    (r'^by-author/$', 'pathagar.books.views.by_author', {}, 'by_author'),
+    (r'^tags/(?P<tag>[-\w]+)/$', 'pathagar.books.views.book_list_tag',
+     {}, 'book_list_tag'),
+    
     # Book list Atom:
-    (r'^feed.atom', 'pathagar.books.views.latest_atom'),
-    # (r'^by-title/feed.atom$', 'pathagar.books.views.by_title_atom'),
-    # (r'^by-author/feed.atom$', 'pathagar.books.views.by_author_atom'),
-    # (r'^tags/(?P<tag>[-\w]+)/feed.atom$', 'pathagar.books.views.book_list_tag_atom'),
+    (r'^feed.atom', 'pathagar.books.views.latest',
+     {'qtype': u'feed'}, 'latest_feed'),
+    (r'^by-title.atom$', 'pathagar.books.views.by_title',
+     {'qtype': u'feed'}, 'by_title_feed'),
+    (r'^by-author.atom$', 'pathagar.books.views.by_author',
+     {'qtype': u'feed'}, 'by_author_feed'),
+    (r'^tags/(?P<tag>[-\w]+).atom$', 'pathagar.books.views.book_list_tag',
+     {'qtype': u'feed'}, 'book_list_tag_feed'),
         
     # Add, view, edit and remove books:
     (r'^add/book/?$', 'pathagar.books.views.add_book'),

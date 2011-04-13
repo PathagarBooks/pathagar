@@ -1,7 +1,10 @@
 TODO
 ----
 
-* review book search, add tests
-* show query instead of "Book Search..." in book search result
+* since tags added, edit is broken in site (not in admin)
+* add get items to feed url
+* "subscribe to feed" link for tags
+* "subscribe to feed" link for search
+* remove "subscribe to feed" in book detail
 
 

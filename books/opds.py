@@ -27,7 +27,6 @@ def __get_mimetype(item):
     else:
         return 'Unknown'
 
-
 def generate_catalog(books, q=None):
     attrs = {}
     attrs[u'xmlns:dcterms'] = u'http://purl.org/dc/terms/'

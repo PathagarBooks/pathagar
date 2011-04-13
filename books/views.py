@@ -37,6 +37,7 @@ from forms import BookForm, AddLanguageForm
 from langlist import langs as LANG_CHOICES
 from models import *
 from popuphandler import handlePopAdd
+from opds import generate_catalog
 
 @login_required
 def add_language(request):
@@ -72,7 +73,7 @@ def remove_book(request, book_id):
         post_delete_redirect = '/',
     )
 
-def _book_list(request, queryset, list_by='latest'):
+def _book_list(request, queryset, qtype=None, list_by='latest'):
     q = request.GET.get('q')
     search_all = request.GET.get('search-all') == 'on'
     search_title = request.GET.get('search-title') == 'on'
@@ -94,6 +95,11 @@ def _book_list(request, queryset, list_by='latest'):
     except (EmptyPage, InvalidPage):
         page_obj = paginator.page(paginator.num_pages)
     
+    # Return OPDS Atom Feed:
+    if qtype == 'feed':
+        catalog = generate_catalog(page_obj, q)
+        return HttpResponse(catalog, mimetype='application/atom+xml')
+    
     extra_context = {
         'book_list': page_obj.object_list,
         'total_books': len(all_books), 'q': q,
@@ -108,29 +114,26 @@ def _book_list(request, queryset, list_by='latest'):
         context_instance = RequestContext(request),
     )
 
-def latest(request):
+def latest(request, qtype=None):
     queryset = Book.objects.all()
-    return _book_list(request, queryset, list_by='latest')
+    return _book_list(request, queryset, qtype, list_by='latest')
 
-def latest_atom(request):
-    return HttpResponse(get_catalog(request), mimetype='application/atom+xml')
-
-def by_title(request):
+def by_title(request, qtype=None):
     queryset = Book.objects.all().order_by('a_title')
-    return _book_list(request, queryset, list_by='by-title')
+    return _book_list(request, queryset, qtype, list_by='by-title')
 
-def by_author(request):
+def by_author(request, qtype=None):
     queryset = Book.objects.all().order_by('a_author')
-    return _book_list(request, queryset, list_by='by-author')
+    return _book_list(request, queryset, qtype, list_by='by-author')
 
-def book_list_tag(request, tag):
+def book_list_tag(request, tag, qtype=None):
     tag_instance = get_tag(tag)
     if tag_instance is None:
         raise Http404()
     queryset = Book.objects.all()
     queryset = TaggedItem.objects.get_by_model(queryset, tag_instance)
     # TODO pass tag_instance as extra context
-    return _book_list(request, queryset, list_by='latest')
+    return _book_list(request, queryset, qtype, list_by='latest')
 
 def book_detail(request, book_id):
     return object_detail(

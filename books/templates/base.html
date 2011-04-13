@@ -35,24 +35,24 @@ $(".navbar a[data-name='{{ list_by }}']").addClass("active");
 });
 </script>
 <div class="header">
-<a href="{% url pathagar.books.views.latest %}"><h1><em>Pathagar</em> Book Server</h1></a>
+<a href="{% url latest %}"><h1><em>Pathagar</em> Book Server</h1></a>
 <form
 {% if list_by %}
     {% if list_by == 'by-title' %}
-    action="{% url pathagar.books.views.by_title %}"
+    action="{% url by_title %}"
     {% endif %}
     {% if list_by == 'by-author' %}
-    action="{% url pathagar.books.views.by_author %}"
+    action="{% url by_author %}"
     {% endif %}
 {% else %}
-    action="{% url pathagar.books.views.latest %}"
+    action="{% url latest %}"
 {% endif %}
 method="get">
 
 <ul class="navbar">
-  <li><a data-name="latest" href="{% url pathagar.books.views.latest %}">Latest</a></li>
-  <li><a data-name="by-title" href="{% url pathagar.books.views.by_title %}">By Title</a></li>
-  <li><a data-name="by-author" href="{% url pathagar.books.views.by_author %}">By Author</a></li>
+  <li><a data-name="latest" href="{% url latest %}">Latest</a></li>
+  <li><a data-name="by-title" href="{% url by_title %}">By Title</a></li>
+  <li><a data-name="by-author" href="{% url by_author %}">By Author</a></li>
   <li class="searchbox">
     <input id="search" type="text" name="q" />
     <input id="submit" type="submit" value="Submit" />
@@ -74,7 +74,18 @@ method="get">
       </li>
     </ul>
   </li>
-  <li><a href="./feed.atom">Subscribe to Feed</a></li>
+  <li><a
+{% if list_by %}
+    {% if list_by == 'by-title' %}
+    href="{% url by_title_feed %}"
+    {% endif %}
+    {% if list_by == 'by-author' %}
+    href="{% url by_author_feed %}"
+    {% endif %}
+{% else %}
+    href="{% url latest_feed %}"
+{% endif %}
+>Subscribe to Feed</a></li>
 </ul>
 </form>
 
@@ -98,7 +109,7 @@ method="get">
         Books can be added to this server via this <a href="{% url pathagar.books.views.add_book %}">page</a>.
 {% endif %}
         <br>
-        An <acronym title="Open Publication Distribution System">OPDS</acronym> feed is also <a href="{% url pathagar.books.views.latest_atom %}">available</a>.
+        An <acronym title="Open Publication Distribution System">OPDS</acronym> feed is also <a href="{% url latest_feed %}">available</a>.
         </small>
     </div>
 <div>
