@@ -1,34 +1,76 @@
 Introduction
 ============
-Pathagar is a simple bookserver serving OPDS feeds.
-One can add books via the admin interface, as well as
-via the command line (using CSV files or a directory
-with EPUB files), through the command
+
+Pathagar is a simple bookserver serving OPDS feeds.  One can add books
+via the admin interface, as well as via the command line (using CSV
+files, JSON files or a directory with EPUB files), through the command
+
   python manage.py addbooks
             OR
   python manage.py addepub
 
 Format of CSV file
 ==================
+
+To add books from a CSV file:
+
+  python manage.py addbooks books.csv
+
 The format of the CSV file is like:
-"Path to ebook file","Title","Author","Description"
-We are working on adding support for more fields in the CSV
-file - feedback on this would be very welcome :-).
+  "Path to ebook file","Title","Author","Description"
+
+If you need to add more fields, please use the JSON file.
+
+Format of JSON file
+==================
+
+To add books from a JSON file:
+  
+  python manage.py addbooks --json books.json
+
+The format of the JSON file is like::
+  [
+    {
+      "book_path": "Path to ebook file",
+      "a_title": "Title",
+      "a_author": "Author",
+      "a_summary": "Description",
+      "tags": "set, of, tags"
+    },
+    ...
+  ]
+
+You can add more fields.  Please refer to the Book model.
+
+Dependencies
+============
+
+* django-tagging
 
 Quickstart
 ==========
-* Install Django (we are primarily using 1.1 to develop Pathagar.
-  YMMV with other versions)
+
+* Install Django, for example using:
+
+    easy_install Django
+
+* Install dependencies,
+
+    easy_install django-tagging
 
 * In the Pathagar folder edit settings.py to suite your needs and
   environment.
 
 * In the Pathagar folder, run
+
     python manage.py syncdb
+
   You will be asked to create an admin user during this stage.
 
 * To run the server, run
+
    python manage.py runserver
+
   This starts a server listening on localhost, port 8000
 
 * With your browser, access http://localhost:8000 and see if the index
@@ -41,4 +83,3 @@ Quickstart
 
 * To run the server in a production environment, look at Django deployment
   docs at : http://docs.djangoproject.com/en/1.1/howto/deployment/
-
