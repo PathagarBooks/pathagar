@@ -43,20 +43,27 @@ class Language(models.Model):
         self.code = code
         super(Language, self).save(*args, **kwargs)
 
+
 class Book(models.Model):
+    """
+    This model stores the book file, and all the metadata that is
+    needed to publish it in a OPDS atom feed.
     
-    book_file = models.FileField(blank=False, upload_to='books')
+    It also stores other information, like tags and downloads, so the
+    book can be listed in OPDS catalogs.
+    
+    """
+    book_file = models.FileField(upload_to='books')
     time_added = models.DateTimeField(auto_now_add=True)
     tags = TagField()
+    downloads = models.IntegerField(default=0)
     a_id = UUIDField('atom:id')
-    a_title = models.CharField('atom:title', max_length=200, blank=False)
-    a_author = models.CharField('atom:author', max_length=200, blank=False)
+    a_title = models.CharField('atom:title', max_length=200)
+    a_author = models.CharField('atom:author', max_length=200)
     a_updated = models.DateTimeField('atom:updated', auto_now=True)
     a_summary = models.TextField('atom:summary', blank=True)
     a_category = models.CharField('atom:category', max_length=200, blank=True)
     a_rights = models.CharField('atom:rights', max_length=200, blank=True)
-    
-    # TODO: if dc_language is None, the /catalogs/ url fails
     dc_language = models.ForeignKey(Language, blank=True, null=True)
     dc_publisher = models.CharField('dc:publisher', max_length=200, blank=True)
     dc_issued = models.CharField('dc:issued', max_length=100, blank=True)

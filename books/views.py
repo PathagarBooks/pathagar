@@ -34,6 +34,7 @@ from django.conf import settings
 
 from tagging.utils import get_tag
 from tagging.models import TaggedItem
+from sendfile import sendfile
 
 from search import simple_search, advanced_search
 from forms import BookForm, AddLanguageForm
@@ -84,11 +85,15 @@ def book_detail(request, book_id):
         template_object_name = 'book',
     )
 
-from sendfile import sendfile
-
 def download_book(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     filename = os.path.join(settings.MEDIA_ROOT, book.book_file.name)
+    
+    # TODO, currently the downloads counter is incremented when the
+    # download is requested, without knowing if the file sending was
+    # successfull:
+    book.downloads += 1
+    book.save()
     return sendfile(request, filename, attachment=True)
 
 def tags(request):
@@ -99,6 +104,11 @@ def tags(request):
     )
 
 def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
+    """
+    Filter the books, paginate the result, and return either a HTML
+    book list, or a atom+xml OPDS catalog.
+    
+    """
     q = request.GET.get('q')
     search_all = request.GET.get('search-all') == 'on'
     search_title = request.GET.get('search-title') == 'on'
