@@ -4,7 +4,8 @@ from django.conf.urls.defaults import *
 from django.contrib import admin
 admin.autodiscover()
 
-import settings
+from django.conf import settings
+from pathagar.books.app_settings import BOOKS_STATICS_VIA_DJANGO
 
 urlpatterns = patterns('',
     
@@ -45,7 +46,7 @@ urlpatterns = patterns('',
 )
 
 
-if settings.DEBUG:
+if BOOKS_STATICS_VIA_DJANGO:
     from django.views.static import serve
     # Serve static media:
     urlpatterns += patterns('',
