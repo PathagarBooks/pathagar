@@ -17,6 +17,8 @@
 
 from cStringIO import StringIO
 
+from django.core.urlresolvers import reverse
+
 from atom import AtomFeed
 
 def __get_mimetype(item):
@@ -75,13 +77,17 @@ def generate_catalog(request, page_obj):
         if book.cover_img:
             linklist = [{'rel': \
                     'http://opds-spec.org/acquisition', 'href': \
-                    book.book_file.url, 'type': __get_mimetype(book)}, {'rel': \
+                    reverse('pathagar.books.views.download_book',
+                            kwargs=dict(book_id=book.pk)),
+                    'type': __get_mimetype(book)}, {'rel': \
                     'http://opds-spec.org/cover', 'href': \
                     book.cover_img.url }]
         else:
            linklist = [{'rel': \
                     'http://opds-spec.org/acquisition', 'href': \
-                    book.book_file.url, 'type': __get_mimetype(book)}]
+                    reverse('pathagar.books.views.download_book',
+                            kwargs=dict(book_id=book.pk)),
+                    'type': __get_mimetype(book)}]
         
         add_kwargs = {
             'content': book.a_summary,

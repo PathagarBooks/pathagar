@@ -15,6 +15,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
+
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
@@ -28,6 +30,7 @@ from django.views.generic.create_update import create_object, update_object, \
 from django.template import RequestContext
 
 from app_settings import BOOKS_PER_PAGE
+from django.conf import settings
 
 from tagging.utils import get_tag
 from tagging.models import TaggedItem
@@ -72,6 +75,21 @@ def remove_book(request, book_id):
         template_object_name = 'book',
         post_delete_redirect = '/',
     )
+
+def book_detail(request, book_id):
+    return object_detail(
+        request,
+        queryset = Book.objects.all(),
+        object_id = book_id,
+        template_object_name = 'book',
+    )
+
+from sendfile import sendfile
+
+def download_book(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+    filename = os.path.join(settings.MEDIA_ROOT, book.book_file.name)
+    return sendfile(request, filename, attachment=True)
 
 def tags(request):
     return render_to_response(
@@ -155,11 +173,3 @@ def by_tag(request, tag, qtype=None):
     queryset = TaggedItem.objects.get_by_model(queryset, tag_instance)
     return _book_list(request, queryset, qtype, list_by='by-tag',
                       tag=tag_instance)
-
-def book_detail(request, book_id):
-    return object_detail(
-        request,
-        queryset = Book.objects.all(),
-        object_id = book_id,
-        template_object_name = 'book',
-    )

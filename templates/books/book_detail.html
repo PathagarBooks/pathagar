@@ -61,12 +61,12 @@
 
 <div class="span-6 last" id="sidebar">
 {% if  book.cover_img %}
-<img src="{{book.cover_img.url}}" alt="Cover" width=150px/>
+<img src="{{ book.cover_img.url }}" alt="Cover" width=150px/>
 {% else %}
-<img src="/static_media/images/generic_cover.png" alt="Cover" width=150px/>
+<img src="{{ MEDIA_URL }}/images/generic_cover.png" alt="Cover" width=150px/>
 {% endif %}
 <hr class="space">
-<a href="{{book.book_file.url}}">Download book</a>
+<a href="{% url pathagar.books.views.download_book book.pk %}">Download book</a>
 </div>
 
 

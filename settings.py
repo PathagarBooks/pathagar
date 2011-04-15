@@ -10,6 +10,9 @@ serve static files, and setup a proper database.
 """
 
 
+import os
+
+
 # Books settings:
 
 BOOKS_PER_PAGE = 2 # Number of books shown per page in the OPDS
@@ -17,8 +20,11 @@ BOOKS_PER_PAGE = 2 # Number of books shown per page in the OPDS
 
 BOOKS_STATICS_VIA_DJANGO = True
 
+# sendfile settings:
+
+SENDFILE_BACKEND = 'sendfile.backends.development'
+
 # Get current directory to get media and templates while developing:
-import os
 CUR_DIR = u'' + os.path.dirname(__file__)
 
 DEBUG = True
