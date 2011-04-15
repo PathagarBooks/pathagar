@@ -4,7 +4,7 @@
 import os
 CUR_DIR = u'' + os.path.dirname(__file__)
 
-ITEMS_PER_PAGE = 2      # Number of books shown per page in the OPDS catalog and in the HTML page
+BOOKS_PER_PAGE = 2 # Number of books shown per page in the OPDS catalog and in the HTML page
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG

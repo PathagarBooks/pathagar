@@ -27,7 +27,7 @@ from django.views.generic.create_update import create_object, update_object, \
   delete_object
 from django.template import RequestContext
 
-from django.conf import settings
+from app_settings import BOOKS_PER_PAGE
 
 from tagging.utils import get_tag
 from tagging.models import TaggedItem
@@ -102,7 +102,7 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     
     all_books = Book.objects.all()
     
-    paginator = Paginator(queryset, settings.ITEMS_PER_PAGE)
+    paginator = Paginator(queryset, BOOKS_PER_PAGE)
     page = int(request.GET.get('page', '1'))
     
     try:
