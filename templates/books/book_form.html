@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}Add book{% endblock %}
+{% block title %}{% if action == 'add' %}
+Add Book
+{% else %}
+Edit Book
+{% endif %}
+{% endblock %}
 
 {% block script %}
 $(document).ready(function()
@@ -18,15 +23,15 @@ $(document).ready(function()
 
 {% block content %}
 <form  enctype="multipart/form-data"
-{% if action = 'add' %}
-  action="/add/book/"
+{% if action == 'add' %}
+  action="/book/add"
 {% else %}
-  action="/edit/book/{{ book.pk }}"
+  action="/book/{{ book.pk }}/edit"
 {% endif %}
-method="POST">
+method="POST">{% csrf_token %}
 <fieldset>
 <legend>
-{% if action = 'add' %}
+{% if action == 'add' %}
 Add Book
 {% else %}
 Edit Book

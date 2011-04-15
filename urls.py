@@ -29,14 +29,14 @@ urlpatterns = patterns('',
     (r'^tags/', 'pathagar.books.views.tags', {}, 'tags'),
     
     # Add, view, edit and remove books:
-    (r'^add/book/?$', 'pathagar.books.views.add_book'),
-    (r'^view/book/(?P<book_id>\d+)/$', 'pathagar.books.views.book_detail'),
-    (r'^edit/book/(?P<book_id>\d+)/?$', 'pathagar.books.views.edit_book'),
-    (r'^remove/book/(?P<book_id>\d+)/?$', 'pathagar.books.views.remove_book'),
-    (r'^download/book/(?P<book_id>\d+)/?$', 'pathagar.books.views.download_book'),
+    (r'^book/add$', 'pathagar.books.views.add_book'),
+    (r'^book/(?P<book_id>\d+)/view$', 'pathagar.books.views.book_detail'),
+    (r'^book/(?P<book_id>\d+)/edit$', 'pathagar.books.views.edit_book'),
+    (r'^book/(?P<book_id>\d+)/remove$', 'pathagar.books.views.remove_book'),
+    (r'^book/(?P<book_id>\d+)/download$', 'pathagar.books.views.download_book'),
     
     # Add language:
-    (r'^add/dc_language|language/?$', 'pathagar.books.views.add_language'),
+    (r'^add/dc_language|language/$', 'pathagar.books.views.add_language'),
     
     # Auth login and logout:
     (r'^accounts/login/$', 'django.contrib.auth.views.login'),
