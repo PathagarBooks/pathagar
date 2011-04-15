@@ -30,6 +30,9 @@
         href="#"
     {% endif %}
 {% endif %}
+{% if list_by == 'most-downloaded' %}
+    href="{% url most_downloaded_feed %}{{ qstring }}"
+{% endif %}
 ><img src="{{ MEDIA_URL }}/images/feed.png" alt="Feed Icon" />Subscribe to Feed</a>
 {% endblock %}
 

@@ -183,3 +183,8 @@ def by_tag(request, tag, qtype=None):
     queryset = TaggedItem.objects.get_by_model(queryset, tag_instance)
     return _book_list(request, queryset, qtype, list_by='by-tag',
                       tag=tag_instance)
+
+def most_downloaded(request, qtype=None):
+    queryset = Book.objects.all().order_by('-downloads')
+    return _book_list(request, queryset, qtype, list_by='most-downloaded')
+
