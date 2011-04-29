@@ -21,7 +21,7 @@ from langlist import langs as LANG_CHOICES
 from selectwithpop import SelectWithPop
 
 class BookForm(ModelForm):
-    dc_language = ModelChoiceField(Language.objects, widget=SelectWithPop)
+    # dc_language = ModelChoiceField(Language.objects, widget=SelectWithPop)
 
     class Meta:
         model = Book
