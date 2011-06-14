@@ -54,6 +54,7 @@ class Book(models.Model):
     
     """
     book_file = models.FileField(upload_to='books')
+    mimetype = models.CharField(max_length=200, null=True)
     time_added = models.DateTimeField(auto_now_add=True)
     tags = TagField()
     downloads = models.IntegerField(default=0)
@@ -70,7 +71,7 @@ class Book(models.Model):
     dc_identifier = models.CharField('dc:identifier', max_length=50, \
         help_text='Use ISBN for this', blank=True)
     cover_img = models.FileField(blank=True, upload_to='covers')
-    
+
     class Meta:
         ordering = ('-time_added',)
         get_latest_by = "time_added"

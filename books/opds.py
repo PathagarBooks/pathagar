@@ -20,12 +20,17 @@ from cStringIO import StringIO
 from django.core.urlresolvers import reverse
 
 from atom import AtomFeed
+import mimetypes
 
 def __get_mimetype(item):
-    if item.book_file.url.endswith('pdf'):
-        return 'application/pdf'
-    elif item.book_file.url.endswith('epub'):
-        return 'application/epub+zip'
+    if item.mimetype is not None:
+        return item.mimetype
+
+    # The MIME Type was not stored in the database, try to guess it
+    # from the filename:
+    mimetype, encoding = mimetypes.guess_type(item.book_file.url)
+    if mimetype is not None:
+        return mimetype
     else:
         return 'Unknown'
 
