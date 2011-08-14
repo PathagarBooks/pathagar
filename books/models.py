@@ -44,6 +44,19 @@ class Language(models.Model):
         super(Language, self).save(*args, **kwargs)
 
 
+class TagGroup(models.Model):
+    name = models.CharField(max_length=200, blank=False)
+    slug = models.SlugField(max_length=200, blank=False)
+    tags = TagField()
+
+    class Meta:
+        verbose_name = "Tag group"
+        verbose_name_plural = "Tag groups"
+
+    def __unicode__(self):
+        return self.name
+
+
 class Status(models.Model):
     status = models.CharField(max_length=200, blank=False)
 

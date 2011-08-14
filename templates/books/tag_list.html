@@ -12,10 +12,15 @@
 
 <div id="content">
 
-<h1 class="alt">Tags</h1>
+<h1 class="alt">Tags {% if tag_group %} by {{ tag_group }}{% endif %}</h1>
 <hr class="space">
 
-{% tags_for_model books.Book as tag_list %}
+{% if tag_group %}
+  {% tags_for_object tag_group as tag_list %}
+{% else %}
+  {% tags_for_model books.Book as tag_list %}
+{% endif %}
+
 {% if tag_list %}
 <div class="span-2"><label>Tags:</label></div>
 <div class="span-10">
@@ -25,5 +30,16 @@
 </div>
 <hr class="space">
 {% endif %}
+
+{% if tag_group_list %}
+<div class="span-2"><label>Tag groups:</label></div>
+<div class="span-10">
+{% for tag_group in tag_group_list %}
+<a class="button" href="{% url tag_groups tag_group.slug %}">{{ tag_group.name }}</a>
+{% endfor %}
+</div>
+<hr class="space">
+{% endif %}
+
 {%  endblock %}
 

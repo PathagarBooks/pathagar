@@ -39,7 +39,7 @@ from sendfile import sendfile
 from search import simple_search, advanced_search
 from forms import BookForm, AddLanguageForm
 from langlist import langs as LANG_CHOICES
-from models import *
+from models import TagGroup, Book
 from popuphandler import handlePopAdd
 from opds import page_qstring, generate_catalog
 
@@ -99,10 +99,18 @@ def download_book(request, book_id):
     book.save()
     return sendfile(request, filename, attachment=True)
 
-def tags(request):
+def tags(request, group_slug=None):
+    context = {'list_by': 'by-tag'}
+
+    if group_slug is not None:
+        tag_group = get_object_or_404(TagGroup, slug=group_slug)
+        context.update({'tag_group': tag_group})
+
+    tag_groups = TagGroup.objects.all()
+    context.update({'tag_group_list': tag_groups})
+
     return render_to_response(
-        'books/tag_list.html',
-        {'list_by': 'by-tag'},
+        'books/tag_list.html', context,
         context_instance = RequestContext(request),
     )
 
