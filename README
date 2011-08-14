@@ -34,6 +34,7 @@ The format of the JSON file is like::
       "book_path": "Path to ebook file",
       "a_title": "Title",
       "a_author": "Author",
+      "a_status": "Published",
       "a_summary": "Description",
       "tags": "set, of, tags"
     },

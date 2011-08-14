@@ -26,3 +26,7 @@ BOOKS_PER_PAGE = getattr(settings, 'BOOKS_PER_PAGE', 2)
 # recommended for production:
 
 BOOKS_STATICS_VIA_DJANGO = getattr(settings, 'BOOKS_STATICS_VIA_DJANGO', False)
+
+# This needs to match the published status
+
+BOOK_PUBLISHED = getattr(settings, 'BOOK_PUBLISHED', 1)

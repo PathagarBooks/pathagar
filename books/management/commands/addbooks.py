@@ -23,7 +23,7 @@ import csv
 import json
 from optparse import make_option
 
-from books.models import Book
+from books.models import Book, Status
 import settings
 
 class Command(BaseCommand):
@@ -73,7 +73,10 @@ class Command(BaseCommand):
             f = open(d['book_path'])
             d['book_file'] = File(f)
             del d['book_path']
-            
+
+            if d.has_key('a_status'):
+                d['a_status'] = Status.objects.get(status = d['a_status'])
+
             book = Book(**d)
             book.save()
     

@@ -89,7 +89,10 @@
         <h3 class="caps">Statistics</h3>
         <div class="box">
         <ul>
-            <li>Number of ebooks in this server: <em>{{ total_books }}</em></li>
+            <li>Published ebooks in this server: <em>{{ published_books }}</em></li>
+{% if user.is_authenticated %}
+            <li>Unpublished ebooks in this server: <em>{{ unpublished_books }}</em></li>
+{% endif %}
         </ul>
         <hr>
         {% if tag %}

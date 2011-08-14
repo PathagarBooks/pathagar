@@ -44,6 +44,16 @@ class Language(models.Model):
         super(Language, self).save(*args, **kwargs)
 
 
+class Status(models.Model):
+    status = models.CharField(max_length=200, blank=False)
+
+    class Meta:
+        verbose_name_plural = "Status"
+
+    def __unicode__(self):
+        return self.status
+
+
 class Book(models.Model):
     """
     This model stores the book file, and all the metadata that is
@@ -59,6 +69,7 @@ class Book(models.Model):
     tags = TagField()
     downloads = models.IntegerField(default=0)
     a_id = UUIDField('atom:id')
+    a_status = models.ForeignKey(Status, blank=False, null=False)
     a_title = models.CharField('atom:title', max_length=200)
     a_author = models.CharField('atom:author', max_length=200)
     a_updated = models.DateTimeField('atom:updated', auto_now=True)

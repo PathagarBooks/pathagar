@@ -13,4 +13,18 @@
         "code": "es",
         "label": "Spanish"
     }
+},
+{
+    "pk": 1,
+    "model": "books.status",
+    "fields": {
+      "status": "Published"
+    }
+},
+{
+    "pk": 2,
+    "model": "books.status",
+    "fields": {
+      "status": "Draft"
+    }
 }]

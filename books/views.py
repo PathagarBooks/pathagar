@@ -27,7 +27,7 @@ from django.views.generic.simple import redirect_to
 from django.views.generic.list_detail import object_list, object_detail
 from django.views.generic.create_update import create_object, update_object, \
   delete_object
-from django.template import RequestContext
+from django.template import RequestContext, resolve_variable
 
 from app_settings import BOOKS_PER_PAGE
 from django.conf import settings
@@ -42,6 +42,9 @@ from langlist import langs as LANG_CHOICES
 from models import *
 from popuphandler import handlePopAdd
 from opds import page_qstring, generate_catalog
+
+from pathagar.books.app_settings import BOOK_PUBLISHED
+
 
 @login_required
 def add_language(request):
@@ -114,6 +117,14 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     search_title = request.GET.get('search-title') == 'on'
     search_author = request.GET.get('search-author') == 'on'
     
+    context_instance = RequestContext(request)
+    user = resolve_variable('user', context_instance)
+    if not user.is_authenticated():
+        queryset = queryset.filter(a_status = BOOK_PUBLISHED)
+
+    published_books = Book.objects.filter(a_status = BOOK_PUBLISHED)
+    unpublished_books = Book.objects.exclude(a_status = BOOK_PUBLISHED)
+
     # If no search options are specified, assumes search all, the
     # advanced search will be used:
     if not search_all and not search_title and not search_author:
@@ -127,8 +138,6 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
         else:
             queryset = simple_search(queryset, q,
                                      search_title, search_author)
-    
-    all_books = Book.objects.all()
     
     paginator = Paginator(queryset, BOOKS_PER_PAGE)
     page = int(request.GET.get('page', '1'))
@@ -150,7 +159,9 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     extra_context = dict(kwargs)
     extra_context.update({
         'book_list': page_obj.object_list,
-        'total_books': len(all_books), 'q': q,
+        'published_books': len(published_books),
+        'unpublished_books': len(unpublished_books),
+        'q': q,
         'paginator': paginator,
         'page_obj': page_obj,
         'search_title': search_title,
