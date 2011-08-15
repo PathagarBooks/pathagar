@@ -10,7 +10,9 @@ from pathagar.books.app_settings import BOOKS_STATICS_VIA_DJANGO
 urlpatterns = patterns('',
     
     # Book list:
-    (r'^$', 'pathagar.books.views.latest',
+    (r'^$', 'pathagar.books.views.home',
+     {}, 'home'),
+    (r'^latest/$', 'pathagar.books.views.latest',
      {}, 'latest'),
     (r'^by-title/$', 'pathagar.books.views.by_title',
      {}, 'by_title'),
@@ -22,7 +24,9 @@ urlpatterns = patterns('',
      {}, 'most_downloaded'),
     
     # Book list Atom:
-    (r'^feed.atom$', 'pathagar.books.views.latest',
+    (r'^catalog.atom$', 'pathagar.books.views.root',
+     {'qtype': u'feed'}, 'root_feed'),
+    (r'^latest.atom$', 'pathagar.books.views.latest',
      {'qtype': u'feed'}, 'latest_feed'),
     (r'^by-title.atom$', 'pathagar.books.views.by_title',
      {'qtype': u'feed'}, 'by_title_feed'),

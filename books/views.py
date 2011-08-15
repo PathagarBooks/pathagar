@@ -20,10 +20,10 @@ import os
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
 from django.core.files.base import ContentFile
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.views.generic.simple import redirect_to
 from django.views.generic.list_detail import object_list, object_detail
 from django.views.generic.create_update import create_object, update_object, \
   delete_object
@@ -41,7 +41,7 @@ from forms import BookForm, AddLanguageForm
 from langlist import langs as LANG_CHOICES
 from models import TagGroup, Book
 from popuphandler import handlePopAdd
-from opds import page_qstring, generate_catalog
+from opds import page_qstring, generate_catalog, generate_root_catalog
 
 from pathagar.books.app_settings import BOOK_PUBLISHED
 
@@ -181,6 +181,14 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
         extra_context,
         context_instance = RequestContext(request),
     )
+
+def home(request):
+    return redirect('latest')
+
+def root(request, qtype=None):
+    """Return the root catalog for navigation"""
+    root_catalog = generate_root_catalog(request)
+    return HttpResponse(root_catalog, mimetype='application/atom+xml')
 
 def latest(request, qtype=None):
     queryset = Book.objects.all()

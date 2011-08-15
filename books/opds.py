@@ -22,6 +22,15 @@ from django.core.urlresolvers import reverse
 from atom import AtomFeed
 import mimetypes
 
+import datetime
+
+ATTRS = {}
+ATTRS[u'xmlns:dcterms'] = u'http://purl.org/dc/terms/'
+ATTRS[u'xmlns:opds'] = u'http://opds-spec.org/'
+ATTRS[u'xmlns:dc'] = u'http://purl.org/dc/elements/1.1/'
+ATTRS[u'xmlns:opensearch'] = 'http://a9.com/-/spec/opensearch/1.1/'
+
+
 def __get_mimetype(item):
     if item.mimetype is not None:
         return item.mimetype
@@ -50,17 +59,51 @@ def page_qstring(request, page_number=None):
         qstring = ''
     
     return qstring
-    
+
+def generate_root_catalog(request):
+    links = []
+    links.append({'type': 'application/atom+xml',
+                  'rel': 'self',
+                  'href': reverse('pathagar.books.views.root')})
+    links.append({'title': 'Home', 'type': 'application/atom+xml',
+                  'rel': 'start',
+                  'href': reverse('pathagar.books.views.root')})
+
+    feed = AtomFeed(title = 'Pathagar Bookserver OPDS feed', \
+        atom_id = 'pathagar:full-catalog', subtitle = \
+        'OPDS catalog for the Pathagar book server', \
+        extra_attrs = ATTRS, hide_generator=True, links=links)
+
+    # TODO: set updated datetime for categories
+    categories = [
+        {'id': 'latest', 'title': 'Latest', 'updated': datetime.datetime.now(),
+         'links': [{'rel': 'subsection', 'type': 'application/atom+xml', \
+                    'href': reverse('latest_feed')}]},
+        {'id': 'by-title', 'title': 'By Title', 'updated': datetime.datetime.now(),
+         'links': [{'rel': 'subsection', 'type': 'application/atom+xml', \
+                    'href': reverse('by_title_feed')}]},
+        {'id': 'by-author', 'title': 'By Author', 'updated': datetime.datetime.now(),
+         'links': [{'rel': 'subsection', 'type': 'application/atom+xml', \
+                    'href': reverse('by_author_feed')}]},
+        {'id': 'by-popularity', 'title': 'Most downloaded', 'updated': datetime.datetime.now(),
+         'links': [{'rel': 'subsection', 'type': 'application/atom+xml', \
+                    'href': reverse('most_downloaded_feed')}]},
+    ]
+
+    for category in categories:
+        feed.add_item(category['id'], category['title'],
+                      category['updated'], links=category['links'])
+
+    s = StringIO()
+    feed.write(s, 'UTF-8')
+    return s.getvalue()
 
 def generate_catalog(request, page_obj):
-    attrs = {}
-    attrs[u'xmlns:dcterms'] = u'http://purl.org/dc/terms/'
-    attrs[u'xmlns:opds'] = u'http://opds-spec.org/'
-    attrs[u'xmlns:dc'] = u'http://purl.org/dc/elements/1.1/'
-    attrs[u'xmlns:opensearch'] = 'http://a9.com/-/spec/opensearch/1.1/'
-    
     links = []
-    
+    links.append({'title': 'Home', 'type': 'application/atom+xml',
+                  'rel': 'start',
+                  'href': reverse('pathagar.books.views.root')})
+
     if page_obj.has_previous():
         previous_page = page_obj.previous_page_number()
         links.append({'title': 'Previous results', 'type': 'application/atom+xml',
@@ -76,7 +119,7 @@ def generate_catalog(request, page_obj):
     feed = AtomFeed(title = 'Pathagar Bookserver OPDS feed', \
         atom_id = 'pathagar:full-catalog', subtitle = \
         'OPDS catalog for the Pathagar book server', \
-        extra_attrs = attrs, hide_generator=True, links=links)
+        extra_attrs = ATTRS, hide_generator=True, links=links)
 
     for book in page_obj.object_list:
         if book.cover_img:
