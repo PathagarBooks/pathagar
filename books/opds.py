@@ -60,11 +60,14 @@ def page_qstring(request, page_number=None):
     
     return qstring
 
-def generate_root_catalog(request):
+def generate_nav_catalog(subsections, is_root=False):
     links = []
-    links.append({'type': 'application/atom+xml',
-                  'rel': 'self',
-                  'href': reverse('pathagar.books.views.root')})
+
+    if is_root:
+        links.append({'type': 'application/atom+xml',
+                      'rel': 'self',
+                      'href': reverse('pathagar.books.views.root')})
+
     links.append({'title': 'Home', 'type': 'application/atom+xml',
                   'rel': 'start',
                   'href': reverse('pathagar.books.views.root')})
@@ -74,8 +77,17 @@ def generate_root_catalog(request):
         'OPDS catalog for the Pathagar book server', \
         extra_attrs = ATTRS, hide_generator=True, links=links)
 
-    # TODO: set updated datetime for categories
-    categories = [
+
+    for subsec in subsections:
+        feed.add_item(subsec['id'], subsec['title'],
+                      subsec['updated'], links=subsec['links'])
+
+    s = StringIO()
+    feed.write(s, 'UTF-8')
+    return s.getvalue()
+
+def generate_root_catalog():
+    subsections = [
         {'id': 'latest', 'title': 'Latest', 'updated': datetime.datetime.now(),
          'links': [{'rel': 'subsection', 'type': 'application/atom+xml', \
                     'href': reverse('latest_feed')}]},
@@ -88,15 +100,20 @@ def generate_root_catalog(request):
         {'id': 'by-popularity', 'title': 'Most downloaded', 'updated': datetime.datetime.now(),
          'links': [{'rel': 'subsection', 'type': 'application/atom+xml', \
                     'href': reverse('most_downloaded_feed')}]},
+        {'id': 'tags', 'title': 'Tags', 'updated': datetime.datetime.now(),
+         'links': [{'rel': 'subsection', 'type': 'application/atom+xml', \
+                    'href': reverse('tags_feed')}]},
     ]
+    return generate_nav_catalog(subsections)
 
-    for category in categories:
-        feed.add_item(category['id'], category['title'],
-                      category['updated'], links=category['links'])
+def generate_tags_catalog(tags):
+    def convert_tag(tag):
+        return {'id': tag.name, 'title': tag.name,  'updated': datetime.datetime.now(),
+                'links': [{'rel': 'subsection', 'type': 'application/atom+xml', \
+                           'href': reverse('by_tag_feed', kwargs=dict(tag=tag.name))}]}
 
-    s = StringIO()
-    feed.write(s, 'UTF-8')
-    return s.getvalue()
+    tags_subsections = map(convert_tag, tags)
+    return generate_nav_catalog(tags_subsections)
 
 def generate_catalog(request, page_obj):
     links = []

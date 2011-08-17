@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load tagging_tags %}
 
 {% block title %}{{ book.a_title }} :: Pathagar Book Server{% endblock %}
 
@@ -14,12 +13,6 @@
 
 <h1 class="alt">Tags {% if tag_group %} by {{ tag_group }}{% endif %}</h1>
 <hr class="space">
-
-{% if tag_group %}
-  {% tags_for_object tag_group as tag_list %}
-{% else %}
-  {% tags_for_model books.Book as tag_list %}
-{% endif %}
 
 {% if tag_list %}
 <div class="span-2"><label>Tags:</label></div>

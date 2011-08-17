@@ -34,6 +34,9 @@ from django.conf import settings
 
 from tagging.utils import get_tag
 from tagging.models import TaggedItem
+from tagging.models import Tag
+from tagging.models import TagManager
+
 from sendfile import sendfile
 
 from search import simple_search, advanced_search
@@ -41,7 +44,10 @@ from forms import BookForm, AddLanguageForm
 from langlist import langs as LANG_CHOICES
 from models import TagGroup, Book
 from popuphandler import handlePopAdd
-from opds import page_qstring, generate_catalog, generate_root_catalog
+from opds import page_qstring
+from opds import generate_catalog
+from opds import generate_root_catalog
+from opds import generate_tags_catalog
 
 from pathagar.books.app_settings import BOOK_PUBLISHED
 
@@ -99,16 +105,26 @@ def download_book(request, book_id):
     book.save()
     return sendfile(request, filename, attachment=True)
 
-def tags(request, group_slug=None):
+def tags(request, qtype=None, group_slug=None):
     context = {'list_by': 'by-tag'}
 
     if group_slug is not None:
         tag_group = get_object_or_404(TagGroup, slug=group_slug)
         context.update({'tag_group': tag_group})
+        context.update({'tag_list': TagManager.get_for_object(tag_group)})
+    else:
+        context.update({'tag_list': Tag.objects.usage_for_model(Book)})
 
     tag_groups = TagGroup.objects.all()
     context.update({'tag_group_list': tag_groups})
 
+
+    # Return OPDS Atom Feed:
+    if qtype == 'feed':
+        catalog = generate_tags_catalog(context['tag_list'])
+        return HttpResponse(catalog, mimetype='application/atom+xml')
+
+    # Return HTML page:
     return render_to_response(
         'books/tag_list.html', context,
         context_instance = RequestContext(request),
@@ -187,7 +203,7 @@ def home(request):
 
 def root(request, qtype=None):
     """Return the root catalog for navigation"""
-    root_catalog = generate_root_catalog(request)
+    root_catalog = generate_root_catalog()
     return HttpResponse(root_catalog, mimetype='application/atom+xml')
 
 def latest(request, qtype=None):

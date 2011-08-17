@@ -43,6 +43,8 @@ urlpatterns = patterns('',
 
     # Tag list:
     (r'^tags/$', 'pathagar.books.views.tags', {}, 'tags'),
+    (r'^tags.atom$', 'pathagar.books.views.tags',
+     {'qtype': u'feed'}, 'tags_feed'),
 
 
     # Add, view, edit and remove books:
