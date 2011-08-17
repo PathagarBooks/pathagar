@@ -15,8 +15,8 @@ import os
 
 # Books settings:
 
-BOOKS_PER_PAGE = 2 # Number of books shown per page in the OPDS
-                   # catalogs and in the HTML pages.
+BOOKS_PER_PAGE = 20 # Number of books shown per page in the OPDS
+                    # catalogs and in the HTML pages.
 
 BOOKS_STATICS_VIA_DJANGO = True
 
