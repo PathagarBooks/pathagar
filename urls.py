@@ -23,6 +23,10 @@ urlpatterns = patterns('',
     (r'^by-popularity/$', 'pathagar.books.views.most_downloaded',
      {}, 'most_downloaded'),
     
+    # Tag groups:
+    (r'^tags/groups.atom$', 'pathagar.books.views.tags_listgroups',
+     {}, 'tags_listgroups'),
+
     # Book list Atom:
     (r'^catalog.atom$', 'pathagar.books.views.root',
      {'qtype': u'feed'}, 'root_feed'),
@@ -40,6 +44,9 @@ urlpatterns = patterns('',
     # Tag groups:
     (r'^tags/groups/(?P<group_slug>[-\w]+)/$', 'pathagar.books.views.tags',
      {}, 'tag_groups'),
+
+    (r'^tags/groups/(?P<group_slug>[-\w]+).atom$', 'pathagar.books.views.tags',
+     {'qtype': u'feed'}, 'tag_groups_feed'),
 
     # Tag list:
     (r'^tags/$', 'pathagar.books.views.tags', {}, 'tags'),

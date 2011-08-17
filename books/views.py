@@ -18,6 +18,7 @@
 import os
 
 from django.http import HttpResponse
+from django.http import Http404
 from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -47,6 +48,7 @@ from opds import page_qstring
 from opds import generate_catalog
 from opds import generate_root_catalog
 from opds import generate_tags_catalog
+from opds import generate_taggroups_catalog
 
 from pathagar.books.app_settings import BOOK_PUBLISHED
 
@@ -128,6 +130,11 @@ def tags(request, qtype=None, group_slug=None):
         'books/tag_list.html', context,
         context_instance = RequestContext(request),
     )
+
+def tags_listgroups(request):
+    tag_groups = TagGroup.objects.all()
+    catalog = generate_taggroups_catalog(tag_groups)
+    return HttpResponse(catalog, mimetype='application/atom+xml')
 
 def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     """
