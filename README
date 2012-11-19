@@ -29,13 +29,14 @@ Format of JSON file
 ===================
 
 To add books from a JSON file:
-  
+
   python manage.py addbooks --json books.json
 
 The format of the JSON file is like::
   [
     {
       "book_path": "Path to ebook file",
+      "cover_path": "Path to cover image",
       "a_title": "Title",
       "a_author": "Author",
       "a_status": "Published",
