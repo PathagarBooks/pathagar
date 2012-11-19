@@ -41,9 +41,9 @@ class Command(BaseCommand):
     def _handle_csv(self, csvpath):
         """
         Store books from a file in CSV format.
-        
+
         """
-        
+
         csvfile = open(csvpath)
         dialect = csv.Sniffer().sniff(csvfile.read(1024))
         csvfile.seek(0)
@@ -64,7 +64,7 @@ class Command(BaseCommand):
     def _handle_json(self, jsonpath):
         """
         Store books from a file in JSON format.
-        
+
         """
         jsonfile = open(jsonpath)
         data_list = json.loads(jsonfile.read())
@@ -74,12 +74,18 @@ class Command(BaseCommand):
             d['book_file'] = File(f)
             del d['book_path']
 
+            if d.has_key('cover_path'):
+                f_cover = open(d['cover_path'])
+                d['cover_img'] = File(f_cover)
+                del d['cover_path']
+
+
             if d.has_key('a_status'):
                 d['a_status'] = Status.objects.get(status = d['a_status'])
 
             book = Book(**d)
             book.save()
-    
+
     def handle(self, filepath='', *args, **options):
         if not os.path.exists(filepath):
             raise CommandError("%r is not a valid path" % filepath)
