@@ -33,9 +33,12 @@ from django.template import RequestContext, resolve_variable
 from app_settings import BOOKS_PER_PAGE
 from django.conf import settings
 
+# OLD ---------------
 from tagging.utils import get_tag
 from tagging.models import TaggedItem
 from tagging.models import Tag
+# --------------- OLD
+from taggit.models import Tag as tTag
 
 from sendfile import sendfile
 
@@ -152,8 +155,8 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     if not user.is_authenticated():
         queryset = queryset.filter(a_status = BOOK_PUBLISHED)
 
-    published_books = Book.objects.filter(a_status = BOOK_PUBLISHED)
-    unpublished_books = Book.objects.exclude(a_status = BOOK_PUBLISHED)
+    published_books_count = Book.objects.filter(a_status = BOOK_PUBLISHED).count()
+    unpublished_books_count = Book.objects.exclude(a_status = BOOK_PUBLISHED).count()
 
     # If no search options are specified, assumes search all, the
     # advanced search will be used:
@@ -189,8 +192,8 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     extra_context = dict(kwargs)
     extra_context.update({
         'book_list': page_obj.object_list,
-        'published_books': len(published_books),
-        'unpublished_books': len(unpublished_books),
+        'published_books': published_books_count,
+        'unpublished_books': unpublished_books_count,
         'q': q,
         'paginator': paginator,
         'page_obj': page_obj,
@@ -225,11 +228,16 @@ def by_author(request, qtype=None):
     return _book_list(request, queryset, qtype, list_by='by-author')
 
 def by_tag(request, tag, qtype=None):
-    tag_instance = get_tag(tag)
+    """ displays a book list by the tag argument """
+    # get the Tag object
+    tag_instance = tTag.objects.get(name=tag) # TODO replace as Tag when django-tagging is removed
+
+    # if the tag does not exist, return 404
     if tag_instance is None:
         raise Http404()
-    queryset = Book.objects.all()
-    queryset = TaggedItem.objects.get_by_model(queryset, tag_instance)
+
+    # Get a list of books that have the requested tag
+    queryset = Book.objects.filter(tags=tag_instance)
     return _book_list(request, queryset, qtype, list_by='by-tag',
                       tag=tag_instance)
 
