@@ -17,7 +17,9 @@
 
 from django.db import models
 
-from tagging.fields import TagField
+from tagging.fields import TagField #OLD
+
+from taggit.managers import TaggableManager #NEW
 
 from uuidfield import UUIDField
 from langlist import langs
@@ -47,7 +49,7 @@ class Language(models.Model):
 class TagGroup(models.Model):
     name = models.CharField(max_length=200, blank=False)
     slug = models.SlugField(max_length=200, blank=False)
-    tags = TagField()
+    #tags = TagableManager()
 
     class Meta:
         verbose_name = "Tag group"
@@ -71,15 +73,15 @@ class Book(models.Model):
     """
     This model stores the book file, and all the metadata that is
     needed to publish it in a OPDS atom feed.
-    
+
     It also stores other information, like tags and downloads, so the
     book can be listed in OPDS catalogs.
-    
+
     """
     book_file = models.FileField(upload_to='books')
     mimetype = models.CharField(max_length=200, null=True)
     time_added = models.DateTimeField(auto_now_add=True)
-    tags = TagField()
+    tags = TaggableManager(blank=True)
     downloads = models.IntegerField(default=0)
     a_id = UUIDField('atom:id')
     a_status = models.ForeignKey(Status, blank=False, null=False)
@@ -93,16 +95,16 @@ class Book(models.Model):
     dc_publisher = models.CharField('dc:publisher', max_length=200, blank=True)
     dc_issued = models.CharField('dc:issued', max_length=100, blank=True)
     dc_identifier = models.CharField('dc:identifier', max_length=50, \
-        help_text='Use ISBN for this', blank=True)
+    help_text='Use ISBN for this', blank=True)
     cover_img = models.FileField(blank=True, upload_to='covers')
 
     class Meta:
         ordering = ('-time_added',)
         get_latest_by = "time_added"
-    
+
     def __unicode__(self):
         return self.a_title
-    
+
     @models.permalink
     def get_absolute_url(self):
         return ('pathagar.books.views.book_detail', [self.pk])
