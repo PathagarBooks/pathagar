@@ -41,6 +41,7 @@ class Command(BaseCommand):
     def _handle_csv(self, csvpath):
         """
         Store books from a file in CSV format.
+        WARN: does not handle tags
 
         """
 
@@ -83,8 +84,13 @@ class Command(BaseCommand):
             if d.has_key('a_status'):
                 d['a_status'] = Status.objects.get(status = d['a_status'])
 
+            tags = d['tags']
+            del d['tags']
+
             book = Book(**d)
-            book.save()
+            book.save() # must save item to generate Book.id before creating tags
+            [book.tags.add(tag) for tag in tags]
+            book.save() # save again after tags are generated
 
     def handle(self, filepath='', *args, **options):
         if not os.path.exists(filepath):
