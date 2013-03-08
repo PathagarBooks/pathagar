@@ -17,7 +17,8 @@
 
 from django.db import models
 
-import datetime
+from tagging.fields import TagField
+
 from uuidfield import UUIDField
 from langlist import langs
 
@@ -42,12 +43,49 @@ class Language(models.Model):
         self.code = code
         super(Language, self).save(*args, **kwargs)
 
+
+class TagGroup(models.Model):
+    name = models.CharField(max_length=200, blank=False)
+    slug = models.SlugField(max_length=200, blank=False)
+    tags = TagField()
+
+    class Meta:
+        verbose_name = "Tag group"
+        verbose_name_plural = "Tag groups"
+
+    def __unicode__(self):
+        return self.name
+
+
+class Status(models.Model):
+    status = models.CharField(max_length=200, blank=False)
+
+    class Meta:
+        verbose_name_plural = "Status"
+
+    def __unicode__(self):
+        return self.status
+
+
 class Book(models.Model):
-    file = models.FileField(blank=False, upload_to='books')
+    """
+    This model stores the book file, and all the metadata that is
+    needed to publish it in a OPDS atom feed.
+    
+    It also stores other information, like tags and downloads, so the
+    book can be listed in OPDS catalogs.
+    
+    """
+    book_file = models.FileField(upload_to='books')
+    mimetype = models.CharField(max_length=200, null=True)
+    time_added = models.DateTimeField(auto_now_add=True)
+    tags = TagField()
+    downloads = models.IntegerField(default=0)
     a_id = UUIDField('atom:id')
-    a_title = models.CharField('atom:title', max_length=200, blank=False)
-    a_author = models.CharField('atom:author', max_length=200, blank=False)
-    a_updated = models.DateTimeField('atom:updated', default=datetime.datetime.now())
+    a_status = models.ForeignKey(Status, blank=False, null=False)
+    a_title = models.CharField('atom:title', max_length=200)
+    a_author = models.CharField('atom:author', max_length=200)
+    a_updated = models.DateTimeField('atom:updated', auto_now=True)
     a_summary = models.TextField('atom:summary', blank=True)
     a_category = models.CharField('atom:category', max_length=200, blank=True)
     a_rights = models.CharField('atom:rights', max_length=200, blank=True)
@@ -58,5 +96,13 @@ class Book(models.Model):
         help_text='Use ISBN for this', blank=True)
     cover_img = models.FileField(blank=True, upload_to='covers')
 
+    class Meta:
+        ordering = ('-time_added',)
+        get_latest_by = "time_added"
+    
     def __unicode__(self):
         return self.a_title
+    
+    @models.permalink
+    def get_absolute_url(self):
+        return ('pathagar.books.views.book_detail', [self.pk])

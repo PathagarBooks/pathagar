@@ -15,18 +15,27 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from pathagar.books.models import Book, Language
+from pathagar.books.models import Book, Language, Status, TagGroup
 from django.contrib import admin
+
 
 class BookAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['file']}),
-        ('Basic Information', {'fields': ['a_title', 'a_author']}),
+        (None, {'fields': ['book_file']}),
+        ('Basic Information', {'fields': ['a_title', 'a_author', 'a_status', 'tags']}),
         ('Extended information', {'fields': ['a_summary', 'a_category', 'a_rights', 'dc_language', 'dc_publisher', 'dc_issued', 'dc_identifier', 'cover_img'], 'classes': ['collapse']}),
     ]
+
 
 class LanguageAdmin(admin.ModelAdmin):
     fieldsets = [(None, {'fields': ['label']})]
 
+
+class TagGroupAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("name",)}
+
+
 admin.site.register(Book, BookAdmin)
 admin.site.register(Language, LanguageAdmin)
+admin.site.register(Status)
+admin.site.register(TagGroup, TagGroupAdmin)

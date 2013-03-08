@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load tagging_tags %}
+
+{% block title %}Welcome to the Pathagar book server{% endblock %}
+
+{% block script %}
+  {{ block.super }}
+  {% if q != None %}
+  $('#search').val('{{ q }}');
+  {% else %}
+  $('#search').example('Book Search...');
+  {% endif %}
+{% endblock %}
+
+{% block feed_link %}
+<a class="feed-link"
+{% if list_by == 'latest' %}
+    href="{% url latest_feed %}{{ qstring }}"
+{% endif %}
+{% if list_by == 'by-title' %}
+    href="{% url by_title_feed %}{{ qstring }}"
+{% endif %}
+{% if list_by == 'by-author' %}
+    href="{% url by_author_feed %}{{ qstring }}"
+{% endif %}
+{% if list_by == 'by-tag' %}
+    {% if tag %}
+        href="{% url by_tag_feed tag.name %}{{ qstring }}"
+    {% else %}
+        href="#"
+    {% endif %}
+{% endif %}
+{% if list_by == 'most-downloaded' %}
+    href="{% url most_downloaded_feed %}{{ qstring }}"
+{% endif %}
+><img src="{{ MEDIA_URL }}/images/feed.png" alt="Feed Icon" />Subscribe to Feed</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="span-17 colborder" id="content">
+{% for book in book_list %}
+<div class="span-3 cover">
+{% if  book.cover_img %}
+<img src="{{book.cover_img.url}}" alt="Cover" width=100px/>
+{% else %}
+<img src="{{ MEDIA_URL }}/images/generic_cover.png" alt="Cover" width=100px/>
+{% endif %}
+</div>
+<div class="prepend-3">
+<h1 class="bookname"><a href="{% url pathagar.books.views.book_detail book.pk %}">{{ book.a_title }}</a></h1>
+<h2>by <span class="alt">{{ book.a_author }}</span></h2>
+{% tags_for_object book as tag_list %}
+{% if tag_list %}
+<div class="span-10"> 
+{% for tag in tag_list %}
+<a class="button" href="{% url by_tag tag.name %}">{{ tag.name }}</a>
+{% endfor %}
+</div>
+{% endif %}
+<div class="span-10"> 
+<p>{{ book.a_summary }}</p>
+</div>
+</div>
+<div class="span-3 prepend-14 last"><em><a href="{% url pathagar.books.views.download_book book.pk %}">Download</a></em></div>
+<hr/>
+{%  endfor %}
+
+<div class="prepend-12 pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }} {% endif %}"><img src="{{ MEDIA_URL }}/images/go-previous.png" alt="previous"></a>
+        {% endif %}
+
+        <span class="current-page">
+            &nbsp;{{ page_obj.number }} of {{ paginator.num_pages }}&nbsp;
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }} {% endif %}"><img src="{{ MEDIA_URL }}/images/go-next.png" alt="next"></a>
+        {% endif %}
+    </span>
+</div>
+</div>
+
+<div class="span-6 last" id="sidebar">
+        <hr class="space">
+        <div class="linkbox">
+        <h3 class="caps">Statistics</h3>
+        <div class="box">
+        <ul>
+            <li>Published ebooks in this server: <em>{{ published_books }}</em></li>
+{% if user.is_authenticated %}
+            <li>Unpublished ebooks in this server: <em>{{ unpublished_books }}</em></li>
+{% endif %}
+        </ul>
+        <hr>
+        {% if tag %}
+        <ul>
+            <li>Showing books with tag <em>{{ tag.name }}</em></li>  
+        </ul>
+        <hr>
+        {% endif %}
+        {% ifnotequal paginator.count total_books %}
+        <ul>
+            <li>Number of ebooks in search result: <em>{{ paginator.count }}</em></li>
+            <li>Showing matches <em>{{ page_obj.start_index }}</em> to <em>{{ page_obj.end_index }}</em></li>
+        {% else %}
+        <ul>
+            <li>Showing entire collection.</li>
+        {% endifnotequal %}
+        </ul>
+        </div>
+        </div>
+</div>
+
+{%  endblock %}
+
