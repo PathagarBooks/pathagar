@@ -20,12 +20,26 @@ from models import *
 from langlist import langs as LANG_CHOICES
 from selectwithpop import SelectWithPop
 
-class AddBookForm(ModelForm):
-    dc_language = ModelChoiceField(Language.objects, widget=SelectWithPop)
+class BookForm(ModelForm):
+    # dc_language = ModelChoiceField(Language.objects, widget=SelectWithPop)
 
     class Meta:
         model = Book
-        exclude = ('a_updated',)
+        exclude = ('mimetype',)
+
+    def save(self, commit=True):
+        """
+        Store the MIME type of the uploaded book in the database.
+
+        This is given by the browser in the POST request.
+
+        """
+        instance = super(BookForm, self).save(commit=False)
+        book_file = self.cleaned_data['book_file']
+        instance.mimetype = book_file.content_type
+        if commit:
+            instance.save()
+        return instance
 
 class AddLanguageForm(ModelForm):
     class Meta:

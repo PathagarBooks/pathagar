@@ -65,7 +65,7 @@ class Command(BaseCommand):
                     info.rights = ''
 
                 f = open(name)
-                book = Book(file=File(f), a_title = info.title, \
+                book = Book(book_file=File(f), a_title = info.title, \
                         a_author = info.creator, a_summary = info.summary, \
                         a_rights = info.rights, dc_identifier = info.identifier['value'].strip('urn:uuid:'), \
                         dc_issued = info.date)

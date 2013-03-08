@@ -20,17 +20,29 @@ from django.core.files import File
 
 import os
 import csv
+import json
+from optparse import make_option
 
-from books.models import Book
+from books.models import Book, Status
 import settings
 
 class Command(BaseCommand):
     help = "Adds a book collection (via a CSV file)"
     args = 'Absolute path to CSV file'
 
-    def handle(self, csvpath='', *args, **options):
-        if not os.path.exists(csvpath):
-            raise CommandError("%r is not a valid path" % csvpath)
+    option_list = BaseCommand.option_list + (
+        make_option('--json',
+            action='store_true',
+            dest='is_json_format',
+            default=False,
+            help='The file is in JSON format'),
+        )
+
+    def _handle_csv(self, csvpath):
+        """
+        Store books from a file in CSV format.
+
+        """
 
         csvfile = open(csvpath)
         dialect = csv.Sniffer().sniff(csvfile.read(1024))
@@ -46,7 +58,41 @@ class Command(BaseCommand):
             summary =  row[3]
 
             f = open(path)
-            book = Book(file = File(f), a_title = title, a_author = author, a_summary = summary)
+            book = Book(book_file = File(f), a_title = title, a_author = author, a_summary = summary)
             book.save()
+
+    def _handle_json(self, jsonpath):
+        """
+        Store books from a file in JSON format.
+
+        """
+        jsonfile = open(jsonpath)
+        data_list = json.loads(jsonfile.read())
+        for d in data_list:
+            # Get a Django File from the given path:
+            f = open(d['book_path'])
+            d['book_file'] = File(f)
+            del d['book_path']
+
+            if d.has_key('cover_path'):
+                f_cover = open(d['cover_path'])
+                d['cover_img'] = File(f_cover)
+                del d['cover_path']
+
+
+            if d.has_key('a_status'):
+                d['a_status'] = Status.objects.get(status = d['a_status'])
+
+            book = Book(**d)
+            book.save()
+
+    def handle(self, filepath='', *args, **options):
+        if not os.path.exists(filepath):
+            raise CommandError("%r is not a valid path" % filepath)
+
+        if options['is_json_format']:
+            self._handle_json(filepath)
+        else:
+            self._handle_csv(filepath)
 
 

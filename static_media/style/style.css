@@ -33,17 +33,95 @@ a[href$=".epub"]   {
 
 .header h1 {
     color: white;
-    size: 120%;
+    font-size: 200%;
     font-weight: bold;
     position: relative;
-    top: 20px;
+    top: 15px;
     left: 20px;
+    display: inline;
 }
 
-.header .searchbox {
+.header .feed-link {
+    position: absolute;
+    top: 45px;
+    left: 20px;
+    font-size: 130%;
+    padding: 0.2em 0.4em;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.header .feed-link:hover {
+    color: gray;
+    background: white;
+}
+
+.header .feed-link {
+    position: absolute;
+    top: 45px;
+    left: 20px;
+    font-size: 130%;
+    padding: 2px 4px 2px 30px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.header .feed-link img {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+}
+
+.header .navbar {
+    position: absolute;
+    right: 0px;
+    top: 25px;
+}
+
+.header .navbar > li {
+    display: inline;
+}
+
+.header .navbar a {
+    font-size: 130%;
+    padding: 2px 4px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.header .navbar a.active {
+    background: #aaa;
+}
+
+.header .navbar a:hover {
+    color: gray;
+    background: white;
+}
+
+.header .loginbox {
     position: absolute;
     right: 25px;
-    top: 25px;
+    top: 5px;
+    color: white;
+}
+
+.header .loginbox a {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.header .loginbox a:hover {
+    text-decoration: underline;
 }
 
 .header a {
@@ -55,15 +133,41 @@ a[href$=".epub"]   {
 }
 
 .searchbox #search {
+    padding: 2px 4px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
     color: gray;
 }
 
 .searchbox #submit {
-    visibility: hidden;
+    display: none;
+}
+
+.search-ops {
+    display: none;
+    margin: 0;
+    padding: 12px;
+    color: white;
+    background-color: gray;
+    position: absolute;
+    right: 0;
+    top: 35px;
+    width: 150px;
+    -moz-border-radius-bottomright: 10px;
+    border-bottom-right-radius: 10px;
+    -moz-border-radius-bottomleft: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.search-ops label {
+    cursor: pointer;
+}
+
+.search-ops li {
+    list-style-type: none;
 }
 
 p.hidden_head {
-    /* padding: 5px 10px; */
     cursor: pointer;
     position: relative;
     background-color:#A9A4A4;
@@ -75,6 +179,11 @@ div.hidden_body {
 }
 
 .bookname a {
+    display: inline-block;
+    margin-left: -0.4em; 
+    padding: 5px 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
     font-weight:normal;
     color:gray;
     line-height:1;
@@ -83,7 +192,28 @@ div.hidden_body {
     font-family: serif;
 }
 
+
+
 .bookname a:hover {
     color: white;
     background: gray;
+}
+
+.button {
+    padding: 2px 4px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    font-weight:normal;
+    line-height:1;
+    text-decoration: none;
+    font-family: serif;
+    color: white;
+    background: gray;
+}
+
+
+
+.button:hover {
+    color: white;
+    background: #555;
 }

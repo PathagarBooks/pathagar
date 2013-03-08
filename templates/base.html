@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset=utf-8 />
+<head>
+  <link rel="stylesheet" href="/static_media/style/blueprint/screen.css" type="text/css" media="screen, projection">
+  <link rel="stylesheet" href="/static_media/style/blueprint/print.css" type="text/css" media="print"> 
+  <link rel="stylesheet" href="/static_media/style/blueprint/plugins/fancy-type/screen.css" type="text/css" media="screen, projection">
+  <link rel="stylesheet" href="/static_media/style/blueprint/plugins/link-icons/screen.css" type="text/css" media="screen, projection">
+  <!--[if lt IE 8]>
+    <link rel="stylesheet" href="/static_media/blueprint/ie.css" type="text/css" media="screen, projection">
+  <![endif]-->
+
+  <link rel="stylesheet" href="/static_media/style/style.css" type="text/css">
+
+  <title>{% block title %}{% endblock %}</title>
+
+  <script type="text/javascript" src="/static_media/js/jquery-1.5.2.min.js"></script>
+  <script type="text/javascript" src="/static_media/js/jquery.example.min.js"></script>
+  {% block head %}{% endblock %}
+</head>
+<body>
+<script type="text/javascript">
+$(document).ready(function() {
+$('.searchbox').hover(
+// handle in:
+function() { $('.search-ops').show(); },
+// handle out:
+function() { $('.search-ops').hide(); }
+);
+{% if list_by != None %}
+$(".navbar a[data-name='{{ list_by }}']").addClass("active");
+{% endif %}
+{% block script %}{% endblock %}
+});
+</script>
+<div class="header">
+<a href="{% url latest %}"><h1><em>Pathagar</em> Book Server</h1></a>
+<form
+{% if list_by %}
+    {% if list_by == 'latest' %}
+    action="{% url latest %}"
+    {% endif %}
+    {% if list_by == 'by-title' %}
+    action="{% url by_title %}"
+    {% endif %}
+    {% if list_by == 'by-author' %}
+    action="{% url by_author %}"
+    {% endif %}
+    {% if list_by == 'by-tag' %}
+        {% if tag %}
+            action="{% url by_tag tag.name %}"
+        {% endif %}
+    {% endif %}
+    {% if list_by == 'most-downloaded' %}
+        action="{% url most_downloaded %}"
+    {% endif %}
+{% endif %}
+method="get">
+
+<ul class="navbar">
+  <li><a data-name="latest" href="{% url latest %}">Latest</a></li>
+  <li><a data-name="by-title" href="{% url by_title %}">By Title</a></li>
+  <li><a data-name="by-author" href="{% url by_author %}">By Author</a></li>
+  <li><a data-name="most-downloaded" href="{% url most_downloaded %}">Most Downloaded</a></li>
+  <li><a data-name="by-tag" href="{% url tags %}">Tags</a></li>
+  <li class="searchbox">
+    <input id="search" type="text" name="q" />
+    <input id="submit" type="submit" value="Submit" />
+    <ul class="search-ops">
+      <li>
+	<input name="search-all" id="search-all" type="checkbox"
+	       {% if search_all %}checked{% endif %} />
+	<label for="search-all">Search All</label>
+      </li>
+      <li>
+	<input name="search-title" id="search-title" type="checkbox"
+	       {% if search_title %}checked{% endif %} />
+	<label for="search-title">Search Title</label>
+      </li>
+      <li>
+	<input name="search-author" id="search-author" type="checkbox"
+	       {% if search_author %}checked{% endif %} />
+	<label for="search-author">Search Author</label>
+      </li>
+    </ul>
+  </li>
+</ul>
+</form>
+
+<div class="loginbox">
+{% if user.is_authenticated %}
+<span>Welcome, {{ user.username }}&nbsp;&nbsp;</span>
+<a href="{% url pathagar.books.views.add_book %}">Add Book</a>&nbsp;&nbsp;
+<a href="{% url django.contrib.auth.views.logout %}?next=/">Log Out</a>
+{% else %}
+<a href="{% url django.contrib.auth.views.login %}?next=/">Log In</a>
+{% endif %}
+</div> 
+
+{% block feed_link %}{% endblock %}
+
+</div> <!-- header -->
+
+<div class="container">
+    {% block content %}{% endblock %}
+    {% block footer %}{% endblock %}
+    <div class="span-12 prepend-6 footer">
+        <small>
+        This is the <em>Pathagar</em> book server..
+        </small>
+    </div>
+<div>
+</body>
+</html>
+
