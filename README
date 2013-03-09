@@ -13,6 +13,9 @@ files), through the command:
             OR
   python manage.py addepub
 
+Pathagar runs on the python web app framework Django.  It is known to work in Django 1.3 and 1.4.
+
+
 Format of CSV file
 ==================
 
@@ -57,15 +60,10 @@ Dependencies
 Quickstart
 ==========
 
-* Install Django.  Pathagar is known to be working in Django 1.3,
-  but it may work in 1.2.  This should work:
+* Install requirements
 
-    easy_install Django
+    pip install -r requirements.pip
 
-* Install dependencies,
-
-    easy_install django-tagging
-    easy_install django-sendfile
 
 * In the Pathagar folder edit settings.py to suite your needs and
   environment.
@@ -91,4 +89,4 @@ Quickstart
         or by simply pointing to a directory with a set of EPUB files.
 
 * To run the server in a production environment, look at Django deployment
-  docs at : http://docs.djangoproject.com/en/1.1/howto/deployment/
+  docs at : http://docs.djangoproject.com/en/1.4/howto/deployment/
