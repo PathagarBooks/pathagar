@@ -117,7 +117,7 @@ def tags(request, qtype=None, group_slug=None):
         context.update({'tag_group': tag_group})
         context.update({'tag_list': Tag.objects.get_for_object(tag_group)})
     else:
-        context.update({'tag_list': Tag.objects.usage_for_model(Book)})
+        context.update({'tag_list': tTag.objects.all()})
 
     tag_groups = TagGroup.objects.all()
     context.update({'tag_group_list': tag_groups})
