@@ -54,7 +54,9 @@ You can add more fields.  Please refer to the Book model.
 Dependencies
 ============
 
-* django-tagging
+* Python
+* Django
+* django-taggit
 * django-sendfile
 
 Quickstart
