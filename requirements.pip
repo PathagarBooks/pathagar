@@ -1,4 +1,4 @@
-Django==1.3.1
+Django==1.4.5
 django-tagging==0.3.1
 django-sendfile==0.3.0
 # hope to replace django-tagging with django-taggit
