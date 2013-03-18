@@ -27,15 +27,14 @@
 <hr class="space">
 {% endif %}
 
-{% tags_for_object book as tag_list %}
-{% if tag_list %}
-<div class="span-2"><label>Tags:</label></div>
-<div class="span-10">
-{% for tag in tag_list %}
-<a class="button" href="{% url by_tag tag.name %}">{{ tag.name }}</a>
-{% endfor %}
-</div>
-<hr class="space">
+{% if book.tags.count != 0 %}
+  <div class="span-2"><label>Tags:</label></div>
+  <div class="span-10">
+  {% for tag in book.tags.all %}
+    <a class="button" href="{% url by_tag tag.name %}">{{ tag.name }}</a>
+  {% endfor %}
+  </div>
+  <hr class="space">
 {% endif %}
 <div class="span-16 colborder">
 <div class="span-2"><label>Language:</label></div>

@@ -33,9 +33,12 @@ from django.template import RequestContext, resolve_variable
 from app_settings import BOOKS_PER_PAGE
 from django.conf import settings
 
+# OLD ---------------
 from tagging.utils import get_tag
 from tagging.models import TaggedItem
 from tagging.models import Tag
+# --------------- OLD
+from taggit.models import Tag as tTag
 
 from sendfile import sendfile
 
@@ -98,7 +101,7 @@ def book_detail(request, book_id):
 def download_book(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     filename = os.path.join(settings.MEDIA_ROOT, book.book_file.name)
-    
+
     # TODO, currently the downloads counter is incremented when the
     # download is requested, without knowing if the file sending was
     # successfull:
@@ -114,7 +117,7 @@ def tags(request, qtype=None, group_slug=None):
         context.update({'tag_group': tag_group})
         context.update({'tag_list': Tag.objects.get_for_object(tag_group)})
     else:
-        context.update({'tag_list': Tag.objects.usage_for_model(Book)})
+        context.update({'tag_list': tTag.objects.all()})
 
     tag_groups = TagGroup.objects.all()
     context.update({'tag_group_list': tag_groups})
@@ -140,26 +143,26 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     """
     Filter the books, paginate the result, and return either a HTML
     book list, or a atom+xml OPDS catalog.
-    
+
     """
     q = request.GET.get('q')
     search_all = request.GET.get('search-all') == 'on'
     search_title = request.GET.get('search-title') == 'on'
     search_author = request.GET.get('search-author') == 'on'
-    
+
     context_instance = RequestContext(request)
     user = resolve_variable('user', context_instance)
     if not user.is_authenticated():
         queryset = queryset.filter(a_status = BOOK_PUBLISHED)
 
-    published_books = Book.objects.filter(a_status = BOOK_PUBLISHED)
-    unpublished_books = Book.objects.exclude(a_status = BOOK_PUBLISHED)
+    published_books_count = Book.objects.filter(a_status = BOOK_PUBLISHED).count()
+    unpublished_books_count = Book.objects.exclude(a_status = BOOK_PUBLISHED).count()
 
     # If no search options are specified, assumes search all, the
     # advanced search will be used:
     if not search_all and not search_title and not search_author:
         search_all = True
-    
+
     # If search queried, modify the queryset with the result of the
     # search:
     if q is not None:
@@ -168,29 +171,29 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
         else:
             queryset = simple_search(queryset, q,
                                      search_title, search_author)
-    
+
     paginator = Paginator(queryset, BOOKS_PER_PAGE)
     page = int(request.GET.get('page', '1'))
-    
+
     try:
         page_obj = paginator.page(page)
     except (EmptyPage, InvalidPage):
         page_obj = paginator.page(paginator.num_pages)
-    
+
     # Build the query string:
     qstring = page_qstring(request)
-    
+
     # Return OPDS Atom Feed:
     if qtype == 'feed':
         catalog = generate_catalog(request, page_obj)
         return HttpResponse(catalog, mimetype='application/atom+xml')
-    
+
     # Return HTML page:
     extra_context = dict(kwargs)
     extra_context.update({
         'book_list': page_obj.object_list,
-        'published_books': len(published_books),
-        'unpublished_books': len(unpublished_books),
+        'published_books': published_books_count,
+        'unpublished_books': unpublished_books_count,
         'q': q,
         'paginator': paginator,
         'page_obj': page_obj,
@@ -225,11 +228,16 @@ def by_author(request, qtype=None):
     return _book_list(request, queryset, qtype, list_by='by-author')
 
 def by_tag(request, tag, qtype=None):
-    tag_instance = get_tag(tag)
+    """ displays a book list by the tag argument """
+    # get the Tag object
+    tag_instance = tTag.objects.get(name=tag) # TODO replace as Tag when django-tagging is removed
+
+    # if the tag does not exist, return 404
     if tag_instance is None:
         raise Http404()
-    queryset = Book.objects.all()
-    queryset = TaggedItem.objects.get_by_model(queryset, tag_instance)
+
+    # Get a list of books that have the requested tag
+    queryset = Book.objects.filter(tags=tag_instance)
     return _book_list(request, queryset, qtype, list_by='by-tag',
                       tag=tag_instance)
 
