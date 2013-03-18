@@ -53,7 +53,7 @@ USE_I18N = True
 
 MEDIA_ROOT = os.path.join(CUR_DIR, 'static_media')
 
-MEDIA_URL = 'http://127.0.0.1:8000/static_media'
+MEDIA_URL = '/static_media/'
 
 ADMIN_MEDIA_PREFIX = '/media/'
 
@@ -86,6 +86,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admin',
-    'tagging',
+    'tagging', # TODO old
+    'taggit',
     'pathagar.books'
 )
