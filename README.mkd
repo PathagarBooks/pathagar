@@ -4,7 +4,10 @@ Introduction
 Pathagar is a simple book server for schools where there is little or no internet. 
 For more information, see [this presentation](http://www.slideshare.net/sverma/pathagar-a-book-server) by Prof. Sameer Verma.
 To get involved, please join our [mailing list](http://mail.archive.org/cgi-bin/mailman/listinfo/pathagar).
+For some of the history of the project, read this [blogpost at OLPC-SF](http://www.olpcsf.org/node/126)
 
+OPDS
+====
 
 It uses the OPDS spec:
 
