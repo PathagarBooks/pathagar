@@ -40,10 +40,6 @@ def _init_directories():
     """Creates initial directories"""
     if exists('%(project_path)s' % env):
         sudo('rm -rf %(project_path)s' % env)
-    if exists('%(translations_path)s' % env):
-        sudo('rm -rf %(translations_path)s' % env)
-    if exists('%(repos_path)s' % env):
-        sudo('rm -rf %(repos_path)s' % env)
 
     sudo('mkdir -p %(project_path)s' % env)
     sudo('mkdir -p %(project_path)s/logs' % env)
@@ -77,14 +73,14 @@ def _checkout_repo(branch="master"):
 def _install_requirements():
     """Installs dependencies defined in the requirements file"""
     with prefix('source %(env_path)s/bin/activate' % env):
-        run('pip install -r %(project_repo_path)s/requirements.txt' % env)
+        run('pip install -r %(project_repo_path)s/requirements.pip' % env)
     run('chmod -R go=u,go-w %(env_path)s' % env)
 
 
 def _update_requirements():
     """Updates dependencies defined in the requirements file"""
     with prefix('source %(env_path)s/bin/activate' % env):
-        run('pip install -U -r %(project_repo_path)s/requirements.txt' % env)
+        run('pip install -U -r %(project_repo_path)s/requirements.pip' % env)
     run('chmod -R go=u,go-w %(env_path)s' % env)
 
 

@@ -27,7 +27,7 @@ SETTINGS['user'] = 'root'
 SETTINGS['db_name'] = 'pathagarh'
 
 # DB user will be used for creating the database
-SETTINGS['db_user'] = 'pootle'
+SETTINGS['db_user'] = 'root'
 
 SETTINGS['db_password_opt'] = '-p'
 
@@ -36,9 +36,9 @@ SETTINGS['db_password_opt'] = '-p'
 #
 
 #: A meaningful name for your Pootle installation
-SETTINGS['project_name'] = 'pootle-staging'
+SETTINGS['project_name'] = 'pathagarh'
 #: This URL will be used in the VirtualHost section
-SETTINGS['project_url'] = 'my-pootle.example.com'
+SETTINGS['project_url'] = 'localhost'
 #: Change the first path part if your Apache websites are stored somewhere else
 SETTINGS['project_path'] = '/var/www/sites/%s' % SETTINGS['project_name']
 
@@ -75,7 +75,7 @@ SETTINGS['env_path'] = '%s/env' % SETTINGS['project_path']
 #
 
 #: The group your web server is running on
-SETTINGS['server_group'] = 'www-data'
+SETTINGS['server_group'] = 'apache'
 SETTINGS['vhost_file'] = '/etc/apache2/sites-available/%s' % \
                                 SETTINGS['project_name']
 SETTINGS['wsgi_file'] = '%s/src/wsgi.py' % SETTINGS['project_path']
