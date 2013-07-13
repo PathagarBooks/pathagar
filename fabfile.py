@@ -4,7 +4,10 @@
 
 """Fabric deployment file."""
 
-from os.path import isfile, isdir
+from os.path import isfile, isdir, dirname
+from os import makedirs
+from os.path import exists as path_exists
+import imp
 
 from fabric.api import cd, env
 from fabric.context_managers import hide, prefix, settings
@@ -12,11 +15,15 @@ from fabric.contrib.console import confirm
 from fabric.contrib.files import exists, upload_template
 from fabric.operations import require, run, sudo, put, get
 
-
 #
 # Deployment environments
 #
 
+def import_django_settings():
+    """Imports the django settings.py file"""
+    if path_exists(env.project_settings_path):
+        return imp.load_source('pathagar_django_settings', env.project_settings_path)
+    return None
 
 def production():
     """Work on the production environment"""
@@ -98,14 +105,14 @@ def bootstrap(branch="master"):
                 _init_directories()
                 _init_virtualenv()
                 _clone_repo()
+                run("touch %(project_repo_path)s/../__init__.py" % env)
                 _checkout_repo(branch=branch)
                 _install_requirements()
     else:
         print('Aborting.')
 
 
-def create_db():
-    """Creates a new DB"""
+def _create_db_mysql():
     require('environment', provided_by=production)
 
     create_db_cmd = ("CREATE DATABASE `%(db_name)s` "
@@ -121,46 +128,73 @@ def create_db():
             create_db_cmd +
             ("' || { test root = '%(db_user)s' && exit $?; " % env))
 
+def _create_db_sqlite3(database):
+    db_path = database['NAME']
+    db_dir  = dirname(db_path)
+    try:
+        makedirs(db_dir)
+    except OSError:
+        pass
+    run("touch %s" % db_path)
+    sudo("chown -R %s:%s %s" % (env.user, env.server_group, db_dir))
+    sudo("chmod -R g+w %s" % (db_dir)) # mark the db writable
+
+def _get_database_type(database):
+    if database["ENGINE"] == "django.db.backends.sqlite3":
+        return "sqlite3"
+    elif database["ENGINE"] == "django.db.backends.mysql":
+        return "mysql"
+
+def create_db():
+    """Creates a new DB"""
+    require('environment', provided_by=production)
+
+    ds = import_django_settings()
+    database = ds.DATABASES['default']
+    db_type = _get_database_type(database)
+    if db_type == 'mysql':
+        _create_db_mysql()
+    elif db_type == 'sqlite3':
+        _create_db_sqlite3(database)
+    else:
+        print("The database type is not currently supported by our fabfile. You'll have to create it manually.")
 
 def drop_db():
     """Drops the current DB - losing all data!"""
     require('environment', provided_by=production)
+    ds = import_django_settings()
+    database = ds.DATABASES['default']
+    db_type = _get_database_type(database)
 
     if confirm('\nDropping the %s DB loses ALL its data! Are you sure?'
                % (env['db_name']), default=False):
-        run("echo 'DROP DATABASE `%s`' | mysql -u %s %s" %
-            (env['db_name'], env['db_user'], env['db_password_opt']))
+        if db_type == 'mysql':
+            _drop_db_mysql()
+        elif db_type == 'sqlite3':
+            _drop_db_sqlite3(database)
     else:
         print('Aborting.')
 
 
+def _drop_db_mysql():
+    run("echo 'DROP DATABASE `%s`' | mysql -u %s %s" %
+            (env['db_name'], env['db_user'], env['db_password_opt']))
+
+def _drop_db_sqlite3(database):
+    run("rm %s" % database['NAME'])
+
 def setup_db():
     """Runs all the necessary steps to create the DB schema from scratch"""
     require('environment', provided_by=production)
-
     syncdb()
-    initdb()
 
 
 def syncdb():
     """Runs `syncdb` to create the DB schema"""
     require('environment', provided_by=production)
-
-    with settings(hide('stdout', 'stderr')):
-        with cd('%(project_repo_path)s' % env):
-            with prefix('source %(env_path)s/bin/activate' % env):
-                run('python manage.py syncdb --noinput')
-
-
-def initdb():
-    """Runs `initdb` to initialize the DB"""
-    require('environment', provided_by=production)
-
-    with settings(hide('stdout', 'stderr')):
-        with cd('%(project_repo_path)s' % env):
-            with prefix('source %(env_path)s/bin/activate' % env):
-                run('python manage.py initdb')
-
+    with cd('%(project_repo_path)s' % env):
+        with prefix('source %(env_path)s/bin/activate' % env):
+            run('python manage.py syncdb')
 
 def load_db(dumpfile=None):
     """Loads data from a SQL script to Pootle DB"""
@@ -265,7 +299,7 @@ def update_config():
 
         # Configure and install settings
         upload_template('deploy/%(environment)s/settings.conf' % env,
-                        '%(project_repo_path)s/settings.py'
+                        '%(project_settings_path)s'
                         % env, context=env)
 
 
