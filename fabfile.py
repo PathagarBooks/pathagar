@@ -239,7 +239,6 @@ def deploy(branch="master"):
 
     with settings(hide('stdout', 'stderr')):
         update_code(branch=branch)
-        deploy_static()
         install_site()
 
 
