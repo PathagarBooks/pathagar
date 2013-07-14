@@ -134,7 +134,7 @@ def _create_db_sqlite3():
     sudo("chown -R %s:%s %s" % (env.user, env.server_group, db_dir))
     sudo("chmod -R g+w %s" % (db_dir)) # mark the db writable
 
-def _get_database_type(database):
+def _get_database_type():
     if env.db_engine == "django.db.backends.sqlite3":
         return "sqlite3"
     elif env.db_engine == "django.db.backends.mysql":
