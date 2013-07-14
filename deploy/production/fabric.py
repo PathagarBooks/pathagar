@@ -23,7 +23,12 @@ SETTINGS['user'] = 'aneesh'
 # Database
 #
 
-# DB name
+# DB Engine
+# Replace 'mysql' with 'postgresql_psycopg2', 'sqlite3' or 'oracle'.
+SETTINGS['db_engine'] = "django.db.backends.mysql"
+
+# DB Name
+# db_name is actually the path of db file when the db_engine is set to sqlite3
 SETTINGS['db_name'] = 'pathagar'
 
 # DB user will be used for creating the database

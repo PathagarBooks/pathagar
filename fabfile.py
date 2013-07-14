@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
+# Copyright 2012 Zuza Software Foundation
+# Copyright 2013 Aneesh Dogra (aneesh@activitycentral.com)
 
 """Fabric deployment file."""
 
 from os.path import isfile, isdir, dirname
 from os import makedirs
 from os.path import exists as path_exists
-import imp
 
 from fabric.api import cd, env
 from fabric.context_managers import hide, prefix, settings
@@ -18,12 +19,6 @@ from fabric.operations import require, run, sudo, put, get
 #
 # Deployment environments
 #
-
-def import_django_settings():
-    """Imports the django settings.py file"""
-    if path_exists(env.project_settings_path):
-        return imp.load_source('pathagar_django_settings', env.project_settings_path)
-    return None
 
 def production():
     """Work on the production environment"""
@@ -126,10 +121,10 @@ def _create_db_mysql():
     with settings(hide('stderr')):
         run(("mysql -u %(db_user)s %(db_password_opt)s -e '" % env) +
             create_db_cmd +
-            ("' || { test root = '%(db_user)s' && exit $?; " % env))
+            ("' || { test root = '%(db_user)s' && exit $?; }" % env))
 
-def _create_db_sqlite3(database):
-    db_path = database['NAME']
+def _create_db_sqlite3():
+    db_path = env.db_name
     db_dir  = dirname(db_path)
     try:
         makedirs(db_dir)
@@ -140,18 +135,16 @@ def _create_db_sqlite3(database):
     sudo("chmod -R g+w %s" % (db_dir)) # mark the db writable
 
 def _get_database_type(database):
-    if database["ENGINE"] == "django.db.backends.sqlite3":
+    if env.db_engine == "django.db.backends.sqlite3":
         return "sqlite3"
-    elif database["ENGINE"] == "django.db.backends.mysql":
+    elif env.db_engine == "django.db.backends.mysql":
         return "mysql"
 
 def create_db():
     """Creates a new DB"""
     require('environment', provided_by=production)
 
-    ds = import_django_settings()
-    database = ds.DATABASES['default']
-    db_type = _get_database_type(database)
+    db_type = _get_database_type()
     if db_type == 'mysql':
         _create_db_mysql()
     elif db_type == 'sqlite3':
@@ -162,9 +155,7 @@ def create_db():
 def drop_db():
     """Drops the current DB - losing all data!"""
     require('environment', provided_by=production)
-    ds = import_django_settings()
-    database = ds.DATABASES['default']
-    db_type = _get_database_type(database)
+    db_type = _get_database_type()
 
     if confirm('\nDropping the %s DB loses ALL its data! Are you sure?'
                % (env['db_name']), default=False):
