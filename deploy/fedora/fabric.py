@@ -16,7 +16,7 @@ SETTINGS = {}
 #: List of hosts to work on
 SETTINGS['hosts'] = ['localhost']
 #: Username to log in in the remote machine
-SETTINGS['user'] = 'aneesh'
+SETTINGS['user'] = 'root'
 
 
 #
