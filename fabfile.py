@@ -20,18 +20,29 @@ from fabric.operations import require, run, sudo, put, get
 # Deployment environments
 #
 
-def production():
-    """Work on the production environment"""
+def ubuntu():
+    """Work on the ubuntu environment"""
 
     try:
-        from deploy.production import fabric
+        from deploy.ubuntu import fabric
     except ImportError:
         print("Can't load 'production' environment; is PYTHONPATH exported?")
         exit(1)
 
     env.update(fabric.SETTINGS)
-    env.environment = 'production'
+    env.environment = 'ubuntu'
 
+def fedora():
+    """Work on the fedora (red-hat based) environment"""
+
+    try:
+        from deploy.fedora import fabric
+    except ImportError:
+        print("Can't load 'fedora' environment; is PYTHONPATH exported?")
+        exit(1)
+
+    env.update(fabric.SETTINGS)
+    env.environment = 'fedora'
 
 #
 # Commands
@@ -88,7 +99,7 @@ def _update_requirements():
 
 def bootstrap(branch="master"):
     """Bootstraps a Pootle deployment using the specified branch"""
-    require('environment', provided_by=production)
+    require('environment', provided_by=[ubuntu, fedora])
 
     if (not exists('%(project_path)s' % env) or
         confirm('\n%(project_path)s already exists. Do you want to continue?'
@@ -108,7 +119,7 @@ def bootstrap(branch="master"):
 
 
 def _create_db_mysql():
-    require('environment', provided_by=production)
+    require('environment', provided_by=[ubuntu, fedora])
 
     create_db_cmd = ("CREATE DATABASE `%(db_name)s` "
                      "DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"
@@ -142,7 +153,7 @@ def _get_database_type():
 
 def create_db():
     """Creates a new DB"""
-    require('environment', provided_by=production)
+    require('environment', provided_by=[ubuntu, fedora])
 
     db_type = _get_database_type()
     if db_type == 'mysql':
@@ -154,7 +165,7 @@ def create_db():
 
 def drop_db():
     """Drops the current DB - losing all data!"""
-    require('environment', provided_by=production)
+    require('environment', provided_by=[ubuntu, fedora])
     db_type = _get_database_type()
 
     if confirm('\nDropping the %s DB loses ALL its data! Are you sure?'
@@ -176,13 +187,13 @@ def _drop_db_sqlite3(database):
 
 def setup_db():
     """Runs all the necessary steps to create the DB schema from scratch"""
-    require('environment', provided_by=production)
+    require('environment', provided_by=[ubuntu, fedora])
     syncdb()
 
 
 def syncdb():
     """Runs `syncdb` to create the DB schema"""
-    require('environment', provided_by=production)
+    require('environment', provided_by=[ubuntu, fedora])
     with cd('%(project_repo_path)s' % env):
         with prefix('source %(env_path)s/bin/activate' % env):
             run('python manage.py syncdb')
@@ -248,7 +259,7 @@ def dump_db(dumpfile="pathagarh_DB_backup.sql"):
 
 def update_code(branch="master"):
     """Updates the source code and its requirements"""
-    require('environment', provided_by=production)
+    require('environment', provided_by=[ubuntu, fedora])
 
     print('Getting the latest code and dependencies...')
 
@@ -258,7 +269,7 @@ def update_code(branch="master"):
 
 def deploy(branch="master"):
     """Updates the code and installs the production site"""
-    require('environment', provided_by=production)
+    require('environment', provided_by=[ubuntu, fedora])
 
     print('Deploying the site...')
 
@@ -269,7 +280,7 @@ def deploy(branch="master"):
 
 def install_site():
     """Configures the server and enables the site"""
-    require('environment', provided_by=production)
+    require('environment', provided_by=[ubuntu, fedora])
 
     print('Configuring and installing site...')
 
@@ -280,7 +291,7 @@ def install_site():
 
 def update_config():
     """Updates server configuration files"""
-    require('environment', provided_by=production)
+    require('environment', provided_by=[ubuntu, fedora])
 
     with settings(hide('stdout', 'stderr')):
 
@@ -296,7 +307,7 @@ def update_config():
 
 def enable_site():
     """Enables the site"""
-    require('environment', provided_by=production)
+    require('environment', provided_by=[ubuntu, fedora])
 
     with settings(hide('stdout', 'stderr')):
         _switch_site(True)
@@ -304,7 +315,7 @@ def enable_site():
 
 def disable_site():
     """Disables the site"""
-    require('environment', provided_by=production)
+    require('environment', provided_by=[ubuntu, fedora])
 
     with settings(hide('stdout', 'stderr')):
         _switch_site(False)
