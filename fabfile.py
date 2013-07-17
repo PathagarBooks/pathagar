@@ -327,9 +327,12 @@ def _switch_site(enable):
     action = "Enabling" if enable else "Disabling"
     print('%s site...' % action)
 
-    env.apache_command = 'a2ensite' if enable else 'a2dissite'
-    sudo('%(apache_command)s %(project_name)s' % env)
-    sudo('service apache2 reload')
+    if env.environment == 'ubuntu':
+        env.apache_command = 'a2ensite' if enable else 'a2dissite'
+        sudo('%(apache_command)s %(project_name)s' % env)
+        sudo('service apache2 reload')
+    elif env.environment == 'fedora':
+        sudo('service httpd restart')
 
 
 def touch():
