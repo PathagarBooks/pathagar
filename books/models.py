@@ -115,9 +115,15 @@ class Book(models.Model):
     def get_absolute_url(self):
         return ('pathagar.books.views.book_detail', [self.pk])
 
+def sha256_sum(filename, block_size=128*64):
+    s = sha256()
+    with open(filename,'rb') as f:
+        for chunk in iter(lambda: f.read(block_size), b''):
+            s.update(chunk)
+    return s.hexdigest()
+
 @receiver(pre_save, sender=Book)
 def my_callback(sender, **kwargs):
-    if str(kwargs['instance'].file_sha256sum): # we already have the sha256_sum
+    if kwargs['instance'].file_sha256sum: # we already have the sha256_sum
         return
-    with open(str(kwargs['instance'].book_file)) as fp:
-        kwargs['instance'].file_sha256sum = sha256(fp.read()).hexdigest()
+    kwargs['instance'].file_sha256sum = sha256_sum(str(kwargs['instance'].book_file))
