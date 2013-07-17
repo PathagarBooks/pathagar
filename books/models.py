@@ -16,6 +16,9 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from django.db import models
+from django.dispatch import receiver
+
+from hashlib import sha256
 
 from tagging.fields import TagField #OLD
 
@@ -23,6 +26,8 @@ from taggit.managers import TaggableManager #NEW
 
 from uuidfield import UUIDField
 from langlist import langs
+
+from django.db.models.signals import pre_save
 
 class Language(models.Model):
     label = models.CharField('language name', max_length=50, blank=False, unique=True)
@@ -79,6 +84,7 @@ class Book(models.Model):
 
     """
     book_file = models.FileField(upload_to='books')
+    file_sha256sum = models.CharField(max_length=64, unique=True)
     mimetype = models.CharField(max_length=200, null=True)
     time_added = models.DateTimeField(auto_now_add=True)
     tags = TaggableManager(blank=True)
@@ -108,3 +114,10 @@ class Book(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return ('pathagar.books.views.book_detail', [self.pk])
+
+@receiver(pre_save, sender=Book)
+def my_callback(sender, **kwargs):
+    if str(kwargs['instance'].file_sha256sum): # we already have the sha256_sum
+        return
+    with open(str(kwargs['instance'].book_file)) as fp:
+        kwargs['instance'].file_sha256sum = sha256(fp.read()).hexdigest()
