@@ -123,7 +123,7 @@ def sha256_sum(filename, block_size=128*64):
     return s.hexdigest()
 
 @receiver(pre_save, sender=Book)
-def my_callback(sender, **kwargs):
+def add_sha256sum(sender, **kwargs):
     if kwargs['instance'].file_sha256sum: # we already have the sha256_sum
         return
     kwargs['instance'].file_sha256sum = sha256_sum(str(kwargs['instance'].book_file))
