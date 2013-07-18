@@ -16,7 +16,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from django.db import models
-from django.dispatch import receiver
 
 from hashlib import sha256
 
@@ -27,7 +26,12 @@ from taggit.managers import TaggableManager #NEW
 from uuidfield import UUIDField
 from langlist import langs
 
-from django.db.models.signals import pre_save
+def sha256_sum(filename, block_size=128 * 64): # used to generate sha256 sum of book files
+    s = sha256()
+    with open(filename,'rb') as f:
+        for chunk in iter(lambda: f.read(block_size), b''):
+            s.update(chunk)
+    return s.hexdigest()
 
 class Language(models.Model):
     label = models.CharField('language name', max_length=50, blank=False, unique=True)
@@ -104,6 +108,12 @@ class Book(models.Model):
     help_text='Use ISBN for this', blank=True)
     cover_img = models.FileField(blank=True, upload_to='covers')
 
+    def save(self, *args, **kwargs):
+        if self.file_sha256sum: # we already have the sha256_sum
+            return
+        self.file_sha256sum = sha256_sum(str(self.book_file))
+        super(Book, self).save()
+
     class Meta:
         ordering = ('-time_added',)
         get_latest_by = "time_added"
@@ -114,16 +124,3 @@ class Book(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return ('pathagar.books.views.book_detail', [self.pk])
-
-def sha256_sum(filename, block_size=128*64):
-    s = sha256()
-    with open(filename,'rb') as f:
-        for chunk in iter(lambda: f.read(block_size), b''):
-            s.update(chunk)
-    return s.hexdigest()
-
-@receiver(pre_save, sender=Book)
-def add_sha256sum(sender, **kwargs):
-    if kwargs['instance'].file_sha256sum: # we already have the sha256_sum
-        return
-    kwargs['instance'].file_sha256sum = sha256_sum(str(kwargs['instance'].book_file))
