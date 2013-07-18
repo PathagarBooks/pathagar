@@ -18,6 +18,9 @@ from django.core.management.base import BaseCommand, CommandError
 from django.core.files.storage import default_storage
 from django.core.files import File
 
+from django.db.utils import IntegrityError
+
+import sys
 import os
 import csv
 import json
@@ -88,9 +91,15 @@ class Command(BaseCommand):
             del d['tags']
 
             book = Book(**d)
-            book.save() # must save item to generate Book.id before creating tags
-            [book.tags.add(tag) for tag in tags]
-            book.save() # save again after tags are generated
+            try:
+                book.save() # must save item to generate Book.id before creating tags
+                [book.tags.add(tag) for tag in tags]
+                book.save() # save again after tags are generated
+            except IntegrityError as e:
+                if str(e) == "column file_sha256sum is not unique":
+                    print "The book (", d['book_file'], ") was not saved because the file already exsists in the database."
+                else:
+                    raise CommandError('Error adding file %s: %s' % (d['book_file'], sys.exc_info()[1]))
 
     def handle(self, filepath='', *args, **options):
         if not os.path.exists(filepath):
