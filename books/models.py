@@ -17,12 +17,21 @@
 
 from django.db import models
 
+from hashlib import sha256
+
 from tagging.fields import TagField #OLD
 
 from taggit.managers import TaggableManager #NEW
 
 from uuidfield import UUIDField
 from langlist import langs
+
+def sha256_sum(filename, block_size=128 * 64): # used to generate sha256 sum of book files
+    s = sha256()
+    with open(filename,'rb') as f:
+        for chunk in iter(lambda: f.read(block_size), b''):
+            s.update(chunk)
+    return s.hexdigest()
 
 class Language(models.Model):
     label = models.CharField('language name', max_length=50, blank=False, unique=True)
@@ -79,6 +88,7 @@ class Book(models.Model):
 
     """
     book_file = models.FileField(upload_to='books')
+    file_sha256sum = models.CharField(max_length=64, unique=True)
     mimetype = models.CharField(max_length=200, null=True)
     time_added = models.DateTimeField(auto_now_add=True)
     tags = TaggableManager(blank=True)
@@ -97,6 +107,12 @@ class Book(models.Model):
     dc_identifier = models.CharField('dc:identifier', max_length=50, \
     help_text='Use ISBN for this', blank=True)
     cover_img = models.FileField(blank=True, upload_to='covers')
+
+    def save(self, *args, **kwargs):
+        if self.file_sha256sum: # we already have the sha256_sum
+            return
+        self.file_sha256sum = sha256_sum(str(self.book_file))
+        super(Book, self).save()
 
     class Meta:
         ordering = ('-time_added',)
