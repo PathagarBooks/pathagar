@@ -81,6 +81,12 @@ def _checkout_repo(branch="master"):
         run('git pull')
         run('git checkout %s' % branch)
     run('chmod -R go=u,go-w %(project_repo_path)s' % env)
+    # now we need to mark the static_media/books directory writable
+    # because that's where the uploaded books are stored
+    books_dir = "%(project_repo_path)s/static_media/books" % env
+    if not path_exists(books_dir):
+        run("mkdir %s" % books_dir)
+    sudo("chmod g+rwxs %s" % books_dir)
 
 
 def _install_requirements():
