@@ -113,7 +113,8 @@ def bootstrap(branch="master"):
                 _clone_repo()
                 run("touch %(project_repo_path)s/../__init__.py" % env)
                 _checkout_repo(branch=branch)
-                _install_requirements()
+                with prefix('source %(env_path)s/bin/activate' % env):
+                    _install_requirements()
     else:
         print('Aborting.')
 
@@ -274,8 +275,9 @@ def deploy(branch="master"):
     print('Deploying the site...')
 
     with settings(hide('stdout', 'stderr')):
-        update_code(branch=branch)
-        install_site()
+        with prefix('source %(env_path)s/bin/activate' % env):
+            update_code(branch=branch)
+            install_site()
 
 
 def install_site():
