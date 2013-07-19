@@ -11,7 +11,11 @@ Setting up Pathagar using Fabric (BETA)
 
 Fabric is the most convenient way to setup Pathagar on your server.
 
-To setup pathagar using fabric you first need to install Fabric and Virtualenv. After installing edit `deploy/ubuntu/fabric.py` , `deploy/ubuntu/settings.conf` and `deploy/ubuntu/virtualhost.conf` to configure the server according to your needs.
+To setup pathagar using fabric you first need to install Fabric and Virtualenv. 
+
+Note: If you are running a red-hat based machine. Replace "ubuntu" in the following commands/paths to fedora and follow the same procedure.
+
+After installing edit `deploy/ubuntu/fabric.py` , `deploy/ubuntu/settings.conf` and `deploy/ubuntu/virtualhost.conf` to configure the server according to your needs.
 
 Great! Now you are ready to deploy.
 
@@ -26,6 +30,7 @@ Now we need to configure apache and let it know about the location of the files.
 Perfect! Now we have apache running our server through mod_wsgi. Now we need to setup our databases.
 
 `fab ubuntu create_db`
+
 `fab ubuntu setup_db`
 
 Done! You should now have a working instance of pathagar running on your server.
