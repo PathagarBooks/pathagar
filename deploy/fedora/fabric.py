@@ -85,3 +85,6 @@ SETTINGS['env_path'] = '%s/env' % SETTINGS['project_path']
 SETTINGS['server_group'] = 'apache'
 SETTINGS['vhost_file'] = '/etc/httpd/conf/httpd.conf'
 SETTINGS['wsgi_file'] = '%s/wsgi.py' % SETTINGS['project_repo_path']
+
+# Check http://httpd.apache.org/docs/2.4/logs.html
+SETTINGS['access_log_format'] = "%h %l %u %t '%r' %>s %b"
