@@ -25,7 +25,7 @@ BOOKS_STATICS_VIA_DJANGO = True
 SENDFILE_BACKEND = 'sendfile.backends.development'
 
 # Get current directory to get media and templates while developing:
-CUR_DIR = '%(project_repo_path)s
+CUR_DIR = u'' + os.path.dirname(__file__)
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -38,18 +38,8 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        # Replace 'sqlite3' with 'postgresql_psycopg2', 'mysql' or 'oracle'.
-        'ENGINE': '%(db_engine)',
-        # Database name or path to database file if using sqlite3.
-        'NAME': '%(db_name)s',
-        # Not used with sqlite3.
-        'USER': '%(db_user)s',
-        # Not used with sqlite3.
-        'PASSWORD': '%(db_password)s',
-        # Set to empty string for localhost. Not used with sqlite3.
-        'HOST': '',
-        # Set to empty string for default. Not used with sqlite3.
-        'PORT': '',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(CUR_DIR, 'database.db'),
     }
 }
 
@@ -100,4 +90,3 @@ INSTALLED_APPS = (
     'taggit',
     'pathagar.books'
 )
-
