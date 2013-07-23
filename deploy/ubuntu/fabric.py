@@ -55,7 +55,7 @@ SETTINGS['project_path'] = '/var/www/sites/%s' % SETTINGS['project_name']
 #
 
 SETTINGS['project_repo_path'] = '%s/src/pathagar' % SETTINGS['project_path']
-SETTINGS['project_repo'] = 'https://github.com/lionaneesh/pathagar.git'
+SETTINGS['project_repo'] = 'https://github.com/PathagarBooks/pathagar.git'
 SETTINGS['project_settings_path'] = '%s/settings.py' % \
                                         SETTINGS['project_repo_path']
 
