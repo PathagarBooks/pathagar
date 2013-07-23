@@ -20,10 +20,8 @@ import subprocess
 
 
 # Customize this script by editing global variables below
-#_________________________________________________________________________________________
-
-#uncomment formats below to download more data
-#formats are listed in order of preference, i.e. prefer 'Text' over 'DjVuTXT'
+# uncomment formats below to download more data
+# formats are listed in order of preference, i.e. prefer 'Text' over 'DjVuTXT'
 requested_formats = {'pdf':  ['Text PDF', 'Additional Text PDF', 'Image Container PDF'],
                      'epub': ['EPUB'],
                      'meta': ['Metadata'],
@@ -36,22 +34,15 @@ download_directory = os.path.join(settings.MEDIA_ROOT, "books")
 
 should_download_cover = True
 
-
-# load_user_bookmarks()
-#_________________________________________________________________________________________
 def load_user_bookmarks(user):
     """Return an array of bookmarked items for a given user.
-    An example of user bookmarks: http://archive.org/bookmarks/sverma
-    """
+    An example of user bookmarks: http://archive.org/bookmarks/sverma"""
 
     print user
     url = 'http://archive.org/bookmarks/%s?output=json' % user
     f = urllib.urlopen(url)
     return json.load(f)
 
-
-# get_item_meatadata()
-#_________________________________________________________________________________________
 def get_item_meatadata(item_id):
     """Returns an object from the archive.org Metadata API"""
 
@@ -59,17 +50,11 @@ def get_item_meatadata(item_id):
     f = urllib.urlopen(url)
     return json.load(f)
 
-
-# get_download_url()
-#_________________________________________________________________________________________
 def get_download_url(item_id, file):
 
     prefix = 'http://archive.org/download/'
     return prefix + os.path.join(item_id, file)
 
-
-# download_files()
-#_________________________________________________________________________________________
 def download_files(item_id, matching_files, item_dir):
 
     for file in matching_files:
@@ -94,9 +79,6 @@ def download_files(item_id, matching_files, item_dir):
 
         time.sleep(0.5)
 
-
-# download_item()
-#_________________________________________________________________________________________
 def download_item(item_id, mediatype, metadata, out_dir, formats):
     """Download an archive.org item into the specified directory"""
 
@@ -125,9 +107,6 @@ def download_item(item_id, mediatype, metadata, out_dir, formats):
             if len(matching_files) > 0:
                 break
 
-
-# download_cover()
-#_________________________________________________________________________________________
 def download_cover(item_id, metadata, download_directory):
     files_list = metadata['files']
 
@@ -143,9 +122,6 @@ def download_cover(item_id, metadata, download_directory):
     #no JPEG Thumbs, JPEGs, or AGIFs, return None
     return None
 
-
-# add_to_pathagar()
-#_________________________________________________________________________________________
 def add_to_pathagar(pathagar_books, mdata, cover_image):
     pathagar_formats = []
     if 'epub' in requested_formats:
