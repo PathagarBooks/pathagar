@@ -36,7 +36,8 @@ class BookForm(ModelForm):
         """
         instance = super(BookForm, self).save(commit=False)
         book_file = self.cleaned_data['book_file']
-        instance.mimetype = book_file.content_type
+        if instance.mimetype is None:
+            instance.mimetype = book_file.content_type
         if commit:
             instance.save()
         return instance

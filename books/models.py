@@ -108,10 +108,9 @@ class Book(models.Model):
     cover_img = models.FileField(blank=True, upload_to='covers')
 
     def save(self, *args, **kwargs):
-        if self.file_sha256sum: # we already have the sha256_sum
-            return
-        self.file_sha256sum = sha256_sum(self.book_file)
-        super(Book, self).save()
+        if not self.file_sha256sum:
+            self.file_sha256sum = sha256_sum(self.book_file)
+        super(Book, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ('-time_added',)
