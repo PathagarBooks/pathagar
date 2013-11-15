@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.core.files.storage import default_storage
 from django.core.files import File
+from django.db.utils import IntegrityError
 
 import os
 
