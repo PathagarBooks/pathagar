@@ -25,7 +25,7 @@ class BookForm(ModelForm):
 
     class Meta:
         model = Book
-        exclude = ('mimetype',)
+        exclude = ('mimetype', 'file_sha256sum', )
 
     def save(self, commit=True):
         """
