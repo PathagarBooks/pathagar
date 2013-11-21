@@ -1,3 +1,4 @@
 database.db
 *pyc
+staticfiles/
 static_media/books
