@@ -55,8 +55,6 @@ MEDIA_ROOT = os.path.join(CUR_DIR, 'static_media')
 
 MEDIA_URL = '/static_media/'
 
-ADMIN_MEDIA_PREFIX = '/media/'
-
 SECRET_KEY = '7ks@b7+gi^c4adff)6ka228#rd4f62v*g_dtmo*@i62k)qn=cs'
 
 TEMPLATE_LOADERS = (
