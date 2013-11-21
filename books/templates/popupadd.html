@@ -2,15 +2,15 @@
     <head>
         <meta charset=utf-8 />
         <title>Add {{ field }}</title>
-      <link rel="stylesheet" href="/static_media/style/blueprint/screen.css" type="text/css" media="screen, projection">
-      <link rel="stylesheet" href="/static_media/style/blueprint/print.css" type="text/css" media="print"> 
-      <link rel="stylesheet" href="/static_media/style/blueprint/plugins/fancy-type/screen.css" type="text/css" media="screen, projection">
+      <link rel="stylesheet" href="{{ STATIC_URL }}style/blueprint/screen.css" type="text/css" media="screen, projection">
+      <link rel="stylesheet" href="{{ STATIC_URL }}style/blueprint/print.css" type="text/css" media="print">
+      <link rel="stylesheet" href="{{ STATIC_URL }}style/blueprint/plugins/fancy-type/screen.css" type="text/css" media="screen, projection">
       <!--[if lt IE 8]>
-        <link rel="stylesheet" href="/static_media/blueprint/ie.css" type="text/css" media="screen, projection">
+        <link rel="stylesheet" href="{{ STATIC_URL }}style/blueprint/ie.css" type="text/css" media="screen, projection">
       <![endif]-->
 
-      <link rel="stylesheet" href="/static_media/style/style.css" type="text/css">
-        <script type="text/javascript" src="/media/js/admin/RelatedObjectLookups.js"></script>
+      <link rel="stylesheet" href="{{ STATIC_URL }}style/style.css" type="text/css">
+        <script type="text/javascript" src="{{ STATIC_URL }}js/RelatedObjectLookups.js"></script>
     </head>
     <body>
         <form method="POST" action="/add/{{ field }}">

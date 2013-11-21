@@ -33,7 +33,7 @@
 {% if list_by == 'most-downloaded' %}
     href="{% url most_downloaded_feed %}{{ qstring }}"
 {% endif %}
-><img src="{{ MEDIA_URL }}/images/feed.png" alt="Feed Icon" />Subscribe to Feed</a>
+><img src="{{ STATIC_URL }}images/feed.png" alt="Feed Icon" />Subscribe to Feed</a>
 {% endblock %}
 
 {% block content %}
@@ -44,7 +44,7 @@
   {% if book.cover_img %}
     <img src="{{ book.cover_img.url }}" alt="Cover" width=100px/>
   {% else %}
-    <img src="{{ MEDIA_URL }}/images/generic_cover.png" alt="Cover" width=100px/>
+    <img src="{{ STATIC_URL }}images/generic_cover.png" alt="Cover" width=100px/>
   {% endif %}
   </div>
   <div class="prepend-3">
@@ -71,7 +71,7 @@
 <div class="prepend-12 pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }} {% endif %}"><img src="{{ MEDIA_URL }}/images/go-previous.png" alt="previous"></a>
+            <a href="?page={{ page_obj.previous_page_number }}{% if q %}&q={{ q }} {% endif %}"><img src="{{ STATIC_URL }}images/go-previous.png" alt="previous"></a>
         {% endif %}
 
         <span class="current-page">
@@ -79,7 +79,7 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }} {% endif %}"><img src="{{ MEDIA_URL }}/images/go-next.png" alt="next"></a>
+            <a href="?page={{ page_obj.next_page_number }}{% if q %}&q={{ q }} {% endif %}"><img src="{{ STATIC_URL }}images/go-next.png" alt="next"></a>
         {% endif %}
     </span>
 </div>
