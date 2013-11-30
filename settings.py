@@ -55,8 +55,6 @@ MEDIA_ROOT = os.path.join(CUR_DIR, 'static_media')
 
 MEDIA_URL = '/static_media/'
 
-ADMIN_MEDIA_PREFIX = '/media/'
-
 SECRET_KEY = '7ks@b7+gi^c4adff)6ka228#rd4f62v*g_dtmo*@i62k)qn=cs'
 
 TEMPLATE_LOADERS = (
@@ -80,11 +78,18 @@ TEMPLATE_DIRS = (
     os.path.join(os.path.dirname(__file__), 'templates'),
 )
 
+STATIC_ROOT = os.path.join(CUR_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(CUR_DIR, 'static'),
+)
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    'django.contrib.staticfiles',
     'django.contrib.admin',
     'tagging', # TODO old
     'taggit',
