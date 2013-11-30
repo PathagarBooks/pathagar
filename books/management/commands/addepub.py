@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.core.files.storage import default_storage
 from django.core.files import File
+from django.db.utils import IntegrityError
 
 import os
 
@@ -77,9 +78,9 @@ class Command(BaseCommand):
                 # FIXME: Find a better way to do this.
                 except IntegrityError as e:
                     if str(e) == "column file_sha256sum is not unique":
-                        print "The book (", d['book_file'], ") was not saved because the file already exsists in the database."
+                        print "The book (", book.book_file, ") was not saved because the file already exsists in the database."
                     else:
-                        raise CommandError('Error adding file %s: %s' % (d['book_file'], sys.exc_info()[1]))
+                        raise CommandError('Error adding file %s: %s' % (book.book_file, sys.exc_info()[1]))
                 except:
-                    raise CommandError('Error adding file %s: %s' % (d['book_file'], sys.exc_info()[1]))
+                    raise CommandError('Error adding file %s: %s' % (book.book_file, sys.exc_info()[1]))
 
