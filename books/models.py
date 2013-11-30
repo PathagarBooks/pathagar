@@ -26,11 +26,10 @@ from taggit.managers import TaggableManager #NEW
 from uuidfield import UUIDField
 from langlist import langs
 
-def sha256_sum(filename, block_size=128 * 64): # used to generate sha256 sum of book files
+def sha256_sum(_file): # used to generate sha256 sum of book files
     s = sha256()
-    with open(filename,'rb') as f:
-        for chunk in iter(lambda: f.read(block_size), b''):
-            s.update(chunk)
+    for chunk in _file:
+        s.update(chunk)
     return s.hexdigest()
 
 class Language(models.Model):
@@ -109,10 +108,9 @@ class Book(models.Model):
     cover_img = models.FileField(blank=True, upload_to='covers')
 
     def save(self, *args, **kwargs):
-        if self.file_sha256sum: # we already have the sha256_sum
-            return
-        self.file_sha256sum = sha256_sum(str(self.book_file))
-        super(Book, self).save()
+        if not self.file_sha256sum:
+            self.file_sha256sum = sha256_sum(self.book_file)
+        super(Book, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ('-time_added',)
