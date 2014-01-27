@@ -24,9 +24,9 @@ $(document).ready(function()
 {% block content %}
 <form  enctype="multipart/form-data"
 {% if action == 'add' %}
-  action="/book/add"
+  action="{% url pathagar.books.views.add_book %}"
 {% else %}
-  action="/book/{{ book.pk }}/edit"
+  action="{% url pathagar.books.views.edit_book book.pk %}"
 {% endif %}
 method="POST">{% csrf_token %}
 <fieldset>
