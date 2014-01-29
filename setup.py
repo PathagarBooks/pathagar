@@ -9,7 +9,7 @@ setup(name='pathagar',
         'pathagar.books.management',
         'pathagar.books.management.commands'
         ],
-    package_dir = {'pathagar':''},
+    package_dir = {'pathagar':'.'},
     package_data = {'pathagar':[
         'static/images/*',
         'static/js/*',
