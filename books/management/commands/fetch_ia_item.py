@@ -142,13 +142,23 @@ def add_to_pathagar(pathagar_books, mdata, cover_image):
 
     item_dir = os.path.join(download_directory, metadata['identifier'])
     book_path = os.path.abspath(os.path.join(item_dir, book_paths[0]))
+    # Some fields are not required
+    if 'description' in metadata:
+        summary = metadata['description']
+    else:
+        summary = metadata['title']
+
+    if 'creator' in metadata:
+        author = metadata['creator']
+    else:
+        author = ''
 
     book = {
         "book_path": os.path.abspath(book_path),
         "a_title": metadata['title'],
-        "a_author": metadata['creator'],
+        "a_author": author,
         "a_status": "Published",
-        "a_summary": metadata['description'],
+        "a_summary": summary,
     }
 
     if cover_image:
