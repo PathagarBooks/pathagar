@@ -85,7 +85,7 @@ def _checkout_repo(branch="master"):
     # because that's where the uploaded books are stored
     books_dir = "%(project_repo_path)s/static_media/books" % env
     if not path_exists(books_dir):
-        run("mkdir %s" % books_dir)
+        run("mkdir -p %s" % books_dir)
     sudo("chmod g+rwxs %s" % books_dir)
 
 
