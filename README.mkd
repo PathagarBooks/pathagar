@@ -104,9 +104,15 @@ Dependencies
 Quickstart
 ==========
 
+* Install mysql
+
+In Fedora
+
+    sudo yum install -y mysql mysql-devel
+
 * Install requirements
 
-    pip install -r requirements.pip
+    sudo pip install -r requirements.pip
 
 
 * In the Pathagar folder edit settings.py to suite your needs and
@@ -123,6 +129,10 @@ Quickstart
     python manage.py runserver
 
   This starts a server listening on localhost, port 8000
+
+  If the port 8000 is in use, can change the port (by example to 8081) running
+
+    python manage.py runserver 0.0.0.0:8081
 
 * With your browser, access http://localhost:8000 and see if the index
   page comes up. If it comes up, click on "Add books" in the footer to
