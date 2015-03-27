@@ -16,12 +16,14 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
+import random
 
 from django.http import HttpResponse
 from django.http import Http404
 from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
+from django.http import HttpResponseRedirect
 from django.core.files.base import ContentFile
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
@@ -30,7 +32,7 @@ from django.views.generic.create_update import create_object, update_object, \
   delete_object
 from django.template import RequestContext, resolve_variable
 
-from app_settings import BOOKS_PER_PAGE
+from app_settings import BOOKS_PER_PAGE, ALLOW_USER_COMMENTS
 from django.conf import settings
 
 # OLD ---------------
@@ -45,7 +47,7 @@ from sendfile import sendfile
 from search import simple_search, advanced_search
 from forms import BookForm, AddLanguageForm
 from langlist import langs as LANG_CHOICES
-from models import TagGroup, Book
+from models import TagGroup, Book, Comment
 from popuphandler import handlePopAdd
 from opds import page_qstring
 from opds import generate_catalog
@@ -91,11 +93,28 @@ def remove_book(request, book_id):
     )
 
 def book_detail(request, book_id):
+    comments = []
+    simple_captcha = ''
+    captcha_result = 0
+    if ALLOW_USER_COMMENTS:
+        comments = Comment.objects.filter(book_id = book_id)
+        r1 = random.randint(1,10)
+        r2 = random.randint(1,10)
+        simple_captcha = str(r1) + ' + ' + str(r2)
+        captcha_result = r1 + r2
+
+    extra_context = {
+        'allow_user_comments': ALLOW_USER_COMMENTS,
+        'comments_list': comments,
+        'simple_captcha': simple_captcha,
+        'captcha_result': captcha_result}
+
     return object_detail(
         request,
         queryset = Book.objects.all(),
         object_id = book_id,
         template_object_name = 'book',
+        extra_context = extra_context
     )
 
 def download_book(request, book_id):
@@ -245,3 +264,15 @@ def most_downloaded(request, qtype=None):
     queryset = Book.objects.all().order_by('-downloads')
     return _book_list(request, queryset, qtype, list_by='most-downloaded')
 
+def add_comment(request):
+    if request.method == 'POST':
+        book_id = request.POST.get('book_id', '')
+        user_name = request.POST.get('user_name', '')
+        comment = request.POST.get('comment', '')
+        book = Book.objects.get(a_id=book_id)
+        book_comment = Comment(book_id=book, user_name=user_name,
+                               comment=comment)
+        book_comment.save(force_insert=True)
+        return HttpResponseRedirect('/book/%s/view' % book.pk)
+    else:
+        raise Http404()

@@ -64,6 +64,9 @@ urlpatterns = patterns('',
     # Add language:
     (r'^add/dc_language|language/$', 'pathagar.books.views.add_language'),
 
+    # Add comment:
+    (r'^add_comment/$', 'pathagar.books.views.add_comment'),
+
     # Auth login and logout:
     (r'^accounts/login/$', 'django.contrib.auth.views.login'),
     (r'^accounts/logout/$', 'django.contrib.auth.views.logout'),

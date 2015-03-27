@@ -62,6 +62,68 @@
 </p>
 </div>
 <hr>
+
+{% if allow_user_comments %}
+<div class="span-16">
+<label>Readers comments:</label>
+</div>
+<hr class="space">
+{% for comment in comments_list %}
+<div class="span-16">{{ comment.comment }} <i> {{ comment.user_name }}</i></div>
+<hr class="space">
+{%  endfor %}
+
+    <script type="text/javascript">
+        function validateForm(form) {
+            if (form['user_name'].value == '') {
+                alert('Please, write your name');
+                form['user_name'].focus();
+                return false;
+            }
+            if (form['comment'].value == '') {
+                alert('Please, write your comment');
+                form['comment'].focus();
+                return false;
+            }
+            input_result = -1;
+            input_result = parseInt(form['result'].value);
+            if (input_result != {{ captcha_result }}) {
+                alert('Wrong value');
+                return false;
+            };
+            return true;
+        }
+    </script>
+
+<hr>
+
+<div class="span-16">
+<label>Add your comment:</label>
+</div>
+<hr class="space">
+
+    <form action="/add_comment/" method="post" name="add_comment"
+            onsubmit="return validateForm(this)">
+        <div class="span-4"><label>Your name:</label></div>
+        <input type="input" name="user_name">
+        <hr class="space">
+        <div class="span-4"><label>Your comment:</label></div>
+        <textarea name="comment" rows="4" cols="50" style="height:50px">
+        </textarea>
+        <hr class="space">
+
+        <div class="span-4"><label>The result of {{ simple_captcha }} is:</label></div>
+        <input type="input" name="result">
+        <input type="hidden" name="book_id" value="{{book.a_id}}">
+
+        <hr class="space">
+        {% csrf_token %}
+        <input type="submit" value="Add">
+    </form>
+
+</div>
+{% endif %}
+
 </div>
 
 <div class="span-6 last" id="sidebar">
