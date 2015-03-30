@@ -122,3 +122,16 @@ class Book(models.Model):
     @models.permalink
     def get_absolute_url(self):
         return ('pathagar.books.views.book_detail', [self.pk])
+
+
+class Comment(models.Model):
+    comment = models.CharField(max_length=200, blank=False)
+    user_name = models.CharField(max_length=30, blank=False)
+    book_id = models.ForeignKey(Book)
+
+    class Meta:
+        verbose_name = "Comment"
+        verbose_name_plural = "Comments"
+
+    def __unicode__(self):
+        return self.comment
