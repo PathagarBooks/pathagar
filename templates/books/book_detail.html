@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load tagging_tags %}
+{% load comments %}
 
 {% block title %}{{ book.a_title }} :: Pathagar Book Server{% endblock %}
 
@@ -62,6 +63,48 @@
 </p>
 </div>
 <hr>
+{% if allow_user_comments %}
+
+<div class="span-16">
+<label>Readers comments:</label>
+</div>
+<hr class="space">
+
+{% get_comment_list for book as comment_list %}
+{% for comment in comment_list %}
+<div class="span-16"><b> {{ comment.user_name }} said: </b>{{ comment.comment }}</div>
+<hr class="space">
+{% endfor %}
+
+<hr>
+
+<div class="span-16">
+<label>Add your comment:</label>
+</div>
+
+{% get_comment_form for book as form %}
+<form action="{% comment_form_target %}" method="post">
+{% csrf_token %}
+
+{{ form.content_type }}
+{{ form.object_pk }}
+{{ form.timestamp }}
+{{ form.security_hash }}
+<input type="hidden" name="next" value="{% url pathagar.books.views.book_detail book.pk %}" />
+
+<div class="span-4"><label for="id_your_name">Your name:</label></div>
+{{ form.name }}
+<hr class="space">
+
+<div class="span-4"><label for="id_comment">Your comment:</label></div>
+{{ form.comment }}
+<hr class="space">
+
+<input type="submit" name="submit" value="Post">
+</form>
+
+
+{% endif %}
 </div>
 
 <div class="span-6 last" id="sidebar">
