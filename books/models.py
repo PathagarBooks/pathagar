@@ -19,8 +19,6 @@ from django.db import models
 
 from hashlib import sha256
 
-from tagging.fields import TagField #OLD
-
 from taggit.managers import TaggableManager #NEW
 
 from uuidfield import UUIDField

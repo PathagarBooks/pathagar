@@ -15,7 +15,6 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from django.core.management.base import BaseCommand, CommandError
-from django.core.files.storage import default_storage
 from django.core.files import File
 
 from django.db.utils import IntegrityError
@@ -27,7 +26,6 @@ import json
 from optparse import make_option
 
 from books.models import Book, Status
-import settings
 
 class Command(BaseCommand):
     help = "Adds a book collection (via a CSV file)"

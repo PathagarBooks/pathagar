@@ -74,7 +74,7 @@ def download_files(item_id, matching_files, item_dir):
                                '--limit-rate=1000k', '--user-agent=fetch_ia_item.py', '-q'])
 
         if 0 != ret:
-            print "    ERROR DOWNLOADING", file_path
+            print "    ERROR DOWNLOADING", download_path
             sys.exit(-1)
 
         time.sleep(0.5)

@@ -1,15 +1,12 @@
 from django.core.management.base import BaseCommand, CommandError
-from django.core.files.storage import default_storage
 from django.core.files import File
 from django.db.utils import IntegrityError
 
 import os
 
-from books.models import *
-from books.epub import *
-from books.langlist import *
-
-import settings
+from books.models import Language, Book, Status
+from books.epub import Epub
+from books.langlist import langs
 
 import sys
 
