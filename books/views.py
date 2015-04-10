@@ -53,7 +53,7 @@ from opds import generate_root_catalog
 from opds import generate_tags_catalog
 from opds import generate_taggroups_catalog
 
-from pathagar.books.app_settings import BOOK_PUBLISHED
+from pathagar.books.app_settings import BOOK_PUBLISHED, ALLOW_USER_COMMENTS
 
 
 @login_required
@@ -96,6 +96,7 @@ def book_detail(request, book_id):
         queryset = Book.objects.all(),
         object_id = book_id,
         template_object_name = 'book',
+        extra_context = {'allow_user_comments': ALLOW_USER_COMMENTS}
     )
 
 def download_book(request, book_id):

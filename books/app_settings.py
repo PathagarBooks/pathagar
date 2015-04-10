@@ -30,3 +30,7 @@ BOOKS_STATICS_VIA_DJANGO = getattr(settings, 'BOOKS_STATICS_VIA_DJANGO', False)
 # This needs to match the published status
 
 BOOK_PUBLISHED = getattr(settings, 'BOOK_PUBLISHED', 1)
+
+# Features
+
+ALLOW_USER_COMMENTS = False
