@@ -40,26 +40,22 @@ Edit Book
 <div class="span-3"><label for="id_book_file">File:</label></div>
 <div class="span-4">{{ form.book_file }}</div>
 <hr class="space">
-<div class="span-3"><label for="id_a_title">atom:title:</label></div>
+<div class="span-3"><label for="id_a_title">Title:</label></div>
 <div class="span-4">{{ form.a_title }}</div>
 <hr class="space">
-<div class="span-3"><label for="id_a_author">atom:author:</label></div>
+<div class="span-3"><label for="id_a_author">Author:</label></div>
 <div class="span-4">{{ form.a_author }}</div>
 <hr class="space">
-<hr class="space">
-<div class="span-3"><label for="id_a_status">atom:status:</label></div>
+<div class="span-3"><label for="id_a_status">Status:</label></div>
 <div class="span-4">{{ form.a_status }}</div>
 <hr class="space">
 <div class="span-3"><label for="id_tags">Tags:</label></div>
 <div class="span-4 last">{{ form.tags }}</div>
 <hr class="space">
-<div class="span-3"><label for="id_downloads">Downloads:</label></div>
-<div class="span-4 last">{{ form.downloads }}</div>
-<hr class="space">
-<div class="span-3"><label for="id_a_summary">atom:summary:</label></div>
+<div class="span-3"><label for="id_a_summary">Summary:</label></div>
 <div class="span-4"></div><div class="span-8">{{ form.a_summary  }}</textarea></div>
 <hr class="space">
-<div class="span-3"><label for="id_dc_language">dc:language:</label></div>
+<div class="span-3"><label for="id_dc_language">Language:</label></div>
 <div class="span-4">
 {{ form.dc_language }}
 </div>
@@ -68,20 +64,23 @@ Edit Book
 <div>
 <p class="hidden_head">Optional information <a href="#">(click to expand)</a></p>
 <div class="hidden_body">
-<div class="span-3"><label for="id_a_category">atom:category:</label></div>
+<div class="span-3"><label for="id_a_category">Category:</label></div>
 <div class="span-4">{{ form.a_category }}</div>
 <hr class="space">
-<div class="span-3"><label for="id_a_rights">atom:rights:</label></div>
+<div class="span-3"><label for="id_a_rights">Rights:</label></div>
 <div class="span-4">{{  form.a_rights}}</div>
 <hr class="space">
-<div class="span-3"><label for="id_dc_publisher">dc:publisher:</label></div>
+<div class="span-3"><label for="id_dc_publisher">Publisher:</label></div>
 <div class="span-4">{{  form.dc_publisher }}</div>
 <hr class="space">
-<div class="span-3"><label for="id_dc_issued">dc:issued: </label></div>
+<div class="span-3"><label for="id_dc_issued">Issued: </label></div>
 <div class="span-4">{{  form.dc_issued }}</div>
 <hr class="space">
-<div class="span-3"><label for="id_dc_identifier">dc:identifier: </label></div>
+<div class="span-3"><label for="id_dc_identifier">Identifier: </label></div>
 <div class="span-4">{{  form.dc_identifier }}</div>
+<hr class="space">
+<div class="span-3"><label for="id_downloads">Downloads:</label></div>
+<div class="span-4 last">{{ form.downloads }}</div>
 <hr class="space">
 <div class="span-3"><label for="id_dc_identifier">Cover image: </label></div>
 <div class="span-4">{{  form.cover_img }}</div>
