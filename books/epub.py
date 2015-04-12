@@ -39,9 +39,6 @@ class Epub(object):
         self._get_opf()
         self._get_ncx()
         
-        ncxfile = self._zobject.open(self._ncxpath)
-        opffile = self._zobject.open(self._opfpath)        
-        
         opffile = self._zobject.open(self._opfpath)
         self._info = epubinfo.EpubInfo(opffile) 
         

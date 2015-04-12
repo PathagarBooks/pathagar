@@ -15,10 +15,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from django.forms import ModelForm, ModelChoiceField
-from models import *
-from langlist import langs as LANG_CHOICES
-from selectwithpop import SelectWithPop
+from django.forms import ModelForm
+from models import Book, Language
 
 class BookForm(ModelForm):
     # dc_language = ModelChoiceField(Language.objects, widget=SelectWithPop)

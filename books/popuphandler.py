@@ -1,6 +1,7 @@
 from django.utils.html import escape
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
+from django import forms
 
 
 def handlePopAdd(request, addForm, field):
@@ -9,7 +10,7 @@ def handlePopAdd(request, addForm, field):
         if form.is_valid():
             try:
                 newObject = form.save()
-            except forms.ValidationError, error:
+            except forms.ValidationError:
                 newObject = None
             if newObject:
                 return HttpResponse('<script type="text/javascript">opener.dismissAddAnotherPopup(window, "%s", "%s");</script>' % \

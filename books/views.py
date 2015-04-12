@@ -22,10 +22,9 @@ from django.http import Http404
 from django.shortcuts import render_to_response
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
-from django.core.files.base import ContentFile
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.views.generic.list_detail import object_list, object_detail
+from django.views.generic.list_detail import object_detail
 from django.views.generic.create_update import create_object, update_object, \
   delete_object
 from django.template import RequestContext, resolve_variable
@@ -34,8 +33,6 @@ from app_settings import BOOKS_PER_PAGE
 from django.conf import settings
 
 # OLD ---------------
-from tagging.utils import get_tag
-from tagging.models import TaggedItem
 from tagging.models import Tag
 # --------------- OLD
 from taggit.models import Tag as tTag
@@ -44,7 +41,6 @@ from sendfile import sendfile
 
 from search import simple_search, advanced_search
 from forms import BookForm, AddLanguageForm
-from langlist import langs as LANG_CHOICES
 from models import TagGroup, Book
 from popuphandler import handlePopAdd
 from opds import page_qstring
