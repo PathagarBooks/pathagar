@@ -15,6 +15,14 @@
     }
 },
 {
+    "pk": 3,
+    "model": "books.language",
+        "fields": {
+        "code": "ht",
+        "label": "Haitian"
+    }
+},
+{
     "pk": 1,
     "model": "books.status",
     "fields": {
