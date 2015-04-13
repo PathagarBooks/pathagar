@@ -33,7 +33,7 @@ class EpubInfo(): #TODO: Cover the entire DC range
         self.identifier = self._get_identifier()
         self.language = self._get_language()
         self.summary = self._get_description()
-        
+        self.cover_image = self._get_cover_image()
     
     def _get_data(self, tagname):
         element = self._e_metadata.find(tagname)
@@ -113,3 +113,10 @@ class EpubInfo(): #TODO: Cover the entire DC range
             return None
         
         return subjectlist
+
+    def _get_cover_image(self):
+        element = self._e_metadata.find('{http://www.idpf.org/2007/opf}meta')
+        if element is not None and element.get('name') == 'cover':
+            return element.get('content')
+        else:
+            return None
