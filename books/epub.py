@@ -128,7 +128,13 @@ class Epub(object):
         Returns a EpubInfo object for the open Epub file
         '''        
         return self._info
-    
+
+    def get_cover_image_path(self):
+        if self._info.cover_image is not None:
+            return os.path.join(self._tempdir, 'OEBPS', self._info.cover_image)
+        else:
+            return None
+
     def close(self):
         '''
         Cleans up (closes open zip files and deletes uncompressed content of Epub. 
