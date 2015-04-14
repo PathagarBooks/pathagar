@@ -217,3 +217,11 @@ div.hidden_body {
     color: white;
     background: #555;
 }
+
+div.required:after {
+    content: '*';
+    color: red;
+    font-size: 120%;
+    font-weight: bold;
+    padding-left: 5px;
+}
