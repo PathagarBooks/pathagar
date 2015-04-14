@@ -15,7 +15,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
+import os
+
 from django.db import models
+from django.core.files import File
 
 from hashlib import sha256
 
@@ -23,6 +26,7 @@ from taggit.managers import TaggableManager #NEW
 
 from uuidfield import UUIDField
 from langlist import langs
+from epub import Epub
 
 def sha256_sum(_file): # used to generate sha256 sum of book files
     s = sha256()
@@ -108,6 +112,18 @@ class Book(models.Model):
     def save(self, *args, **kwargs):
         if not self.file_sha256sum:
             self.file_sha256sum = sha256_sum(self.book_file)
+
+        if not self.cover_img:
+            if self.book_file.name.endswith('.epub'):
+                # get the cover path from the epub file
+                epub_file = Epub(self.book_file)
+                cover_path = epub_file.get_cover_image_path()
+                if cover_path is not None:
+                    cover_file = File(open(cover_path))
+                    self.cover_img.save(os.path.basename(cover_path),
+                                        cover_file)
+                epub_file.close()
+
         super(Book, self).save(*args, **kwargs)
 
     class Meta:
