@@ -25,8 +25,11 @@ import epubinfo
 
 
 class Epub(object):
-    def __init__(self, filepath):
-        self._filepath = filepath
+    def __init__(self, _file):
+        """
+        _file: can be either a path to a file (a string) or a file-like object.
+        """
+        self._file = _file
         self._zobject = None
         self._opfpath = None
         self._ncxpath = None
@@ -96,10 +99,11 @@ class Epub(object):
         Method to crudely check to verify that what we 
         are dealing with is a epub file or not
         '''
-        if not os.path.exists(self._filepath):
-            return False
+        if isinstance(self._file, basestring):
+            if not os.path.exists(self._file):
+                return False
         
-        self._zobject = zipfile.ZipFile(self._filepath)
+        self._zobject = zipfile.ZipFile(self._file)
         
         if not 'mimetype' in self._zobject.namelist():
             return False
