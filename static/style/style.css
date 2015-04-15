@@ -218,6 +218,14 @@ div.hidden_body {
     background: #555;
 }
 
+div.required:after {
+    content: '*';
+    color: red;
+    font-size: 120%;
+    font-weight: bold;
+    padding-left: 5px;
+}
+
 .download {
     display: inline-block;
     padding: 5px 10px;
