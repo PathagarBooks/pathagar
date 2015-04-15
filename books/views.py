@@ -56,8 +56,12 @@ from pathagar.books.app_settings import BOOK_PUBLISHED
 def add_language(request):
     return handlePopAdd(request, AddLanguageForm, 'language')
 
-@login_required
 def add_book(request):
+    context_instance = RequestContext(request)
+    user = resolve_variable('user', context_instance)
+    if not settings.ALLOW_PUBLIC_ADD_BOOKS and not user.is_authenticated():
+        return redirect('/accounts/login/?next=/book/add')
+
     extra_context = {'action': 'add'}
     return create_object(
         request,
@@ -196,6 +200,7 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
         'search_title': search_title,
         'search_author': search_author, 'list_by': list_by,
         'qstring': qstring,
+        'allow_public_add_book': settings.ALLOW_PUBLIC_ADD_BOOKS
     })
     return render_to_response(
         'books/book_list.html',

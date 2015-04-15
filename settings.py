@@ -20,6 +20,9 @@ BOOKS_PER_PAGE = 20 # Number of books shown per page in the OPDS
 
 BOOKS_STATICS_VIA_DJANGO = True
 
+# Allow non logued users to upload books
+ALLOW_PUBLIC_ADD_BOOKS = False
+
 # sendfile settings:
 
 SENDFILE_BACKEND = 'sendfile.backends.development'
