@@ -93,6 +93,11 @@ form.inline p {margin-bottom:0;}
 .error a {color:#8a1f11;}
 .notice a {color:#514721;}
 .success a {color:#264409;}
+.errorlist {
+    margin-left: 400px;
+    margin-bottom: 0px;
+    color: red;
+}
 
 /* grid.css */
 .container {width:950px;margin:0 auto;}
