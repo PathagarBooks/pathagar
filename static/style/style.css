@@ -217,3 +217,23 @@ div.hidden_body {
     color: white;
     background: #555;
 }
+
+.download {
+    display: inline-block;
+    padding: 5px 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    font-weight:normal;
+    background-color: lightgray;
+    color:black;
+    line-height:1;
+    text-decoration: none;
+    font-size: 150%;
+    font-family: serif;
+    margin: 5px;
+}
+
+.download:hover {
+    color: white;
+    background: gray;
+}
