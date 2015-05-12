@@ -2,5 +2,4 @@ Django==1.4.5
 django-tagging==0.3.1
 django-sendfile==0.3.6
 MySQL-python>=1.2.3
-# hope to replace django-tagging with django-taggit
-git+git://github.com/FinalsClub/django-taggit.git
+django-taggit==0.14.0
