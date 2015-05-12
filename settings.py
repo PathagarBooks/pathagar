@@ -87,6 +87,8 @@ STATICFILES_DIRS = (
     os.path.join(CUR_DIR, 'static'),
 )
 
+ALLOW_USER_COMMENTS = False
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -96,5 +98,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'tagging', # TODO old
     'taggit',
+    'django.contrib.comments',
     'pathagar.books'
 )

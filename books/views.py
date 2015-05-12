@@ -17,6 +17,7 @@
 
 import os
 
+from django.conf import settings
 from django.http import HttpResponse
 from django.http import Http404
 from django.shortcuts import render_to_response
@@ -96,6 +97,7 @@ def book_detail(request, book_id):
         queryset = Book.objects.all(),
         object_id = book_id,
         template_object_name = 'book',
+        extra_context = {'allow_user_comments': settings.ALLOW_USER_COMMENTS}
     )
 
 def download_book(request, book_id):

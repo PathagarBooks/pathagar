@@ -61,6 +61,9 @@ urlpatterns = patterns('',
     (r'^book/(?P<book_id>\d+)/remove$', 'pathagar.books.views.remove_book'),
     (r'^book/(?P<book_id>\d+)/download$', 'pathagar.books.views.download_book'),
 
+    # Comments
+    (r'^comments/', include('django.contrib.comments.urls')),
+
     # Add language:
     (r'^add/dc_language|language/$', 'pathagar.books.views.add_language'),
 
