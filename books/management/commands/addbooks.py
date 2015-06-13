@@ -65,7 +65,11 @@ class Command(BaseCommand):
                 f = open(path)
                 book = Book(book_file=File(f), a_title=title, a_author=author,
                             a_summary=summary, a_status=status_published)
-                book.save()
+                try:
+                    book.save()
+                except:
+                    print "EXCEPTION SAVING FILE '%s': %s" % (
+                        path, sys.exc_info()[0])
             else:
                 print "FILE NOT FOUND '%s'" % path
 
