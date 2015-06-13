@@ -53,6 +53,8 @@ class Command(BaseCommand):
 
         #TODO: Figure out if this is a valid CSV file
 
+        status_published = Status.objects.get(status = 'Published')
+
         for row in reader:
             path = row[0]
             title = row[1]
@@ -60,7 +62,8 @@ class Command(BaseCommand):
             summary =  row[3]
 
             f = open(path)
-            book = Book(book_file = File(f), a_title = title, a_author = author, a_summary = summary)
+            book = Book(book_file=File(f), a_title=title, a_author=author,
+                        a_summary=summary, a_status=status_published)
             book.save()
 
     def _handle_json(self, jsonpath):
