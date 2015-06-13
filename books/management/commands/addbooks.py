@@ -61,10 +61,13 @@ class Command(BaseCommand):
             author = row[2]
             summary =  row[3]
 
-            f = open(path)
-            book = Book(book_file=File(f), a_title=title, a_author=author,
-                        a_summary=summary, a_status=status_published)
-            book.save()
+            if os.path.exists(path):
+                f = open(path)
+                book = Book(book_file=File(f), a_title=title, a_author=author,
+                            a_summary=summary, a_status=status_published)
+                book.save()
+            else:
+                print "FILE NOT FOUND '%s'" % path
 
     def _handle_json(self, jsonpath):
         """
