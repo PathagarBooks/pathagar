@@ -81,6 +81,9 @@ class Command(BaseCommand):
         """
         jsonfile = open(jsonpath)
         data_list = json.loads(jsonfile.read())
+
+        status_published = Status.objects.get(status='Published')
+
         for d in data_list:
             # Get a Django File from the given path:
             f = open(d['book_path'])
@@ -94,6 +97,8 @@ class Command(BaseCommand):
 
             if 'a_status' in d:
                 d['a_status'] = Status.objects.get(status=d['a_status'])
+            else:
+                d['a_status'] = status_published
 
             tags = d['tags']
             del d['tags']
