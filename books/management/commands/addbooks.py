@@ -27,16 +27,17 @@ from optparse import make_option
 
 from books.models import Book, Status
 
+
 class Command(BaseCommand):
     help = "Adds a book collection (via a CSV file)"
     args = 'Absolute path to CSV file'
 
     option_list = BaseCommand.option_list + (
         make_option('--json',
-            action='store_true',
-            dest='is_json_format',
-            default=False,
-            help='The file is in JSON format'),
+                    action='store_true',
+                    dest='is_json_format',
+                    default=False,
+                    help='The file is in JSON format'),
         )
 
     def _handle_csv(self, csvpath):
@@ -51,17 +52,27 @@ class Command(BaseCommand):
         csvfile.seek(0)
         reader = csv.reader(csvfile, dialect)
 
-        #TODO: Figure out if this is a valid CSV file
+        # TODO: Figure out if this is a valid CSV file
+
+        status_published = Status.objects.get(status='Published')
 
         for row in reader:
             path = row[0]
             title = row[1]
             author = row[2]
-            summary =  row[3]
+            summary = row[3]
 
-            f = open(path)
-            book = Book(book_file = File(f), a_title = title, a_author = author, a_summary = summary)
-            book.save()
+            if os.path.exists(path):
+                f = open(path)
+                book = Book(book_file=File(f), a_title=title, a_author=author,
+                            a_summary=summary, a_status=status_published)
+                try:
+                    book.save()
+                except:
+                    print "EXCEPTION SAVING FILE '%s': %s" % (
+                        path, sys.exc_info()[0])
+            else:
+                print "FILE NOT FOUND '%s'" % path
 
     def _handle_json(self, jsonpath):
         """
@@ -70,34 +81,41 @@ class Command(BaseCommand):
         """
         jsonfile = open(jsonpath)
         data_list = json.loads(jsonfile.read())
+
+        status_published = Status.objects.get(status='Published')
+
         for d in data_list:
             # Get a Django File from the given path:
             f = open(d['book_path'])
             d['book_file'] = File(f)
             del d['book_path']
 
-            if d.has_key('cover_path'):
+            if 'cover_path' in d:
                 f_cover = open(d['cover_path'])
                 d['cover_img'] = File(f_cover)
                 del d['cover_path']
 
-
-            if d.has_key('a_status'):
-                d['a_status'] = Status.objects.get(status = d['a_status'])
+            if 'a_status' in d:
+                d['a_status'] = Status.objects.get(status=d['a_status'])
+            else:
+                d['a_status'] = status_published
 
             tags = d['tags']
             del d['tags']
 
             book = Book(**d)
             try:
-                book.save() # must save item to generate Book.id before creating tags
+                # must save item to generate Book.id before creating tags
+                book.save()
                 [book.tags.add(tag) for tag in tags]
-                book.save() # save again after tags are generated
+                book.save()  # save again after tags are generated
             except IntegrityError as e:
                 if str(e) == "column file_sha256sum is not unique":
-                    print "The book (", d['book_file'], ") was not saved because the file already exsists in the database."
+                    print "The book (", d['book_file'], ") was not saved " \
+                        "because the file already exsists in the database."
                 else:
-                    raise CommandError('Error adding file %s: %s' % (d['book_file'], sys.exc_info()[1]))
+                    raise CommandError('Error adding file %s: %s' % (
+                        d['book_file'], sys.exc_info()[1]))
 
     def handle(self, filepath='', *args, **options):
         if not os.path.exists(filepath):
@@ -107,5 +125,3 @@ class Command(BaseCommand):
             self._handle_json(filepath)
         else:
             self._handle_csv(filepath)
-
-
