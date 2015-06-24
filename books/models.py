@@ -19,6 +19,7 @@ import os
 
 from django.db import models
 from django.core.files import File
+from django.conf import settings
 
 from hashlib import sha256
 
@@ -95,7 +96,8 @@ class Book(models.Model):
     tags = TaggableManager(blank=True)
     downloads = models.IntegerField(default=0)
     a_id = UUIDField('atom:id')
-    a_status = models.ForeignKey(Status, blank=False, null=False)
+    a_status = models.ForeignKey(Status, blank=False, null=False,
+                                 default=settings.DEFAULT_BOOK_STATUS)
     a_title = models.CharField('atom:title', max_length=200)
     a_author = models.CharField('atom:author', max_length=200)
     a_updated = models.DateTimeField('atom:updated', auto_now=True)
