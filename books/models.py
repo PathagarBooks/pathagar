@@ -95,7 +95,8 @@ class Book(models.Model):
     tags = TaggableManager(blank=True)
     downloads = models.IntegerField(default=0)
     a_id = UUIDField('atom:id')
-    a_status = models.ForeignKey(Status, blank=False, null=False)
+    a_status = models.ForeignKey(Status, blank=False, null=False,
+                                 default='Published')
     a_title = models.CharField('atom:title', max_length=200)
     a_author = models.CharField('atom:author', max_length=200)
     a_updated = models.DateTimeField('atom:updated', auto_now=True)
