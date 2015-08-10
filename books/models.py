@@ -19,7 +19,9 @@ import os
 
 from django.db import models
 from django.core.files import File
+from django.core.exceptions import ValidationError
 from django.conf import settings
+from django.forms.forms import NON_FIELD_ERRORS
 
 from hashlib import sha256
 
@@ -111,10 +113,15 @@ class Book(models.Model):
     help_text='Use ISBN for this', blank=True)
     cover_img = models.FileField(blank=True, upload_to='covers')
 
-    def save(self, *args, **kwargs):
+    def validate_unique(self, *args, **kwargs):
         if not self.file_sha256sum:
             self.file_sha256sum = sha256_sum(self.book_file)
+        if (self.__class__.objects.filter(
+                file_sha256sum=self.file_sha256sum).exists()):
+            raise ValidationError({
+                NON_FIELD_ERRORS:['The book already exists in the server.',]})
 
+    def save(self, *args, **kwargs):
         if not self.cover_img:
             if self.book_file.name.endswith('.epub'):
                 # get the cover path from the epub file
