@@ -75,6 +75,10 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
 )
 
+if settings.DEBUG:
+    # Serve staticfiles
+    from django.conf.urls.static import static
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if BOOKS_STATICS_VIA_DJANGO:
     from django.views.static import serve
