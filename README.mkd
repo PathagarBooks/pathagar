@@ -6,6 +6,25 @@ For more information, see [this presentation](http://www.slideshare.net/sverma/p
 To get involved, please join our [mailing list](http://mail.archive.org/cgi-bin/mailman/listinfo/pathagar).
 For some of the history of the project, read this [blogpost at OLPC-SF](http://www.olpcsf.org/node/126)
 
+
+## Prequisites
+
+### Ubuntu 16.04
+
+Install these dependencies.
+
+- python-dev
+- build-essential
+- mysql-server
+- libxml2-dev
+- libxslt-dev
+- libmysqlclient-dev
+
+### Fedora
+
+    sudo yum install -y mysql mysql-devel
+
+
 Setting up Pathagar using Fabric (BETA)
 =======================================
 
@@ -103,12 +122,6 @@ Dependencies
 
 Quickstart
 ==========
-
-* Install mysql
-
-In Fedora
-
-    sudo yum install -y mysql mysql-devel
 
 * Install requirements
 
