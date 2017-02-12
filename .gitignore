@@ -2,3 +2,4 @@ database.db
 *pyc
 staticfiles/
 static_media/books
+local_settings.py
