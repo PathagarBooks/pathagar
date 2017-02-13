@@ -1,0 +1,7 @@
+language: python
+
+install:
+  - pip install -r requirements.pip
+
+script:
+  - python manage.py test
