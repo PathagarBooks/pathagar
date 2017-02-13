@@ -148,3 +148,10 @@ In Fedora
 
 * To run the server in a production environment, look at Django deployment
   docs at : http://docs.djangoproject.com/en/1.4/howto/deployment/
+
+
+## Running tests
+
+Don't forget to add relevant tests and fix any regressions.
+
+    $ python manage.py test
