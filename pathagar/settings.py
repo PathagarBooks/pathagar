@@ -95,7 +95,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'tagging', # TODO old
     'taggit',
-    'django.contrib.comments',
+    'django_comments',
     'books'
 )
 

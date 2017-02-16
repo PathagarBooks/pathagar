@@ -63,7 +63,7 @@ urlpatterns = patterns('',
     (r'^book/(?P<book_id>\d+)/download$', 'books.views.download_book'),
 
     # Comments
-    (r'^comments/', include('django.contrib.comments.urls')),
+    (r'^comments/', include('django_comments.urls')),
 
     # Add language:
     (r'^add/dc_language|language/$', 'books.views.add_language'),
