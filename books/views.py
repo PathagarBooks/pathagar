@@ -25,9 +25,11 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.core.urlresolvers import reverse
 from django.views.generic.list_detail import object_detail
 from django.views.generic.detail import DetailView
-from django.views.generic.create_update import create_object, update_object, \
+from django.views.generic.edit import CreateView
+from django.views.generic.create_update import update_object, \
   delete_object
 from django.template import RequestContext, resolve_variable
 
@@ -53,23 +55,37 @@ from opds import generate_taggroups_catalog
 
 from pathagar.books.app_settings import BOOK_PUBLISHED
 
+#class LoginRequiredMixin(object):
+#    @method_decorator(login_required)
+#    def dispatch(self, *args, **kwargs):
+#        return super(LoginRequiredMixin, self).dispatch(*args, **kwargs)
+
 
 @login_required
 def add_language(request):
     return handlePopAdd(request, AddLanguageForm, 'language')
 
-def add_book(request):
-    context_instance = RequestContext(request)
-    user = resolve_variable('user', context_instance)
-    if not settings.ALLOW_PUBLIC_ADD_BOOKS and not user.is_authenticated():
-        return redirect('/accounts/login/?next=/book/add')
 
-    extra_context = {'action': 'add'}
-    return create_object(
-        request,
-        form_class = BookForm,
-        extra_context = extra_context,
-    )
+class AddBookView(CreateView):
+    model = Book
+    form_class = BookForm
+
+    def get_success_url(self):
+	return reverse('book-detail', kwargs={'book_id': self.object.pk})
+
+    def dispatch(self, request, *args, **kwargs):
+        context_instance = RequestContext(request)
+        user = resolve_variable('user', context_instance)
+        if not settings.ALLOW_PUBLIC_ADD_BOOKS and not user.is_authenticated():
+            return redirect('/accounts/login/?next=/book/add')
+
+        return super(AddBookView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(AddBookView, self).get_context_data(**kwargs)
+        context['action'] = 'add'
+        return context
+
 
 @login_required
 def edit_book(request, book_id):
