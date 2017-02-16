@@ -26,11 +26,11 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.urlresolvers import reverse
+from django.utils.decorators import method_decorator
 from django.views.generic.list_detail import object_detail
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView
-from django.views.generic.create_update import update_object, \
-  delete_object
+from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.create_update import delete_object
 from django.template import RequestContext, resolve_variable
 
 from app_settings import BOOKS_PER_PAGE
@@ -55,10 +55,10 @@ from opds import generate_taggroups_catalog
 
 from pathagar.books.app_settings import BOOK_PUBLISHED
 
-#class LoginRequiredMixin(object):
-#    @method_decorator(login_required)
-#    def dispatch(self, *args, **kwargs):
-#        return super(LoginRequiredMixin, self).dispatch(*args, **kwargs)
+class LoginRequiredMixin(object):
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(LoginRequiredMixin, self).dispatch(*args, **kwargs)
 
 
 @login_required
@@ -87,16 +87,19 @@ class AddBookView(CreateView):
         return context
 
 
-@login_required
-def edit_book(request, book_id):
-    extra_context = {'action': 'edit'}
-    return update_object(
-        request,
-        form_class = BookForm,
-        object_id = book_id,
-        template_object_name = 'book',
-        extra_context = extra_context,
-    )
+class EditBookView(LoginRequiredMixin, UpdateView):
+    model = Book
+    form_class = BookForm
+    context_object_name = 'book'
+    pk_url_kwarg = 'book_id'
+
+    def get_context_data(self, **kwargs):
+        context = super(EditBookView, self).get_context_data(**kwargs)
+        context.update({
+	    'action': 'edit',
+	})
+        return context
+
 
 @login_required
 def remove_book(request, book_id):

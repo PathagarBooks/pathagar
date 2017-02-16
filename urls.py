@@ -6,7 +6,7 @@ admin.autodiscover()
 
 from django.conf import settings
 from pathagar.books.app_settings import BOOKS_STATICS_VIA_DJANGO
-from pathagar.books.views import AddBookView, BookDetailView
+from pathagar.books.views import AddBookView, BookDetailView, EditBookView
 
 urlpatterns = patterns('',
 
@@ -58,7 +58,7 @@ urlpatterns = patterns('',
     # Add, view, edit and remove books:
     url(r'^book/add$', AddBookView.as_view(), name='book-create'),
     url(r'^book/(?P<book_id>\d+)/view$', BookDetailView.as_view(), name='book-detail'),
-    (r'^book/(?P<book_id>\d+)/edit$', 'pathagar.books.views.edit_book'),
+    url(r'^book/(?P<book_id>\d+)/edit$', EditBookView.as_view(), name='book-edit'),
     (r'^book/(?P<book_id>\d+)/remove$', 'pathagar.books.views.remove_book'),
     (r'^book/(?P<book_id>\d+)/download$', 'pathagar.books.views.download_book'),
 
