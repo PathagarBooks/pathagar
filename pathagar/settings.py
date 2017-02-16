@@ -12,6 +12,9 @@ serve static files, and setup a proper database.
 
 import os
 
+# Get project directory for specifying paths
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 # Books settings:
 
@@ -28,9 +31,6 @@ ALLOW_PUBLIC_ADD_BOOKS = False
 
 SENDFILE_BACKEND = 'sendfile.backends.development'
 
-# Get current directory to get media and templates while developing:
-CUR_DIR = u'' + os.path.dirname(__file__)
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -43,7 +43,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(CUR_DIR, 'database.db'),
+        'NAME': os.path.join(BASE_DIR, 'database.db'),
     }
 }
 
@@ -55,7 +55,7 @@ SITE_ID = 1
 
 USE_I18N = True
 
-MEDIA_ROOT = os.path.join(CUR_DIR, 'static_media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static_media')
 
 MEDIA_URL = '/static_media/'
 
@@ -79,13 +79,13 @@ ROOT_URLCONF = 'pathagar.urls'
 INTERNAL_IPS = ('127.0.0.1',)
 
 TEMPLATE_DIRS = (
-    os.path.join(os.path.dirname(__file__), 'templates'),
+    os.path.join(BASE_DIR, 'templates'),
 )
 
-STATIC_ROOT = os.path.join(CUR_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    os.path.join(CUR_DIR, 'static'),
+    os.path.join(BASE_DIR, 'static'),
 )
 
 ALLOW_USER_COMMENTS = False
@@ -100,5 +100,5 @@ INSTALLED_APPS = (
     'tagging', # TODO old
     'taggit',
     'django.contrib.comments',
-    'pathagar.books'
+    'books'
 )
