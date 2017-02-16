@@ -24,9 +24,9 @@ $(document).ready(function()
 {% block content %}
 <form  enctype="multipart/form-data"
 {% if action == 'add' %}
-  action="{% url book-create %}"
+  action="{% url 'book-create' %}"
 {% else %}
-  action="{% url book-edit book.pk %}"
+  action="{% url 'book-edit' book.pk %}"
 {% endif %}
 method="POST">{% csrf_token %}
 <fieldset>
