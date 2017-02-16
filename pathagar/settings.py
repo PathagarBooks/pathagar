@@ -78,15 +78,8 @@ ROOT_URLCONF = 'pathagar.urls'
 
 INTERNAL_IPS = ('127.0.0.1',)
 
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'templates'),
-)
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
 
 ALLOW_USER_COMMENTS = False
 
