@@ -51,7 +51,7 @@ from opds import generate_root_catalog
 from opds import generate_tags_catalog
 from opds import generate_taggroups_catalog
 
-from pathagar.books.app_settings import BOOK_PUBLISHED
+from app_settings import BOOK_PUBLISHED
 
 class LoginRequiredMixin(object):
     @method_decorator(login_required)

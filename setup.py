@@ -7,9 +7,9 @@ setup(name='pathagar',
     version='0.8.0',
     url='https://github.com/PathagarBooks/pathagar',
     packages = ['pathagar',
-        'pathagar.books',
-        'pathagar.books.management',
-        'pathagar.books.management.commands'
+        'books',
+        'books.management',
+        'books.management.commands'
         ],
     package_dir = {'pathagar':'.'},
     package_data = {'pathagar':[
