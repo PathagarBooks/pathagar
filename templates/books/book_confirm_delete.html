@@ -17,7 +17,7 @@ $(document).ready(function()
 {% block head %}<script type="text/javascript" src="{{ STATIC_URL }}js/RelatedObjectLookups.js"></script>{% endblock %}
 
 {% block content %}
-<form  enctype="multipart/form-data" action="{% url pathagar.books.views.remove_book book.pk %}"
+<form  enctype="multipart/form-data" action="{% url book-remove book.pk %}"
 method="POST">{% csrf_token %}
 <fieldset>
 <legend>Are you shure you want to remove {{ book.a_title }}?</legend>

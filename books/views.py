@@ -29,8 +29,7 @@ from django.core.urlresolvers import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic.list_detail import object_detail
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView
-from django.views.generic.create_update import delete_object
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.template import RequestContext, resolve_variable
 
 from app_settings import BOOKS_PER_PAGE
@@ -101,15 +100,13 @@ class EditBookView(LoginRequiredMixin, UpdateView):
         return context
 
 
-@login_required
-def remove_book(request, book_id):
-    return delete_object(
-        request,
-        model = Book,
-        object_id = book_id,
-        template_object_name = 'book',
-        post_delete_redirect = '/',
-    )
+class RemoveBookView(LoginRequiredMixin, DeleteView):
+    model = Book
+    pk_url_kwarg = 'book_id'
+    context_object_name = 'book'
+    #TODO this should be reverse('home')
+    success_url = '/'
+
 
 class BookDetailView(DetailView):
     model = Book
