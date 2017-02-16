@@ -44,7 +44,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'database.db'),
-    }
+        'TEST': {
+            'NAME': os.path.join(BASE_DIR, 'test.db'),
+        },
+    },
 }
 
 TIME_ZONE = 'America/Chicago'
@@ -95,3 +98,5 @@ INSTALLED_APPS = (
     'django.contrib.comments',
     'books'
 )
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
