@@ -26,6 +26,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.views.generic.list_detail import object_detail
+from django.views.generic.detail import DetailView
 from django.views.generic.create_update import create_object, update_object, \
   delete_object
 from django.template import RequestContext, resolve_variable
@@ -91,14 +92,16 @@ def remove_book(request, book_id):
         post_delete_redirect = '/',
     )
 
-def book_detail(request, book_id):
-    return object_detail(
-        request,
-        queryset = Book.objects.all(),
-        object_id = book_id,
-        template_object_name = 'book',
-        extra_context = {'allow_user_comments': settings.ALLOW_USER_COMMENTS}
-    )
+class BookDetailView(DetailView):
+    model = Book
+    template_name = 'book'
+    pk_url_kwarg = 'book_id'
+
+    def get_context_data(self, **kwargs):
+        context = super(BookDetailView, self).get_context_data(**kwargs)
+        context['allow_user_comments'] = settings.ALLOW_USER_COMMENTS
+        return context
+
 
 def download_book(request, book_id):
     book = get_object_or_404(Book, pk=book_id)

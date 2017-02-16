@@ -20,6 +20,7 @@ import os
 from django.db import models
 from django.core.files import File
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.forms.forms import NON_FIELD_ERRORS
 
@@ -144,4 +145,4 @@ class Book(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('pathagar.books.views.book_detail', [self.pk])
+        return reverse('book-detail', kwargs={"book_id": self.pk})

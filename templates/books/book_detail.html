@@ -90,7 +90,7 @@
 {{ form.object_pk }}
 {{ form.timestamp }}
 {{ form.security_hash }}
-<input type="hidden" name="next" value="{% url pathagar.books.views.book_detail book.pk %}" />
+<input type="hidden" name="next" value="{% url book-detail book_id=book.pk %}" />
 
 <div class="span-4"><label for="id_your_name">Your name:</label></div>
 {{ form.name }}
