@@ -1,4 +1,4 @@
-Django==1.4.5
+Django==1.5
 django-tagging==0.3.1
 django-sendfile==0.3.6
 MySQL-python>=1.2.3
