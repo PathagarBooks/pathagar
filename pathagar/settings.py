@@ -22,6 +22,7 @@ BOOKS_PER_PAGE = 20 # Number of books shown per page in the OPDS
                     # catalogs and in the HTML pages.
 
 BOOKS_STATICS_VIA_DJANGO = True
+# One of 'Published', 'Draft'
 DEFAULT_BOOK_STATUS = 'Published'
 
 # Allow non logued users to upload books

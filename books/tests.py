@@ -3,16 +3,10 @@ from books.models import Book, Status
 
 class LoginRequiredPagesTest(TestCase):
     def setUp(self):
-        #TODO move this into a test fixture
-        published = Status(status="Published")
-        published.save()
-
-        book = Book(
+        Book.objects.create(
             a_title="Red Fish Two Fish One Fish Blue Fish",
             a_author="Dr. Seuss",
-            a_status=published,
         )
-        book.save()
 
     def test_login_page_ok(self):
         response = self.client.get('/accounts/login/')

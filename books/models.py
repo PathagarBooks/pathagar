@@ -32,6 +32,15 @@ from uuidfield import UUIDField
 from langlist import langs
 from epub import Epub
 
+
+# TODO Statuses should probably be represented as choices instead of it's own
+# model.
+if settings.DEFAULT_BOOK_STATUS == 'Published':
+    DEFAULT_BOOK_STATUS_ID = 1
+else:
+    DEFAULT_BOOK_STATUS_ID = 2
+
+
 def sha256_sum(_file): # used to generate sha256 sum of book files
     s = sha256()
     for chunk in _file:
@@ -73,8 +82,15 @@ class TagGroup(models.Model):
         return self.name
 
 
+class StatusManager(models.Manager):
+    def get_by_natural_key(self, status):
+        """For referencing Status by name."""
+        return self.get(status=status)
+
+
 class Status(models.Model):
-    status = models.CharField(max_length=200, blank=False)
+    status = models.CharField(max_length=200, blank=False, unique=True)
+    objects = StatusManager()
 
     class Meta:
         verbose_name_plural = "Status"
@@ -100,7 +116,7 @@ class Book(models.Model):
     downloads = models.IntegerField(default=0)
     a_id = UUIDField('atom:id')
     a_status = models.ForeignKey(Status, blank=False, null=False,
-                                 default=settings.DEFAULT_BOOK_STATUS)
+	    default=DEFAULT_BOOK_STATUS_ID)
     a_title = models.CharField('atom:title', max_length=200)
     a_author = models.CharField('atom:author', max_length=200)
     a_updated = models.DateTimeField('atom:updated', auto_now=True)
