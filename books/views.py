@@ -73,8 +73,7 @@ class AddBookView(CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         context_instance = RequestContext(request)
-        user = resolve_variable('user', context_instance)
-        if not settings.ALLOW_PUBLIC_ADD_BOOKS and not user.is_authenticated():
+        if not settings.ALLOW_PUBLIC_ADD_BOOKS and not request.user.is_authenticated():
             return redirect('/accounts/login/?next=/book/add')
 
         return super(AddBookView, self).dispatch(request, *args, **kwargs)
@@ -170,8 +169,7 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     search_author = request.GET.get('search-author') == 'on'
 
     context_instance = RequestContext(request)
-    user = resolve_variable('user', context_instance)
-    if not user.is_authenticated():
+    if not request.user.is_authenticated():
         queryset = queryset.filter(a_status = BOOK_PUBLISHED)
 
     published_books_count = Book.objects.filter(a_status = BOOK_PUBLISHED).count()
