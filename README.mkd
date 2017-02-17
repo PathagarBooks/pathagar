@@ -93,57 +93,45 @@ The format of the JSON file is like::
 
 You can add more fields.  Please refer to the Book model.
 
-Dependencies
-============
 
-* Python
-* Django
-* django-taggit
-* django-sendfile
+## Development
 
-Quickstart
-==========
-
-* Install mysql
-
-In Fedora
-
-    sudo yum install -y mysql mysql-devel
-
-* Install requirements
-
-    sudo pip install -r requirements.pip
+Pathagar is built using Django 1.8 with long term support. This makes sure
+Pathagar is stable with regular security updates and bug fixes. Be sure to check
+the [documentation for version 1.8](https://docs.djangoproject.com/en/1.8/) and
+not the latest development version of Django.
 
 
-* In the Pathagar folder edit settings.py to suite your needs and
-  environment.
+### Prerequisites
 
-* In the Pathagar folder, run
+These packages are required for Pathagar development. The package names come
+from Ubuntu 16.04, YMMV.
 
-    python manage.py syncdb
+- python-dev
+- build-essential
+- mysql-server
+- libxml2-dev
+- libxslt-dev
+- libmysqlclient-dev
 
-  You will be asked to create an admin user during this stage.
 
-* To run the server, run
+### Initial setup
 
-    python manage.py runserver
+Install python dependencies.
 
-  This starts a server listening on localhost, port 8000
+    $ pip install -r requirements.pip
 
-  If the port 8000 is in use, can change the port (by example to 8081) running
+Initialize the database schema.
 
-    python manage.py runserver 0.0.0.0:8081
+    $ python manage.py migrate
 
-* With your browser, access http://localhost:8000 and see if the index
-  page comes up. If it comes up, click on "Add books" in the footer to
-  start adding books. You will be asked for a username/password. This is
-  the admin username/password you supplied while running syncdb.
+Create an admin user.
 
-  NOTE: You can also mass add books via the command line through CSV files
-  or by simply pointing to a directory with a set of EPUB files.
+    $ python manage.py createsuperuser
 
-* To run the server in a production environment, look at Django deployment
-  docs at : http://docs.djangoproject.com/en/1.4/howto/deployment/
+Start the development server.
+
+    $ python manage.py runserver
 
 
 ## Testing
