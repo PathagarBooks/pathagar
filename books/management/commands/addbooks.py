@@ -15,18 +15,23 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from django.core.management.base import BaseCommand, CommandError
+from django.core.exceptions import ValidationError
 from django.core.files import File
 
 from django.db.utils import IntegrityError
 
-import sys
-import os
 import csv
 import json
+import logging
+import os
+import sys
 from optparse import make_option
 
 from books.models import Book, Status
 
+logger = logging.getLogger(__name__)
+logging.basicConfig()
+logger.setLevel(logging.DEBUG)
 
 class Command(BaseCommand):
     help = "Adds a book collection (via a CSV file)"
@@ -85,10 +90,14 @@ class Command(BaseCommand):
         status_published = Status.objects.get(status='Published')
 
         for d in data_list:
+            logger.debug('read item %s' % json.dumps(d))
             # Get a Django File from the given path:
-            f = open(d['book_path'])
-            d['book_file'] = File(f)
-            del d['book_path']
+            if 'book_path' in d:
+                if os.path.exists(d['book_path']):
+                    f = open(d['book_path'])
+                    d['book_file'] = File(f)
+
+                del d['book_path']
 
             if 'cover_path' in d:
                 f_cover = open(d['cover_path'])
@@ -100,8 +109,9 @@ class Command(BaseCommand):
             else:
                 d['a_status'] = status_published
 
-            tags = d['tags']
-            del d['tags']
+            tags = d.get('tags', [])
+            if 'tags' in d:
+                del d['tags']
 
             book = Book(**d)
             try:
@@ -109,10 +119,18 @@ class Command(BaseCommand):
                 book.save()
                 [book.tags.add(tag) for tag in tags]
                 book.save()  # save again after tags are generated
+            except ValidationError as e:
+                print json.dumps(e)
             except IntegrityError as e:
+                # TODO clean this up, we should check for the file_sha256 exists in database before even trying to save it
                 if str(e) == "column file_sha256sum is not unique":
                     print "The book (", d['book_file'], ") was not saved " \
-                        "because the file already exsists in the database."
+                        "because the file already exists in the database."
+                elif str(e) == "UNIQUE constraint failed: books_book.file_sha256sum":
+                    if 'book_file' not in d:
+                        print d
+                    print "The book (", d['book_file'], ") was not saved " \
+                        "because the file already exists in the database."
                 else:
                     raise CommandError('Error adding file %s: %s' % (
                         d['book_file'], sys.exc_info()[1]))
