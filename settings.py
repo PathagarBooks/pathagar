@@ -102,3 +102,9 @@ INSTALLED_APPS = (
     'django.contrib.comments',
     'pathagar.books'
 )
+
+
+try:
+    from local_settings import *
+except ImportError:
+    pass

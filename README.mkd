@@ -115,8 +115,8 @@ In Fedora
     sudo pip install -r requirements.pip
 
 
-* In the Pathagar folder edit settings.py to suite your needs and
-  environment.
+* In the Pathagar folder, copy `local_settings.example.py` to
+  `local_settings.py` and edit it to suite your needs and environment.
 
 * In the Pathagar folder, run
 
