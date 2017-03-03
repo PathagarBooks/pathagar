@@ -8,7 +8,7 @@ This script will download all of an user's bookmarked items from archive.org.
 
 from django.core.management.base import BaseCommand, CommandError
 from optparse import make_option
-import settings
+from django.conf import settings
 
 import re
 import os
