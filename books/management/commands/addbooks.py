@@ -18,6 +18,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.core.exceptions import ValidationError
 from django.core.files import File
 
+from django.db import transaction
 from django.db.utils import IntegrityError
 
 import csv
@@ -116,9 +117,10 @@ class Command(BaseCommand):
             book = Book(**d)
             try:
                 # must save item to generate Book.id before creating tags
-                book.save()
-                [book.tags.add(tag) for tag in tags]
-                book.save()  # save again after tags are generated
+                with transaction.autocommit():
+                    book.save()
+                    [book.tags.add(tag) for tag in tags]
+                    book.save()  # save again after tags are generated
             except ValidationError as e:
                 print json.dumps(e)
             except IntegrityError as e:
@@ -127,12 +129,12 @@ class Command(BaseCommand):
                     print "The book (", d['book_file'], ") was not saved " \
                         "because the file already exists in the database."
                 elif "duplicate key value violates unique constraint" in str(e):
-                    print "The book (", d['book_file'], ") was not saved " \
+                    book_file = d.get('book_file', 'unknown')
+                    print "The book (", book_file, ") was not saved " \
                         "because the file already exists in the database."
                 elif str(e) == "UNIQUE constraint failed: books_book.file_sha256sum":
-                    if 'book_file' not in d:
-                        print d
-                    print "The book (", d['book_file'], ") was not saved " \
+                    book_file = d.get('book_file', 'unknown')
+                    print "The book (", book_file, ") was not saved " \
                         "because the file already exists in the database."
                 else:
                     raise CommandError('Error adding file %s: %s' % (
