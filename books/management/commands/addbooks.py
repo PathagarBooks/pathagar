@@ -126,6 +126,9 @@ class Command(BaseCommand):
                 if str(e) == "column file_sha256sum is not unique":
                     print "The book (", d['book_file'], ") was not saved " \
                         "because the file already exists in the database."
+                elif "duplicate key value violates unique constraint" in str(e):
+                    print "The book (", d['book_file'], ") was not saved " \
+                        "because the file already exists in the database."
                 elif str(e) == "UNIQUE constraint failed: books_book.file_sha256sum":
                     if 'book_file' not in d:
                         print d
