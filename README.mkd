@@ -57,20 +57,54 @@ files), through the command:
 Pathagar runs on the python web app framework Django.  It is known to work in Django 1.3 and 1.4.
 
 
-Format of CSV file
-==================
+## Loading content
+
+Once installed, Pathagar contains no books. You can upload individual books
+through the UI or you can bulk load them by following the instructions below.
+
+
+### From Internet Archive
+
+You can download book files from Internet Archive. First you need to create
+a user and a bookmarks list. Once created, you'll fetch the book files on your
+bookmarks list with the `fetch_ia_item` command.
+
+    python manage.py fetch_ia_item --username=<your-username> --out=books.json
+
+This can take a while depending on your internet connection and how many books
+you have on your bookmarks list. You might want to go grab a coffee and take
+a stretch break.
+
+Once complete, you'll have a `books.json` file which you can use with the
+`addbooks` command.
+
+    python manage.py addbooks --json books.json
+
+Learn more about the `addbooks` command below.
+
+
+### addbooks command
+
+If you have your books already with metadata described in a file, use the
+`addbooks` command to import them into Pathagar.
+
+
+#### CSV format
 
 To add books from a CSV file:
 
     python manage.py addbooks books.csv
 
 The format of the CSV file is like:
-  "Path to ebook file","Title","Author","Description"
+
+```
+"Path to ebook file","Title","Author","Description"
+```
 
 If you need to add more fields, please use the JSON file.
 
-Format of JSON file
-===================
+
+#### JSON format
 
 To add books from a JSON file:
 
@@ -92,6 +126,7 @@ The format of the JSON file is like::
     ]
 
 You can add more fields.  Please refer to the Book model.
+
 
 Dependencies
 ============
