@@ -117,7 +117,7 @@ class Command(BaseCommand):
             book = Book(**d)
             try:
                 # must save item to generate Book.id before creating tags
-                with transaction.autocommit():
+                with transaction.commit_on_success():
                     book.save()
                     [book.tags.add(tag) for tag in tags]
                     book.save()  # save again after tags are generated
@@ -137,8 +137,13 @@ class Command(BaseCommand):
                     print "The book (", book_file, ") was not saved " \
                         "because the file already exists in the database."
                 else:
-                    raise CommandError('Error adding file %s: %s' % (
+                    # Likely a bug
+                    logger.warn('IntegrityError adding file %s: %s' % (
                         d['book_file'], sys.exc_info()[1]))
+            except Exception as e:
+                # Likely a bug
+                logger.warn("Error adding file %s: %s" % (d['book_file'], sys.exc_info()[1]))
+
 
     def handle(self, filepath='', *args, **options):
         if not os.path.exists(filepath):
