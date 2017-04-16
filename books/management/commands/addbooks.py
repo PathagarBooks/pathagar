@@ -92,14 +92,23 @@ class Command(BaseCommand):
         stats = dict(total=0, errors=0, skipped=0, imported=0)
 
         for d in data_list:
+            stats['total'] += 1
             logger.debug('read item %s' % json.dumps(d))
-            # Get a Django File from the given path:
-            if 'book_path' in d:
-                if os.path.exists(d['book_path']):
-                    f = open(d['book_path'])
-                    d['book_file'] = File(f)
 
-                del d['book_path']
+            # Skip unless there is book content
+            if 'book_path' not in d:
+                stats['skipped'] += 1
+                continue
+
+            # Skip unless there is book content
+            if not os.path.exists(d['book_path']):
+                stats['skipped'] += 1
+                continue
+
+            # Get a Django File from the given path:
+            f = open(d['book_path'])
+            d['book_file'] = File(f)
+            del d['book_path']
 
             if 'cover_path' in d:
                 f_cover = open(d['cover_path'])
@@ -117,39 +126,22 @@ class Command(BaseCommand):
 
             book = Book(**d)
             try:
-                # must save item to generate Book.id before creating tags
+                book.validate_unique() # Throws ValidationError if not unique
+
                 with transaction.commit_on_success():
-                    book.save()
+                    book.save() # must save item to generate Book.id before creating tags
                     [book.tags.add(tag) for tag in tags]
                     book.save()  # save again after tags are generated
                     stats['imported'] += 1
             except ValidationError as e:
-                stats['errors'] += 1
-                logger.warn("ValidationError: %s" % json.dumps(e))
-            except IntegrityError as e:
                 stats['skipped'] += 1
-                # TODO clean this up, we should check for the file_sha256 exists in database before even trying to save it
-                if str(e) == "column file_sha256sum is not unique":
-                    print "The book (", d['book_file'], ") was not saved " \
-                        "because the file already exists in the database."
-                elif "duplicate key value violates unique constraint" in str(e):
-                    book_file = d.get('book_file', 'unknown')
-                    print "The book (", book_file, ") was not saved " \
-                        "because the file already exists in the database."
-                elif str(e) == "UNIQUE constraint failed: books_book.file_sha256sum":
-                    book_file = d.get('book_file', 'unknown')
-                    print "The book (", book_file, ") was not saved " \
-                        "because the file already exists in the database."
-                else:
-                    # Likely a bug
-                    logger.warn('IntegrityError adding file %s: %s' % (
-                        d['book_file'], sys.exc_info()[1]))
+                logger.info('Book already imported, skipping title="%s"' % book.a_title)
             except Exception as e:
                 stats['errors'] += 1
                 # Likely a bug
-                logger.warn("Error adding file %s: %s" % (d['book_file'], sys.exc_info()[1]))
-            finally:
-                stats['total'] += 1
+                book_file = d.get('book_file', 'unknown')
+                logger.warn('Error adding book title="%s": %s' % (
+                    book.a_title, e))
 
         logger.info("addbooks complete total=%(total)d imported=%(imported)d skipped=%(skipped)d errors=%(errors)d" % stats)
 
