@@ -139,7 +139,6 @@ class Command(BaseCommand):
             except Exception as e:
                 stats['errors'] += 1
                 # Likely a bug
-                book_file = d.get('book_file', 'unknown')
                 logger.warn('Error adding book title="%s": %s' % (
                     book.a_title, e))
 
