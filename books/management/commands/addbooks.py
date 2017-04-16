@@ -130,7 +130,7 @@ class Command(BaseCommand):
 
                 with transaction.commit_on_success():
                     book.save() # must save item to generate Book.id before creating tags
-                    [book.tags.add(tag) for tag in tags]
+                    [book.tags.add(tag) for tag in tags if tag]
                     book.save()  # save again after tags are generated
                     stats['imported'] += 1
             except ValidationError as e:
