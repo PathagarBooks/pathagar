@@ -89,6 +89,7 @@ class Command(BaseCommand):
         data_list = json.loads(jsonfile.read())
 
         status_published = Status.objects.get(status='Published')
+        stats = dict(total=0, errors=0, skipped=0, imported=0)
 
         for d in data_list:
             logger.debug('read item %s' % json.dumps(d))
@@ -121,9 +122,12 @@ class Command(BaseCommand):
                     book.save()
                     [book.tags.add(tag) for tag in tags]
                     book.save()  # save again after tags are generated
+                    stats['imported'] += 1
             except ValidationError as e:
-                print json.dumps(e)
+                stats['errors'] += 1
+                logger.warn("ValidationError: %s" % json.dumps(e))
             except IntegrityError as e:
+                stats['skipped'] += 1
                 # TODO clean this up, we should check for the file_sha256 exists in database before even trying to save it
                 if str(e) == "column file_sha256sum is not unique":
                     print "The book (", d['book_file'], ") was not saved " \
@@ -141,8 +145,13 @@ class Command(BaseCommand):
                     logger.warn('IntegrityError adding file %s: %s' % (
                         d['book_file'], sys.exc_info()[1]))
             except Exception as e:
+                stats['errors'] += 1
                 # Likely a bug
                 logger.warn("Error adding file %s: %s" % (d['book_file'], sys.exc_info()[1]))
+            finally:
+                stats['total'] += 1
+
+        logger.info("addbooks complete total=%(total)d imported=%(imported)d skipped=%(skipped)d errors=%(errors)d" % stats)
 
 
     def handle(self, filepath='', *args, **options):
