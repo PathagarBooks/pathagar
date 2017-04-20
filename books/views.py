@@ -18,6 +18,7 @@
 import os
 
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.http import Http404
 from django.shortcuts import render_to_response
@@ -61,7 +62,8 @@ def add_book(request):
     context_instance = RequestContext(request)
     user = resolve_variable('user', context_instance)
     if not settings.ALLOW_PUBLIC_ADD_BOOKS and not user.is_authenticated():
-        return redirect('/accounts/login/?next=/book/add')
+        next = reverse('pathagar.books.views.add_book')
+        return redirect('/accounts/login/?next=%s' % next)
 
     extra_context = {'action': 'add'}
     return create_object(
