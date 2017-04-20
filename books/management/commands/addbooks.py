@@ -15,18 +15,24 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from django.core.management.base import BaseCommand, CommandError
+from django.core.exceptions import ValidationError
 from django.core.files import File
 
+from django.db import transaction
 from django.db.utils import IntegrityError
 
-import sys
-import os
 import csv
 import json
+import logging
+import os
+import sys
 from optparse import make_option
 
 from books.models import Book, Status
 
+logger = logging.getLogger(__name__)
+logging.basicConfig()
+logger.setLevel(logging.DEBUG)
 
 class Command(BaseCommand):
     help = "Adds a book collection (via a CSV file)"
@@ -83,8 +89,22 @@ class Command(BaseCommand):
         data_list = json.loads(jsonfile.read())
 
         status_published = Status.objects.get(status='Published')
+        stats = dict(total=0, errors=0, skipped=0, imported=0)
 
         for d in data_list:
+            stats['total'] += 1
+            logger.debug('read item %s' % json.dumps(d))
+
+            # Skip unless there is book content
+            if 'book_path' not in d:
+                stats['skipped'] += 1
+                continue
+
+            # Skip unless there is book content
+            if not os.path.exists(d['book_path']):
+                stats['skipped'] += 1
+                continue
+
             # Get a Django File from the given path:
             f = open(d['book_path'])
             d['book_file'] = File(f)
@@ -100,22 +120,30 @@ class Command(BaseCommand):
             else:
                 d['a_status'] = status_published
 
-            tags = d['tags']
-            del d['tags']
+            tags = d.get('tags', [])
+            if 'tags' in d:
+                del d['tags']
 
             book = Book(**d)
             try:
-                # must save item to generate Book.id before creating tags
-                book.save()
-                [book.tags.add(tag) for tag in tags]
-                book.save()  # save again after tags are generated
-            except IntegrityError as e:
-                if str(e) == "column file_sha256sum is not unique":
-                    print "The book (", d['book_file'], ") was not saved " \
-                        "because the file already exsists in the database."
-                else:
-                    raise CommandError('Error adding file %s: %s' % (
-                        d['book_file'], sys.exc_info()[1]))
+                book.validate_unique() # Throws ValidationError if not unique
+
+                with transaction.commit_on_success():
+                    book.save() # must save item to generate Book.id before creating tags
+                    [book.tags.add(tag) for tag in tags if tag]
+                    book.save()  # save again after tags are generated
+                    stats['imported'] += 1
+            except ValidationError as e:
+                stats['skipped'] += 1
+                logger.info('Book already imported, skipping title="%s"' % book.a_title)
+            except Exception as e:
+                stats['errors'] += 1
+                # Likely a bug
+                logger.warn('Error adding book title="%s": %s' % (
+                    book.a_title, e))
+
+        logger.info("addbooks complete total=%(total)d imported=%(imported)d skipped=%(skipped)d errors=%(errors)d" % stats)
+
 
     def handle(self, filepath='', *args, **options):
         if not os.path.exists(filepath):

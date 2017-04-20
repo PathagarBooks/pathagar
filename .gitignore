@@ -1,5 +1,5 @@
 database.db
 *pyc
 staticfiles/
-static_media/books
+static_media/
 local_settings.py

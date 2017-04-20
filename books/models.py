@@ -16,6 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import os
+import os.path
 
 from django.db import models
 from django.core.files import File
@@ -127,7 +128,7 @@ class Book(models.Model):
                 # get the cover path from the epub file
                 epub_file = Epub(self.book_file)
                 cover_path = epub_file.get_cover_image_path()
-                if cover_path is not None:
+                if cover_path is not None and os.path.exists(cover_path):
                     cover_file = File(open(cover_path))
                     self.cover_img.save(os.path.basename(cover_path),
                                         cover_file)

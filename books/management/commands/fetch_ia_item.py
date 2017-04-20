@@ -8,7 +8,7 @@ This script will download all of an user's bookmarked items from archive.org.
 
 from django.core.management.base import BaseCommand, CommandError
 from optparse import make_option
-import settings
+from django.conf import settings
 
 import re
 import os
@@ -193,6 +193,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if not options['username']:
            raise CommandError("Option '--username ...' must be specified.")
+
+        if not os.path.exists(download_directory):
+            os.mkdir(download_directory, 0o755)
+
         bookmarks = load_user_bookmarks(options['username'])
         pathagar_books = []
         for item in bookmarks:
