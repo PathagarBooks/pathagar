@@ -71,6 +71,7 @@ class Command(BaseCommand):
                         a_status = pub_status)
 
                 try:
+                    book.validate_unique()
                     book.save()
                 # FIXME: Find a better way to do this.
                 except IntegrityError as e:
