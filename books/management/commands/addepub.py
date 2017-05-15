@@ -70,6 +70,8 @@ class Command(BaseCommand):
                     info.creator = ''
                 if not info.rights:
                     info.rights = ''
+                if not info.date:
+                    info.date = ''
 
                 f = open(name)
                 pub_status = Status.objects.get(status='Published')
