@@ -51,8 +51,6 @@ TIME_ZONE = 'America/Chicago'
 
 LANGUAGE_CODE = 'en-us'
 
-SITE_ID = 1
-
 USE_I18N = True
 
 MEDIA_ROOT = os.path.join(CUR_DIR, 'static_media')
@@ -94,7 +92,6 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'tagging', # TODO old
