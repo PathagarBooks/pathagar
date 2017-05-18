@@ -123,6 +123,7 @@ class Book(models.Model):
                 NON_FIELD_ERRORS:['The book already exists in the server.',]})
 
     def save(self, *args, **kwargs):
+        assert self.file_sha256sum
         if not self.cover_img:
             if self.book_file.name.endswith('.epub'):
                 # get the cover path from the epub file
