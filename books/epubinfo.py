@@ -17,6 +17,8 @@
 
 from lxml import etree
 
+from django.utils.html import strip_tags
+
 
 class EpubInfo(): #TODO: Cover the entire DC range
     def __init__(self, opffile):
@@ -45,7 +47,7 @@ class EpubInfo(): #TODO: Cover the entire DC range
         except AttributeError:
             return None
 
-        return ret
+        return strip_tags(ret)
 
     def _get_title(self):
         try:
