@@ -295,8 +295,10 @@ def latest(request, qtype=None):
     queryset = Book.objects.all()
     return _book_list(request, queryset, qtype, list_by='latest')
 
-def by_title(request, qtype=None):
+def by_title(request, qtype=None, author_id=None):
     queryset = Book.objects.all().order_by('a_title')
+    if author_id:
+        queryset = queryset.filter(a_author=author_id)
     return _book_list(request, queryset, qtype, list_by='by-title')
 
 def by_author(request, qtype=None):

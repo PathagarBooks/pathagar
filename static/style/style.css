@@ -192,9 +192,19 @@ div.hidden_body {
     font-family: serif;
 }
 
-
-
 .bookname a:hover {
+    color: white;
+    background: gray;
+}
+
+.authorname a {
+    -moz-border-radius: 9px;
+    border-radius: 9px;
+    line-height:1;
+    text-decoration: none;
+}
+
+.authorname a:hover {
     color: white;
     background: gray;
 }

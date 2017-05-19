@@ -51,7 +51,11 @@
   <h1 class="bookname">
     <a href="{% url pathagar.books.views.book_detail book.pk %}">{{ book.a_title }}</a>
   </h1>
-  <h2>by <span class="alt">{{ book.a_author }}</span></h2>
+  <h2 class="authorname">
+    <a href="{% url books_by_author book.a_author.id %}">
+        <span class="alt">{{ book.a_author }}</span>
+    </a>
+  </h2>
   {% tags_for_object book as tag_list %}
   {% if book.tags.count != 0 %}
     <div class="span-10"> 
