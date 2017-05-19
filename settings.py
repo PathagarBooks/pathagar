@@ -17,6 +17,8 @@ import os
 
 BOOKS_PER_PAGE = 20 # Number of books shown per page in the OPDS
                     # catalogs and in the HTML pages.
+AUTHORS_PER_PAGE = 40 # Number of books shown per page in the OPDS
+                      # catalogs and in the HTML pages.
 
 BOOKS_STATICS_VIA_DJANGO = True
 DEFAULT_BOOK_STATUS = 'Published'

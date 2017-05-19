@@ -5,7 +5,7 @@ from django.db.utils import IntegrityError
 import os
 from optparse import make_option
 
-from books.models import Language, Book, Status
+from books.models import Language, Book, Status, Author
 from books.epub import Epub
 from books.langlist import langs
 
@@ -75,8 +75,9 @@ class Command(BaseCommand):
 
                 f = open(name)
                 pub_status = Status.objects.get(status='Published')
+                author = Author.objects.get_or_create(a_author=info.creator)[0]
                 book = Book(book_file=File(f), a_title = info.title, \
-                        a_author = info.creator, a_summary = info.summary, \
+                        a_author = author, a_summary = info.summary, \
                         a_rights = info.rights, dc_identifier = info.identifier['value'].strip('urn:uuid:'), \
                         dc_issued = info.date,
                         a_status = pub_status)

@@ -82,6 +82,12 @@ class Status(models.Model):
     def __unicode__(self):
         return self.status
 
+class Author(models.Model):
+    a_author = models.CharField('atom:author', max_length=200, unique=True)
+
+    def __unicode__(self):
+        return self.a_author
+
 
 class Book(models.Model):
     """
@@ -102,7 +108,7 @@ class Book(models.Model):
     a_status = models.ForeignKey(Status, blank=False, null=False,
                                  default=settings.DEFAULT_BOOK_STATUS)
     a_title = models.CharField('atom:title', max_length=200)
-    a_author = models.CharField('atom:author', max_length=200)
+    a_author = models.ForeignKey(Author, blank=False, null=False)
     a_updated = models.DateTimeField('atom:updated', auto_now=True)
     a_summary = models.TextField('atom:summary', blank=True)
     a_category = models.CharField('atom:category', max_length=200, blank=True)

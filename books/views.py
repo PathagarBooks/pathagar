@@ -31,7 +31,7 @@ from django.views.generic.create_update import create_object, update_object, \
   delete_object
 from django.template import RequestContext, resolve_variable
 
-from app_settings import BOOKS_PER_PAGE
+from app_settings import BOOKS_PER_PAGE, AUTHORS_PER_PAGE
 from django.conf import settings
 
 # OLD ---------------
@@ -43,7 +43,7 @@ from sendfile import sendfile
 
 from search import simple_search, advanced_search
 from forms import BookForm, AddLanguageForm
-from models import TagGroup, Book
+from models import TagGroup, Book, Author
 from popuphandler import handlePopAdd
 from opds import page_qstring
 from opds import generate_catalog
@@ -212,6 +212,77 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
         context_instance = RequestContext(request),
     )
 
+def _author_list(request, queryset, qtype=None, list_by='latest', **kwargs):
+    """
+    Filter the books, paginate the result, and return either a HTML
+    book list, or a atom+xml OPDS catalog.
+
+    """
+    q = request.GET.get('q')
+    # search_all = request.GET.get('search-all') == 'on'
+    # search_title = request.GET.get('search-title') == 'on'
+    search_author = request.GET.get('search-author') == 'on'
+
+    # context_instance = RequestContext(request)
+    # user = resolve_variable('user', context_instance)
+    # if not user.is_authenticated():
+    #     queryset = queryset.filter(a_status = BOOK_PUBLISHED)
+
+    # published_books_count = Book.objects.filter(a_status = BOOK_PUBLISHED).count()
+    # unpublished_books_count = Book.objects.exclude(a_status = BOOK_PUBLISHED).count()
+
+    # If no search options are specified, assumes search all, the
+    # advanced search will be used:
+    # if not search_all and not search_title and not search_author:
+    #     search_all = True
+
+    # FIXME
+    # If search queried, modify the queryset with the result of the
+    # search:
+    # if q is not None:
+    #     if search_all:
+    #         queryset = advanced_search(queryset, q)
+    #     else:
+    #         queryset = simple_search(queryset, q,
+    #                                  search_title, search_author)
+
+    paginator = Paginator(queryset, BOOKS_PER_PAGE)
+    page = int(request.GET.get('page', '1'))
+
+    try:
+        page_obj = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        page_obj = paginator.page(paginator.num_pages)
+
+    # Build the query string:
+    qstring = page_qstring(request)
+
+    # Return OPDS Atom Feed:
+    if qtype == 'feed':
+        catalog = generate_catalog(request, page_obj)
+        return HttpResponse(catalog, mimetype='application/atom+xml')
+
+    # Return HTML page:
+    extra_context = dict(kwargs)
+    extra_context.update({
+        'author_list': page_obj.object_list,
+        # 'published_books': published_books_count,
+        # 'unpublished_books': unpublished_books_count,
+        'q': q,
+        'paginator': paginator,
+        'page_obj': page_obj,
+        # 'search_title': search_title,
+        'search_author': search_author,
+        'list_by': list_by,
+        'qstring': qstring,
+        # 'allow_public_add_book': settings.ALLOW_PUBLIC_ADD_BOOKS
+    })
+    return render_to_response(
+        'authors/author_list.html',
+        extra_context,
+        context_instance = RequestContext(request),
+    )
+
 def home(request):
     return redirect('latest')
 
@@ -229,8 +300,11 @@ def by_title(request, qtype=None):
     return _book_list(request, queryset, qtype, list_by='by-title')
 
 def by_author(request, qtype=None):
-    queryset = Book.objects.all().order_by('a_author')
-    return _book_list(request, queryset, qtype, list_by='by-author')
+    #queryset = Book.objects.all().order_by('a_author')
+    #return _book_list(request, queryset, qtype, list_by='by-author')
+    queryset = Author.objects.all().order_by('a_author')
+    print("stuff")
+    return _author_list(request, queryset, qtype, list_by='by-author')
 
 def by_tag(request, tag, qtype=None):
     """ displays a book list by the tag argument """
