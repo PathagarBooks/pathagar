@@ -131,10 +131,13 @@ class Epub(object):
         return self._info
 
     def get_cover_image_path(self):
-        if self._info.cover_image is not None:
-            return os.path.join(self._tempdir, 'OEBPS', self._info.cover_image)
-        else:
+        if self._info.cover_image is None:
             return None
+        for subdir in [self._basepath, '']:
+            path = os.path.join(self._tempdir, subdir, self._info.cover_image)
+            if os.path.exists(path):
+                return path
+        return None
 
     def close(self):
         '''

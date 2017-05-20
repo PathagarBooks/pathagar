@@ -25,6 +25,7 @@ class EpubInfo(): #TODO: Cover the entire DC range
         self._tree = etree.parse(opffile)
         self._root = self._tree.getroot()
         self._e_metadata = self._root.find('{http://www.idpf.org/2007/opf}metadata')
+        self._e_manifest = self._root.find('{http://www.idpf.org/2007/opf}manifest')
         
         self.title = self._get_title()
         self.creator = self._get_creator()
@@ -117,8 +118,23 @@ class EpubInfo(): #TODO: Cover the entire DC range
         return subjectlist
 
     def _get_cover_image(self):
-        element = self._e_metadata.find('{http://www.idpf.org/2007/opf}meta')
+        # TODO: we we should use xpath
+        elements = self._e_metadata.findall('{http://www.idpf.org/2007/opf}meta')
+        if len(elements) == 0:
+            return None
+
+        for element in elements:
+            if element.get('name') == 'cover':
+                break
         if element is not None and element.get('name') == 'cover':
-            return element.get('content')
+            xref = element.get('content')
+            try:
+                # FIXME: we should use xpath
+                for item in self._e_manifest.findall('{http://www.idpf.org/2007/opf}item'):
+                    if item.attrib['id'] == xref:
+                        return item.attrib['href']
+            except Exception as ex:
+                # TODO: add a log
+                return None
         else:
             return None
