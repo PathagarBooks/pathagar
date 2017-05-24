@@ -47,6 +47,7 @@ from models import TagGroup, Book, Author
 from popuphandler import handlePopAdd
 from opds import page_qstring
 from opds import generate_catalog
+from opds import generate_author_catalog
 from opds import generate_root_catalog
 from opds import generate_tags_catalog
 from opds import generate_taggroups_catalog
@@ -259,7 +260,7 @@ def _author_list(request, queryset, qtype=None, list_by='latest', **kwargs):
 
     # Return OPDS Atom Feed:
     if qtype == 'feed':
-        catalog = generate_catalog(request, page_obj)
+        catalog = generate_author_catalog(request, page_obj)
         return HttpResponse(catalog, mimetype='application/atom+xml')
 
     # Return HTML page:
