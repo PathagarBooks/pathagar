@@ -80,7 +80,7 @@ class Command(BaseCommand):
                         a_author = author, a_summary = info.summary, \
                         a_rights = info.rights, dc_identifier = info.identifier['value'].strip('urn:uuid:'), \
                         dc_issued = info.date,
-                        a_status = pub_status)
+                        a_status = pub_status, mimetype="application/epub+zip")
 
                 try:
                     book.validate_unique()
