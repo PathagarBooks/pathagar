@@ -131,6 +131,7 @@ class Book(models.Model):
     def save(self, *args, **kwargs):
         assert self.file_sha256sum
         if not self.cover_img:
+            # FIXME: we should use mimetype
             if self.book_file.name.endswith('.epub'):
                 # get the cover path from the epub file
                 epub_file = Epub(self.book_file)

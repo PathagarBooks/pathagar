@@ -47,6 +47,7 @@ class Command(BaseCommand):
                 try:
                     e = Epub(name)
                     info = e.get_info()
+                    e.close()
                 except:
                     print "%s is not a valid epub file" % name
                     continue
@@ -72,6 +73,8 @@ class Command(BaseCommand):
                     info.rights = ''
                 if not info.date:
                     info.date = ''
+                if not info.identifier.get('value'):
+                    info.identifier['value'] = ''
 
                 f = open(name)
                 pub_status = Status.objects.get(status='Published')
