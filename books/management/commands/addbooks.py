@@ -149,6 +149,7 @@ class Command(BaseCommand):
         if not os.path.exists(filepath):
             raise CommandError("%r is not a valid path" % filepath)
 
+        filepath = os.path.abspath(filepath)
         if options['is_json_format']:
             self._handle_json(filepath)
         else:
