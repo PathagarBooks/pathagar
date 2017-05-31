@@ -28,7 +28,7 @@ import os
 import sys
 from optparse import make_option
 
-from books.models import Book, Status
+from books.models import Author, Book, Status
 
 logger = logging.getLogger(__name__)
 logging.basicConfig()
@@ -54,9 +54,11 @@ class Command(BaseCommand):
         """
 
         csvfile = open(csvpath)
-        dialect = csv.Sniffer().sniff(csvfile.read(1024))
-        csvfile.seek(0)
-        reader = csv.reader(csvfile, dialect)
+        # Sniffer fais to detect a CSV created with DictWriter with default Dialect (excel) !
+        # dialect = csv.Sniffer().sniff(csvfile.read(32000))
+        # csvfile.seek(0)
+        dialect = 'excel'
+        reader = csv.reader(csvfile) #, dialect)
 
         # TODO: Figure out if this is a valid CSV file
 
@@ -68,11 +70,19 @@ class Command(BaseCommand):
             author = row[2]
             summary = row[3]
 
+            if not os.path.exists(path):
+                # check if file is located in same directory as CSV
+                path = os.path.join(os.path.dirname(csvpath), path)
+
             if os.path.exists(path):
+
                 f = open(path)
-                book = Book(book_file=File(f), a_title=title, a_author=author,
+
+                a_author = Author.objects.get_or_create(a_author=author)[0]
+                book = Book(book_file=File(f), a_title=title, a_author=a_author,
                             a_summary=summary, a_status=status_published)
                 try:
+                    book.validate_unique()
                     book.save()
                 except:
                     print "EXCEPTION SAVING FILE '%s': %s" % (
