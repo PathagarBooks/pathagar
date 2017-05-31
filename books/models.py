@@ -123,8 +123,10 @@ class Book(models.Model):
     def validate_unique(self, *args, **kwargs):
         if not self.file_sha256sum:
             self.file_sha256sum = sha256_sum(self.book_file)
-        if (self.__class__.objects.filter(
-                file_sha256sum=self.file_sha256sum).exists()):
+        unicity = self.__class__.objects.filter(file_sha256sum=self.file_sha256sum)
+        if self.pk is not None:
+            unicity = unicity.exclude(pk=self.pk)
+        if unicity.exists():
             raise ValidationError({
                 NON_FIELD_ERRORS:['The book already exists in the server.',]})
 
