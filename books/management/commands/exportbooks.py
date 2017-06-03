@@ -60,7 +60,7 @@ class Command(BaseCommand):
                 'a_author': book.a_author.a_author.encode('utf-8'),
                 'a_summary': book.a_summary.encode('utf-8')}
             writer.writerow(entry)
-        writer.close()
+        csvfile.close()
 
 
     def handle(self, filepath='', *args, **options):

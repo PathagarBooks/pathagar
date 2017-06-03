@@ -1,0 +1,15 @@
+langague: python
+distr: trusty
+sudo: required
+python:
+    - 2.7
+
+before_install:
+    - sudo apt-get install -y python-virtualenv
+    - virtualenv /tmp/venv
+    - source /tmp/venv/bin/activate
+    - pip install -r requirements.pip
+    - pip install -r test-requirements.pip
+
+script:
+    - scripts/run-pylint.sh
