@@ -9,3 +9,6 @@ Add detection of language on summary
 Fix validate unique
 Tags are not saved form edit webpage
 Order Authors list on edit page (it looks like order by their internal ID)
+Improve Author check (suppress whitespaces, try to invert between ',', ...)
+Add webpage to perform action on multiple items like add tags or updating authors
+Add default 'anonymous' author if not fount in EPUB or in JSON import
