@@ -73,6 +73,8 @@ class Command(BaseCommand):
                     info.rights = ''
                 if not info.date:
                     info.date = ''
+                if not info.identifier:
+                    info.identifier = {}
                 if not info.identifier.get('value'):
                     info.identifier['value'] = ''
 
