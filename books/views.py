@@ -21,7 +21,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.http import Http404
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, render
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
@@ -164,7 +164,7 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     search_author = request.GET.get('search-author') == 'on'
 
     context_instance = RequestContext(request)
-    user = Variable('user').resolve(context_instance)
+    user = request.user #Variable('user').resolve(context_instance)
     # user = resolve_variable('user', context_instance)
     if not user.is_authenticated():
         queryset = queryset.filter(a_status = BOOK_PUBLISHED)
@@ -216,6 +216,8 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
         'qstring': qstring,
         'allow_public_add_book': settings.ALLOW_PUBLIC_ADD_BOOKS
     })
+    return render(request, 'books/book_list.html',
+                  context=extra_context)
     return render_to_response(
         'books/book_list.html',
         extra_context,

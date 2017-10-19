@@ -14,7 +14,7 @@ urlpatterns = [
     url(r'^$', views.home,
      kwargs={}, name='home'),
     url(r'^latest/$', views.latest,
-     {}, 'latest'),
+     {}, name='latest'),
     url(r'^by-title/$', views.by_title,
      {}, 'by_title'),
     url(r'^by-author/$', views.by_author,
