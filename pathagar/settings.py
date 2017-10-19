@@ -102,7 +102,6 @@ INSTALLED_APPS = (
     'tagging', # TODO old
     'taggit',
     # 'django.contrib.comments', # DEPRECATED, use https://github.com/django/django-contrib-comments
-    #'books',
     'books',
 )
 
