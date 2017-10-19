@@ -16,7 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from django.db.models import Q
-from models import Book
+from books.models import Book
 
 
 def simple_search(queryset, searchterms,

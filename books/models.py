@@ -28,9 +28,9 @@ from hashlib import sha256
 
 from taggit.managers import TaggableManager #NEW
 
-from uuidfield import UUIDField
-from langlist import langs
-from epub import Epub
+from books.uuidfield import UUIDField
+from books.langlist import langs
+from books.epub import Epub
 
 def sha256_sum(_file): # used to generate sha256 sum of book files
     s = sha256()

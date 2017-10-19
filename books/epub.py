@@ -21,7 +21,7 @@ import os, os.path
 from lxml import etree
 import shutil
 
-import epubinfo
+from books import epubinfo
 
 
 class Epub(object):
@@ -37,7 +37,7 @@ class Epub(object):
         self._tempdir = tempfile.mkdtemp()
 
         if not self._verify():
-            print 'Warning: This does not seem to be a valid epub file'
+            print('Warning: This does not seem to be a valid epub file')
 
         self._get_opf()
         self._get_ncx()

@@ -26,12 +26,18 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.views.generic.list_detail import object_detail
-from django.views.generic.create_update import create_object, update_object, \
-  delete_object
-from django.template import RequestContext, resolve_variable
+# from django.views.generic.list_detail import object_detail
+from django.views.generic.list import ListView as object_detail
 
-from app_settings import BOOKS_PER_PAGE, AUTHORS_PER_PAGE
+# from django.views.generic.create_update import create_object, update_object, \
+#  delete_object
+from django.views.generic.edit import UpdateView as update_object
+from django.views.generic.edit import CreateView as create_object
+from django.views.generic.edit import DeleteView as delete_object
+from django.template import RequestContext, Variable
+#, resolve_variable
+
+from pathagar.settings import BOOKS_PER_PAGE, AUTHORS_PER_PAGE
 from django.conf import settings
 
 # OLD ---------------
@@ -41,7 +47,7 @@ from taggit.models import Tag as tTag
 
 from sendfile import sendfile
 
-from search import simple_search, advanced_search
+from books.search import simple_search, advanced_search
 from forms import BookForm, AddLanguageForm
 from models import TagGroup, Book, Author
 from popuphandler import handlePopAdd
@@ -61,7 +67,8 @@ def add_language(request):
 
 def add_book(request):
     context_instance = RequestContext(request)
-    user = resolve_variable('user', context_instance)
+    user = Variable('user').resolve(context_instance)
+    # user = resolve_variable('user', context_instance)
     if not settings.ALLOW_PUBLIC_ADD_BOOKS and not user.is_authenticated():
         next = reverse('pathagar.books.views.add_book')
         return redirect('/accounts/login/?next=%s' % next)
@@ -156,7 +163,8 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     search_author = request.GET.get('search-author') == 'on'
 
     context_instance = RequestContext(request)
-    user = resolve_variable('user', context_instance)
+    user = Variable('user').resolve(context_instance)
+    # user = resolve_variable('user', context_instance)
     if not user.is_authenticated():
         queryset = queryset.filter(a_status = BOOK_PUBLISHED)
 
