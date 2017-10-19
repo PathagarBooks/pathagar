@@ -49,7 +49,7 @@
   </div>
   <div class="prepend-3">
   <h1 class="bookname">
-    <a href="{% url pathagar.books.views.book_detail book.pk %}">{{ book.a_title }}</a>
+    <a href="{% url books.views.book_detail book.pk %}">{{ book.a_title }}</a>
   </h1>
   <h2 class="authorname">
     <a href="{% url books_by_author book.a_author.id %}">
@@ -68,7 +68,7 @@
   <p>{{ book.a_summary }}</p>
   </div>
   </div>
-  <div class="span-3 prepend-14 last"><em><a class="download" href="{% url pathagar.books.views.download_book book.pk %}">Download</a></em></div>
+  <div class="span-3 prepend-14 last"><em><a class="download" href="{% url books.views.download_book book.pk %}">Download</a></em></div>
   <hr/>
 {%  endfor %}
 

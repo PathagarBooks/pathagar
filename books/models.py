@@ -155,4 +155,4 @@ class Book(models.Model):
 
     @models.permalink
     def get_absolute_url(self):
-        return ('pathagar.books.views.book_detail', [self.pk])
+        return ('books.views.book_detail', [self.pk])

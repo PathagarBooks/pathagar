@@ -48,17 +48,18 @@ from taggit.models import Tag as tTag
 from sendfile import sendfile
 
 from books.search import simple_search, advanced_search
-from forms import BookForm, AddLanguageForm
-from models import TagGroup, Book, Author
-from popuphandler import handlePopAdd
-from opds import page_qstring
-from opds import generate_catalog
-from opds import generate_author_catalog
-from opds import generate_root_catalog
-from opds import generate_tags_catalog
-from opds import generate_taggroups_catalog
+from books.forms import BookForm, AddLanguageForm
+from books.models import TagGroup, Book, Author
+from books.popuphandler import handlePopAdd
+# FIXME: move opds in dedicated app
+from books.opds import page_qstring
+from books.opds import generate_catalog
+from books.opds import generate_author_catalog
+from books.opds import generate_root_catalog
+from books.opds import generate_tags_catalog
+from books.opds import generate_taggroups_catalog
 
-from pathagar.books.app_settings import BOOK_PUBLISHED
+from books.app_settings import BOOK_PUBLISHED
 
 
 @login_required
@@ -70,7 +71,7 @@ def add_book(request):
     user = Variable('user').resolve(context_instance)
     # user = resolve_variable('user', context_instance)
     if not settings.ALLOW_PUBLIC_ADD_BOOKS and not user.is_authenticated():
-        next = reverse('pathagar.books.views.add_book')
+        next = reverse('books.views.add_book')
         return redirect('/accounts/login/?next=%s' % next)
 
     extra_context = {'action': 'add'}

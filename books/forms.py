@@ -16,7 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from django.forms import ModelForm
-from models import Book, Language
+from books.models import Book, Language
 
 class BookForm(ModelForm):
     # dc_language = ModelChoiceField(Language.objects, widget=SelectWithPop)

@@ -15,11 +15,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from cStringIO import StringIO
+# from cStringIO import StringIO
+from io import StringIO
+
 
 from django.core.urlresolvers import reverse
 
-from atom import AtomFeed
+from books.atom import AtomFeed
 import mimetypes
 
 import datetime
@@ -66,11 +68,11 @@ def generate_nav_catalog(subsections, is_root=False):
     if is_root:
         links.append({'type': 'application/atom+xml',
                       'rel': 'self',
-                      'href': reverse('pathagar.books.views.root')})
+                      'href': reverse('books.views.root')})
 
     links.append({'title': 'Home', 'type': 'application/atom+xml',
                   'rel': 'start',
-                  'href': reverse('pathagar.books.views.root')})
+                  'href': reverse('books.views.root')})
 
     feed = AtomFeed(title = 'Pathagar Bookserver OPDS feed', \
         atom_id = 'pathagar:full-catalog', subtitle = \
@@ -132,7 +134,7 @@ def generate_catalog(request, page_obj):
     links = []
     links.append({'title': 'Home', 'type': 'application/atom+xml',
                   'rel': 'start',
-                  'href': reverse('pathagar.books.views.root')})
+                  'href': reverse('books.views.root')})
 
     if page_obj.has_previous():
         previous_page = page_obj.previous_page_number()
@@ -155,7 +157,7 @@ def generate_catalog(request, page_obj):
         if book.cover_img:
             linklist = [{'rel': \
                     'http://opds-spec.org/acquisition', 'href': \
-                    reverse('pathagar.books.views.download_book',
+                    reverse('books.views.download_book',
                             kwargs=dict(book_id=book.pk)),
                     'type': __get_mimetype(book)}, {'rel': \
                     'http://opds-spec.org/cover', 'href': \
@@ -163,7 +165,7 @@ def generate_catalog(request, page_obj):
         else:
            linklist = [{'rel': \
                     'http://opds-spec.org/acquisition', 'href': \
-                    reverse('pathagar.books.views.download_book',
+                    reverse('books.views.download_book',
                             kwargs=dict(book_id=book.pk)),
                     'type': __get_mimetype(book)}]
         add_kwargs = {
@@ -189,7 +191,7 @@ def generate_author_catalog(request, page_obj):
     links = []
     links.append({'title': 'Home', 'type': nav, #'application/atom+xml',
                   'rel': 'start',
-                  'href': reverse('pathagar.books.views.root')})
+                  'href': reverse('books.views.root')})
 
     if page_obj.has_previous():
         previous_page = page_obj.previous_page_number()
@@ -211,7 +213,7 @@ def generate_author_catalog(request, page_obj):
     print("send ", len(page_obj.object_list))
     for author in page_obj.object_list:
         linklist = [{'rel': 'subsection',
-                     'href': reverse('pathagar.books.views.by_title',
+                     'href': reverse('books.views.by_title',
                                      kwargs=dict(author_id=author.pk)),
                      'type': nav}]
         add_kwargs = {

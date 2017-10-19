@@ -91,13 +91,13 @@ method="get">
 <div class="loginbox">
 {% if user.is_authenticated %}
 <span>Welcome, {{ user.username }}&nbsp;&nbsp;</span>
-<a href="{% url pathagar.books.views.add_book %}">Add Book</a>&nbsp;&nbsp;
-<a href="{% url django.contrib.auth.views.logout %}?next={% url pathagar.books.views.home %}">Log Out</a>
+<a href="{% url books.views.add_book %}">Add Book</a>&nbsp;&nbsp;
+<a href="{% url django.contrib.auth.views.logout %}?next={% url books.views.home %}">Log Out</a>
 {% else %}
 {% if allow_public_add_book %}
-<a href="{% url pathagar.books.views.add_book %}">Add Book</a>&nbsp;&nbsp;
+<a href="{% url books.views.add_book %}">Add Book</a>&nbsp;&nbsp;
 {% endif %}
-<a href="{% url django.contrib.auth.views.login %}?next={% url pathagar.books.views.home %}">Log In</a>
+<a href="{% url django.contrib.auth.views.login %}?next={% url books.views.home %}">Log In</a>
 {% endif %}
 </div>
 
