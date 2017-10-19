@@ -103,7 +103,7 @@ class Epub(object):
         Method to crudely check to verify that what we
         are dealing with is a epub file or not
         '''
-        if isinstance(self._file, basestring):
+        if isinstance(self._file, str):
             self._file = os.path.abspath(self._file)
             if not os.path.exists(self._file):
                 return False

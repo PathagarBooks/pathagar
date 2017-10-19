@@ -45,6 +45,9 @@ class Language(models.Model):
     def __unicode__(self):
         return self.label
 
+    def __str__(self):
+        return self.label
+
     def save(self, *args, **kwargs):
         '''
         This method automatically tries to assign the right language code
@@ -72,6 +75,9 @@ class TagGroup(models.Model):
     def __unicode__(self):
         return self.name
 
+    def __str__(self):
+        return self.name
+
 
 class Status(models.Model):
     status = models.CharField(max_length=200, blank=False)
@@ -82,10 +88,17 @@ class Status(models.Model):
     def __unicode__(self):
         return self.status
 
+    def __str__(self):
+        return self.status
+
+
 class Author(models.Model):
     a_author = models.CharField('atom:author', max_length=200, unique=True)
 
     def __unicode__(self):
+        return self.a_author
+
+    def __str__(self):
         return self.a_author
 
 
@@ -105,8 +118,7 @@ class Book(models.Model):
     tags = TaggableManager(blank=True)
     downloads = models.IntegerField(default=0)
     a_id = UUIDField('atom:id')
-    a_status = models.ForeignKey(Status, blank=False, null=False,
-                                 default=settings.DEFAULT_BOOK_STATUS)
+    a_status = models.ForeignKey(Status, blank=False, null=False, default=settings.DEFAULT_BOOK_STATUS)
     a_title = models.CharField('atom:title', max_length=200)
     a_author = models.ForeignKey(Author, blank=False, null=False)
     a_updated = models.DateTimeField('atom:updated', auto_now=True)
@@ -151,6 +163,9 @@ class Book(models.Model):
         get_latest_by = "time_added"
 
     def __unicode__(self):
+        return self.a_title
+
+    def __str__(self):
         return self.a_title
 
     @models.permalink
