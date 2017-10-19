@@ -34,7 +34,7 @@ SENDFILE_BACKEND = 'sendfile.backends.development'
 CUR_DIR = u'' + os.path.dirname(__file__)
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+# TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
@@ -63,10 +63,10 @@ MEDIA_URL = '/static_media/'
 
 SECRET_KEY = '7ks@b7+gi^c4adff)6ka228#rd4f62v*g_dtmo*@i62k)qn=cs'
 
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-)
+# TEMPLATE_LOADERS = (
+#     'django.template.loaders.filesystem.Loader',
+#     'django.template.loaders.app_directories.Loader',
+# )
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -80,9 +80,24 @@ ROOT_URLCONF = 'pathagar.urls'
 
 INTERNAL_IPS = ('127.0.0.1',)
 
-TEMPLATE_DIRS = (
-    os.path.join(os.path.dirname(__file__), 'templates'),
-)
+# TEMPLATE_DIRS = (
+#     os.path.join(os.path.dirname(__file__), 'templates'),
+# )
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 STATIC_ROOT = os.path.join(CUR_DIR, 'staticfiles')
 STATIC_URL = '/static/'
