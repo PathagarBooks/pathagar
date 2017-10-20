@@ -85,10 +85,10 @@ class Command(BaseCommand):
                     book.validate_unique()
                     book.save()
                 except:
-                    print "EXCEPTION SAVING FILE '%s': %s" % (
-                        path, sys.exc_info()[0])
+                    print("EXCEPTION SAVING FILE '%s': %s" % (
+                        path, sys.exc_info()[0]))
             else:
-                print "FILE NOT FOUND '%s'" % path
+                print("FILE NOT FOUND '%s'" % path)
 
     def _handle_json(self, jsonpath):
         """
@@ -138,7 +138,7 @@ class Command(BaseCommand):
             try:
                 book.validate_unique() # Throws ValidationError if not unique
 
-                with transaction.commit_on_success():
+                with transaction.atomic():
                     book.save() # must save item to generate Book.id before creating tags
                     [book.tags.add(tag) for tag in tags if tag]
                     book.save()  # save again after tags are generated
