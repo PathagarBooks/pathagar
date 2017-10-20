@@ -16,7 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from django.forms import ModelForm
-from books.models import Book, Language
+from books.models import Book, Language, Author
 
 class BookForm(ModelForm):
     # dc_language = ModelChoiceField(Language.objects, widget=SelectWithPop)
@@ -39,6 +39,15 @@ class BookForm(ModelForm):
         if commit:
             instance.save()
         return instance
+
+    def get_absolute_url(self):
+        return reverse('book_detail', kwargs={'pk': self.pk})
+
+
+class AuthorForm(ModelForm):
+    class Meta:
+        model = Author
+        exclude = ()
 
 class AddLanguageForm(ModelForm):
     class Meta:

@@ -34,8 +34,12 @@ from django.views.generic.list import ListView as object_detail
 from django.views.generic.edit import UpdateView as update_object
 from django.views.generic.edit import CreateView as create_object
 from django.views.generic.edit import DeleteView as delete_object
-from django.template import RequestContext, Variable
-#, resolve_variable
+
+from django.views.generic.edit import CreateView
+
+from django.views.generic.edit import FormView
+
+from django.template import RequestContext
 
 from pathagar.settings import BOOKS_PER_PAGE, AUTHORS_PER_PAGE
 from django.conf import settings
@@ -62,24 +66,37 @@ from books.opds import generate_taggroups_catalog
 from books.app_settings import BOOK_PUBLISHED
 
 
+
+
+
+
+
 @login_required
 def add_language(request):
     return handlePopAdd(request, AddLanguageForm, 'language')
 
 def add_book(request):
     context_instance = RequestContext(request)
-    user = Variable('user').resolve(context_instance)
+    user = request.user
     # user = resolve_variable('user', context_instance)
     if not settings.ALLOW_PUBLIC_ADD_BOOKS and not user.is_authenticated():
-        next = reverse('books.views.add_book')
+        next = reverse('book_add')
         return redirect('/accounts/login/?next=%s' % next)
 
     extra_context = {'action': 'add'}
+    #return 
+    """
     return create_object(
         request,
         form_class = BookForm,
         extra_context = extra_context,
     )
+    """
+    extra_context = {'action': 'add', 'form': BookForm()}
+    if request.method == 'POST':
+        raise Exception("Do Stuff Save Here")
+    return render(request, 'books/book_form.html',
+                  extra_context)
 
 @login_required
 def edit_book(request, book_id):
@@ -142,6 +159,8 @@ def tags(request, qtype=None, group_slug=None):
         return HttpResponse(catalog, mimetype='application/atom+xml')
 
     # Return HTML page:
+    return render(request, 'books/tag_list.html',
+                  context)
     return render_to_response(
         'books/tag_list.html', context,
         context_instance = RequestContext(request),
@@ -164,8 +183,7 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     search_author = request.GET.get('search-author') == 'on'
 
     context_instance = RequestContext(request)
-    user = request.user #Variable('user').resolve(context_instance)
-    # user = resolve_variable('user', context_instance)
+    user = request.user
     if not user.is_authenticated():
         queryset = queryset.filter(a_status = BOOK_PUBLISHED)
 
@@ -289,6 +307,8 @@ def _author_list(request, queryset, qtype=None, list_by='latest', **kwargs):
         'qstring': qstring,
         # 'allow_public_add_book': settings.ALLOW_PUBLIC_ADD_BOOKS
     })
+    return render(request, 'authors/author_list.html',
+                  context=extra_context)
     return render_to_response(
         'authors/author_list.html',
         extra_context,
