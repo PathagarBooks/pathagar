@@ -40,14 +40,12 @@ class BookForm(ModelForm):
             instance.save()
         return instance
 
-    def get_absolute_url(self):
-        return reverse('book_detail', kwargs={'pk': self.pk})
-
 
 class AuthorForm(ModelForm):
     class Meta:
         model = Author
         exclude = ()
+
 
 class AddLanguageForm(ModelForm):
     class Meta:
