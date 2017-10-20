@@ -123,6 +123,7 @@ class EpubInfo(): #TODO: Cover the entire DC range
         if len(elements) == 0:
             return None
 
+        element = None
         for element in elements:
             if element.get('name') == 'cover':
                 break
