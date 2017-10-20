@@ -15,23 +15,23 @@
 {% block feed_link %}
 <a class="feed-link"
 {% if list_by == 'latest' %}
-    href="{% url latest_feed %}{{ qstring }}"
+    href="{% url 'latest_feed' %}{{ qstring }}"
 {% endif %}
 {% if list_by == 'by-title' %}
-    href="{% url by_title_feed %}{{ qstring }}"
+    href="{% url 'by_title_feed' %}{{ qstring }}"
 {% endif %}
 {% if list_by == 'by-author' %}
-    href="{% url by_author_feed %}{{ qstring }}"
+    href="{% url 'by_author_feed' %}{{ qstring }}"
 {% endif %}
 {% if list_by == 'by-tag' %}
     {% if tag %}
-        href="{% url by_tag_feed tag.name %}{{ qstring }}"
+        href="{% url 'by_tag_feed' tag.name %}{{ qstring }}"
     {% else %}
         href="#"
     {% endif %}
 {% endif %}
 {% if list_by == 'most-downloaded' %}
-    href="{% url most_downloaded_feed %}{{ qstring }}"
+    href="{% url 'most_downloaded_feed' %}{{ qstring }}"
 {% endif %}
 ><img src="{{ STATIC_URL }}images/feed.png" alt="Feed Icon" />Subscribe to Feed</a>
 {% endblock %}

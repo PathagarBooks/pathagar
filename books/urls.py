@@ -60,11 +60,11 @@ urlpatterns = [
 
 
     # Add, view, edit and remove books:
-    url(r'^book/add$', views.add_book),
-    url(r'^book/(?P<book_id>\d+)/view$', views.book_detail),
-    url(r'^book/(?P<book_id>\d+)/edit$', views.edit_book),
-    url(r'^book/(?P<book_id>\d+)/remove$', views.remove_book),
-    url(r'^book/(?P<book_id>\d+)/download$', views.download_book),
+    url(r'^book/add$', views.add_book, name='book_add'),
+    url(r'^book/(?P<book_id>\d+)/view$', views.book_detail, name='book_detail'),
+    url(r'^book/(?P<book_id>\d+)/edit$', views.edit_book, name='book_edit'),
+    url(r'^book/(?P<book_id>\d+)/remove$', views.remove_book, name='book_remove'),
+    url(r'^book/(?P<book_id>\d+)/download$', views.download_book, name='book_download'),
 
     # Comments
     # FIXME (r'^comments/', include('django.contrib.comments.urls')),

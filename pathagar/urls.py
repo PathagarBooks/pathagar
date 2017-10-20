@@ -8,7 +8,7 @@ admin.autodiscover()
 from django.conf import settings
 from books.app_settings import BOOKS_STATICS_VIA_DJANGO
 
-
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
 
@@ -19,8 +19,8 @@ urlpatterns = [
     # FIXME (r'^comments/', include('django.contrib.comments.urls')),
 
     # Auth login and logout:
-    # url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
-    # url(r'^accounts/logout/$', 'django.contrib.auth.views.logout'),
+    url(r'^accounts/login/$', auth_views.login, name='login'),
+    url(r'^accounts/logout/$', auth_views.logout, name='logout'),
 
     # Admin:
     url(r'^admin/', include(admin.site.urls)),
