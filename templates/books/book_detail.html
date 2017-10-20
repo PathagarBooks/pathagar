@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 {% load tagging_tags %}
 {% load comments %}
 
@@ -114,7 +115,7 @@
 {% if  book.cover_img %}
 <img src="{{ book.cover_img.url }}" alt="Cover" width=150px/>
 {% else %}
-<img src="{{ STATIC_URL }}images/generic_cover.png" alt="Cover" width=150px/>
+<img src="{% static 'images/generic_cover.png' %}" alt="Cover" width=150px/>
 {% endif %}
 <hr class="space">
 <a class="download" href="{% url books.views.download_book book.pk %}">Download book</a>

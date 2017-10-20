@@ -1,22 +1,23 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
 <meta charset=utf-8 />
 <head>
-  <link rel="stylesheet" href="{{ STATIC_URL }}style/blueprint/screen.css" type="text/css" media="screen, projection">
-  <link rel="stylesheet" href="{{ STATIC_URL }}style/blueprint/print.css" type="text/css" media="print">
-  <link rel="stylesheet" href="{{ STATIC_URL }}style/blueprint/plugins/fancy-type/screen.css" type="text/css" media="screen, projection">
-  <link rel="stylesheet" href="{{ STATIC_URL }}style/blueprint/plugins/link-icons/screen.css" type="text/css" media="screen, projection">
+  <link rel="stylesheet" href="{% static 'style/blueprint/screen.css' %}" type="text/css" media="screen, projection">
+  <link rel="stylesheet" href="{% static 'style/blueprint/print.css' %}" type="text/css" media="print">
+  <link rel="stylesheet" href="{% static 'style/blueprint/plugins/fancy-type/screen.css' %}" type="text/css" media="screen, projection">
+  <link rel="stylesheet" href="{% static 'style/blueprint/plugins/link-icons/screen.css' %}" type="text/css" media="screen, projection">
   <!--[if lt IE 8]>
-    <link rel="stylesheet" href="{{ STATIC_URL }}style/blueprint/ie.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="{% static 'style/blueprint/ie.css' %}" type="text/css" media="screen, projection">
   <![endif]-->
 
-  <link rel="stylesheet" href="{{ STATIC_URL }}style/style.css" type="text/css">
+  <link rel="stylesheet" href="{% static 'style/style.css' %}" type="text/css">
 
   <title>{% block title %}{% endblock %}</title>
 
-  <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.5.2.min.js"></script>
-  <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.example.min.js"></script>
+  <script type="text/javascript" src="{% static 'js/jquery-1.5.2.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/jquery.example.min.js' %}"></script>
   {% block head %}{% endblock %}
 </head>
 <body>

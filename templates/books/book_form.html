@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}{% if action == 'add' %}
 Add Book
@@ -19,7 +20,7 @@ $(document).ready(function()
 });
 {% endblock %}
 
-{% block head %}<script type="text/javascript" src="{{ STATIC_URL }}js/RelatedObjectLookups.js"></script>{% endblock %}
+{% block head %}<script type="text/javascript" src="{% static 'js/RelatedObjectLookups.js' %}"></script>{% endblock %}
 
 {% block content %}
 <form  enctype="multipart/form-data"
