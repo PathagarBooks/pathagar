@@ -163,7 +163,7 @@ def generate_catalog(request, page_obj):
                     'http://opds-spec.org/cover', 'href': \
                     book.cover_img.url }]
         else:
-           linklist = [{'rel': \
+            linklist = [{'rel': \
                     'http://opds-spec.org/acquisition', 'href': \
                     reverse('book_download',
                             kwargs=dict(book_id=book.pk)),
@@ -171,7 +171,7 @@ def generate_catalog(request, page_obj):
         add_kwargs = {
             'content': book.a_summary,
             'links': linklist,
-            'authors': [{'name' : unicode(book.a_author)}],
+            'authors': [{'name' : str(book.a_author)}],
             'dc_publisher': book.dc_publisher,
             'dc_issued': book.dc_issued,
             'dc_identifier': book.dc_identifier,

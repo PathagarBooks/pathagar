@@ -27,13 +27,12 @@ class Command(BaseCommand):
     help = "Adds a book collection (via a directory containing EPUB file(s))"
     args = 'Absolute path to directory of EPUB files'
 
-    option_list = BaseCommand.option_list + (
-        make_option('--ignore-error',
-                    action='store_true',
-                    dest='ignore_error',
-                    default=False,
-                    help='Continue after error'),
-        )
+    def add_arguments(self, parser):
+        parser.add_argument('--ignore-error',
+                            action='store_true',
+                            dest='ignore_error',
+                            default=False,
+                            help='Continue after error')
 
     def handle(self, dirpath='', *args, **options):
         if not os.path.exists(dirpath):
@@ -49,7 +48,7 @@ class Command(BaseCommand):
                     info = e.get_info()
                     e.close()
                 except:
-                    print "%s is not a valid epub file" % name
+                    print("%s is not a valid epub file" % name)
                     continue
                 lang = Language.objects.filter(code=info.language)
                 if not lang:
@@ -93,15 +92,15 @@ class Command(BaseCommand):
                 # FIXME: Find a better way to do this.
                 except IntegrityError as e:
                     if str(e) == "column file_sha256sum is not unique":
-                        print "The book (", book.book_file, ") was not saved because the file already exsists in the database."
+                        print("The book (", book.book_file, ") was not saved because the file already exsists in the database.")
                     else:
                         if options['ignore_error']:
-                            print 'Error adding file %s: %s' % (book.book_file, sys.exc_info()[1])
+                            print('Error adding file %s: %s' % (book.book_file, sys.exc_info()[1]))
                             continue
                         raise CommandError('Error adding file %s: %s' % (book.book_file, sys.exc_info()[1]))
                 except:
                     if options['ignore_error']:
-                        print 'Error adding file %s: %s' % (book.book_file, sys.exc_info()[1])
+                        print('Error adding file %s: %s' % (book.book_file, sys.exc_info()[1]))
                         continue
                     raise CommandError('Error adding file %s: %s' % (book.book_file, sys.exc_info()[1]))
 

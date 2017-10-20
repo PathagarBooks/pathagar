@@ -38,13 +38,12 @@ class Command(BaseCommand):
     help = "Adds a book collection (via a CSV file)"
     args = 'Absolute path to CSV file'
 
-    option_list = BaseCommand.option_list + (
-        make_option('--json',
-                    action='store_true',
-                    dest='is_json_format',
-                    default=False,
-                    help='The file is in JSON format'),
-        )
+    def add_arguments(self, parser):
+        parser.add_argument('--json',
+                      action='store_true',
+                      dest='is_json_format',
+                      default=False,
+                      help='The file is in JSON format')
 
     def _handle_csv(self, csvpath):
         """

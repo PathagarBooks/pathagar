@@ -21,7 +21,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.http import Http404
-from django.shortcuts import render_to_response, render
+from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
@@ -101,6 +101,8 @@ def add_book(request):
 @login_required
 def edit_book(request, book_id):
     extra_context = {'action': 'edit'}
+    raise NotImplementedError  # TODO
+    """
     return update_object(
         request,
         form_class = BookForm,
@@ -108,9 +110,12 @@ def edit_book(request, book_id):
         template_object_name = 'book',
         extra_context = extra_context,
     )
+    """
 
 @login_required
 def remove_book(request, book_id):
+    raise NotImplementedError  # TODO
+    """
     return delete_object(
         request,
         model = Book,
@@ -118,8 +123,11 @@ def remove_book(request, book_id):
         template_object_name = 'book',
         post_delete_redirect = '/',
     )
+    """
 
 def book_detail(request, book_id):
+    raise NotImplementedError  # TODO
+    """
     return object_detail(
         request,
         queryset = Book.objects.all(),
@@ -127,6 +135,7 @@ def book_detail(request, book_id):
         template_object_name = 'book',
         extra_context = {'allow_user_comments': settings.ALLOW_USER_COMMENTS}
     )
+    """
 
 def download_book(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
@@ -161,10 +170,6 @@ def tags(request, qtype=None, group_slug=None):
     # Return HTML page:
     return render(request, 'books/tag_list.html',
                   context)
-    return render_to_response(
-        'books/tag_list.html', context,
-        context_instance = RequestContext(request),
-    )
 
 def tags_listgroups(request):
     tag_groups = TagGroup.objects.all()
@@ -236,11 +241,6 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     })
     return render(request, 'books/book_list.html',
                   context=extra_context)
-    return render_to_response(
-        'books/book_list.html',
-        extra_context,
-        context_instance = RequestContext(request),
-    )
 
 def _author_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     """
@@ -309,11 +309,6 @@ def _author_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     })
     return render(request, 'authors/author_list.html',
                   context=extra_context)
-    return render_to_response(
-        'authors/author_list.html',
-        extra_context,
-        context_instance = RequestContext(request),
-    )
 
 def home(request):
     return redirect('latest')
