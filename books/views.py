@@ -78,23 +78,18 @@ def add_language(request):
 def add_book(request):
     context_instance = RequestContext(request)
     user = request.user
-    # user = resolve_variable('user', context_instance)
     if not settings.ALLOW_PUBLIC_ADD_BOOKS and not user.is_authenticated():
         next = reverse('book_add')
         return redirect('/accounts/login/?next=%s' % next)
 
-    extra_context = {'action': 'add'}
-    #return 
-    """
-    return create_object(
-        request,
-        form_class = BookForm,
-        extra_context = extra_context,
-    )
-    """
-    extra_context = {'action': 'add', 'form': BookForm()}
     if request.method == 'POST':
-        raise Exception("Do Stuff Save Here")
+        form = BookForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    else:
+        form = BookForm()
+    extra_context = {'action': 'add', 'form': form}
     return render(request, 'books/book_form.html',
                   extra_context)
 

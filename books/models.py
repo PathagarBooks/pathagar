@@ -133,6 +133,8 @@ class Book(models.Model):
     cover_img = models.FileField(blank=True, upload_to='covers')
 
     def validate_unique(self, *args, **kwargs):
+        print(args)
+        print(kwargs)
         if not self.file_sha256sum:
             self.file_sha256sum = sha256_sum(self.book_file)
         unicity = self.__class__.objects.filter(file_sha256sum=self.file_sha256sum)
@@ -151,7 +153,7 @@ class Book(models.Model):
                 epub_file = Epub(self.book_file)
                 cover_path = epub_file.get_cover_image_path()
                 if cover_path is not None and os.path.exists(cover_path):
-                    cover_file = File(open(cover_path))
+                    cover_file = File(open(cover_path, "rb"))
                     self.cover_img.save(os.path.basename(cover_path), # pylint: disable=no-member
                                         cover_file)
                 epub_file.close()

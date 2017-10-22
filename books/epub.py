@@ -114,7 +114,7 @@ class Epub(object):
             return False
 
         mtypefile = self._zobject.open('mimetype')
-        mimetype = mtypefile.readline()
+        mimetype = mtypefile.readline().decode('utf-8')
 
         if not mimetype.startswith('application/epub+zip'): # Some files seem to have trailing characters
             return False
