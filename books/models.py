@@ -133,8 +133,6 @@ class Book(models.Model):
     cover_img = models.FileField(blank=True, upload_to='covers')
 
     def validate_unique(self, *args, **kwargs):
-        print(args)
-        print(kwargs)
         if not self.file_sha256sum:
             self.file_sha256sum = sha256_sum(self.book_file)
         unicity = self.__class__.objects.filter(file_sha256sum=self.file_sha256sum)

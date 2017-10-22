@@ -3,9 +3,8 @@ from django.core.files import File
 from django.db.utils import IntegrityError
 
 import os
-from optparse import make_option
 
-from books.models import Language, Book, Status, Author
+from books.models import Language, Book, Status, Author, sha256_sum
 from books.epub import Epub
 from books.langlist import langs
 
@@ -33,9 +32,12 @@ class Command(BaseCommand):
                             dest='ignore_error',
                             default=False,
                             help='Continue after error')
+        parser.add_argument('dirpath',
+                            help='PATH')
 
-    def handle(self, dirpath='', *args, **options):
-        if not os.path.exists(dirpath):
+    def handle(self, *args, **options):
+        dirpath = options.get('dirpath')
+        if not dirpath or not os.path.exists(dirpath):
             raise CommandError("%r is not a valid path" % dirpath)
 
 
@@ -77,16 +79,18 @@ class Command(BaseCommand):
                 if not info.identifier.get('value'):
                     info.identifier['value'] = ''
 
-                f = open(name)
+                f = open(name, "rb")
+                sha = sha256_sum(open(name, "rb"))
                 pub_status = Status.objects.get(status='Published')
                 author = Author.objects.get_or_create(a_author=info.creator)[0]
-                book = Book(book_file=File(f), a_title = info.title, \
-                        a_author = author, a_summary = info.summary, \
-                        a_rights = info.rights, dc_identifier = info.identifier['value'].strip('urn:uuid:'), \
+                book = Book(a_title = info.title,
+                        a_author = author, a_summary = info.summary,
+                        file_sha256sum=sha,
+                        a_rights = info.rights, dc_identifier = info.identifier['value'].strip('urn:uuid:'),
                         dc_issued = info.date,
                         a_status = pub_status, mimetype="application/epub+zip")
-
                 try:
+                    book.book_file.save(os.path.basename(name), File(f))
                     book.validate_unique()
                     book.save()
                 # FIXME: Find a better way to do this.
