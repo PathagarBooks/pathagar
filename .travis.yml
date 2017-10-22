@@ -13,3 +13,4 @@ install:
 
 script:
     - scripts/run-pylint.sh
+    - ./manage.py test
