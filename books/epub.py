@@ -53,17 +53,14 @@ class Epub(object):
 
     def _unzip(self):
         #self._zobject.extractall(path = self._tempdir) # This is broken upto python 2.7
-        orig_cwd = os.getcwd()
-        os.chdir(self._tempdir)
         for name in self._zobject.namelist():
-            if name.startswith(os.path.sep): # Some weird zip file entries start with a slash, and we don't want to write to the root directory
+            # Some weird zip file entries start with a slash, and we don't want to write to the root directory
+            if name.startswith(os.path.sep):
                 name = name[1:]
             if name.endswith(os.path.sep) or name.endswith('\\'):
-                os.makedirs(name)
+                os.makedirs(os.path.join(self._tempdir, name))
             else:
-                self._zobject.extract(name)
-        os.chdir(orig_cwd)
-
+                self._zobject.extract(name, self._tempdir)
 
     def _get_opf(self):
         containerfile = self._zobject.open('META-INF/container.xml')
