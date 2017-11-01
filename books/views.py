@@ -26,20 +26,12 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-# from django.views.generic.list_detail import object_detail
-from django.views.generic.list import ListView as object_detail
 
-# from django.views.generic.create_update import create_object, update_object, \
-#  delete_object
-from django.views.generic.edit import UpdateView as update_object
-from django.views.generic.edit import CreateView as create_object
-from django.views.generic.edit import DeleteView as delete_object
-
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import UpdateView
 from django.views.generic.edit import CreateView
-
 from django.views.generic.edit import FormView
-
-from django.template import RequestContext
+from django.views.generic.edit import DeleteView
 
 from pathagar.settings import BOOKS_PER_PAGE, AUTHORS_PER_PAGE
 from django.conf import settings
@@ -65,72 +57,36 @@ from books.opds import generate_taggroups_catalog
 
 from books.app_settings import BOOK_PUBLISHED
 
-
-
-
-
-
-
 @login_required
 def add_language(request):
     return handlePopAdd(request, AddLanguageForm, 'language')
 
-def add_book(request):
-    context_instance = RequestContext(request)
-    user = request.user
-    if not settings.ALLOW_PUBLIC_ADD_BOOKS and not user.is_authenticated():
-        next = reverse('book_add')
-        return redirect('/accounts/login/?next=%s' % next)
+class BookDetailView(DetailView):
+    model = Book
+    form_class = BookForm
 
-    if request.method == 'POST':
-        form = BookForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('/')
-    else:
-        form = BookForm()
-    extra_context = {'action': 'add', 'form': form}
-    return render(request, 'books/book_form.html',
-                  extra_context)
+class BookEditView(UpdateView):
+    model = Book
+    form_class = BookForm
 
-@login_required
-def edit_book(request, book_id):
-    extra_context = {'action': 'edit'}
-    raise NotImplementedError  # TODO
-    """
-    return update_object(
-        request,
-        form_class = BookForm,
-        object_id = book_id,
-        template_object_name = 'book',
-        extra_context = extra_context,
-    )
-    """
+    def get_context_data(self, **kwargs):
+        context = super(BookEditView, self).get_context_data(**kwargs)
+        context['action'] = 'edit'
+        return context
 
-@login_required
-def remove_book(request, book_id):
-    raise NotImplementedError  # TODO
-    """
-    return delete_object(
-        request,
-        model = Book,
-        object_id = book_id,
-        template_object_name = 'book',
-        post_delete_redirect = '/',
-    )
-    """
+class BookAddView(CreateView):
+    model = Book
+    form_class = BookForm
 
-def book_detail(request, book_id):
-    raise NotImplementedError  # TODO
-    """
-    return object_detail(
-        request,
-        queryset = Book.objects.all(),
-        object_id = book_id,
-        template_object_name = 'book',
-        extra_context = {'allow_user_comments': settings.ALLOW_USER_COMMENTS}
-    )
-    """
+    def get_context_data(self, **kwargs):
+        context = super(BookAddView, self).get_context_data(**kwargs)
+        context['action'] = 'add'
+        return context
+
+class BookDeleteView(DeleteView):
+    model = Book
+    form_class = BookForm
+    success_url = '/'
 
 def download_book(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
@@ -182,7 +138,6 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     search_title = request.GET.get('search-title') == 'on'
     search_author = request.GET.get('search-author') == 'on'
 
-    context_instance = RequestContext(request)
     user = request.user
     if not user.is_authenticated():
         queryset = queryset.filter(a_status = BOOK_PUBLISHED)

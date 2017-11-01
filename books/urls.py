@@ -58,12 +58,11 @@ urlpatterns = [
     url(r'^tags.atom$', views.tags,
      {'qtype': u'feed'}, 'tags_feed'),
 
-
     # Add, view, edit and remove books:
-    url(r'^book/add$', views.add_book, name='book_add'),
-    url(r'^book/(?P<book_id>\d+)/view$', views.book_detail, name='book_detail'),
-    url(r'^book/(?P<book_id>\d+)/edit$', views.edit_book, name='book_edit'),
-    url(r'^book/(?P<book_id>\d+)/remove$', views.remove_book, name='book_remove'),
+    url(r'^book/add$', views.BookAddView.as_view(), name='book_add'),
+    url(r'^book/(?P<pk>\d+)/view$', views.BookDetailView.as_view(), name='book_detail'),
+    url(r'^book/(?P<pk>\d+)/edit$', views.BookEditView.as_view(), name='book_edit'),
+    url(r'^book/(?P<pk>\d+)/remove$', views.BookDeleteView.as_view(), name='book_remove'),
     url(r'^book/(?P<book_id>\d+)/download$', views.download_book, name='book_download'),
 
     # Comments
