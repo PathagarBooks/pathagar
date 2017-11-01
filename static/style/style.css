@@ -5,6 +5,8 @@
 
 a[href$=".epub"]   {
     background-image: url(blueprint/plugins/link-icons/icons/epub.png);
+    padding-left: 20px;
+    background-repeat: no-repeat;
 }
 
 .footer {
