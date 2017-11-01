@@ -17,6 +17,8 @@ import os
 
 BOOKS_PER_PAGE = 20 # Number of books shown per page in the OPDS
                     # catalogs and in the HTML pages.
+AUTHORS_PER_PAGE = 40 # Number of books shown per page in the OPDS
+                      # catalogs and in the HTML pages.
 
 BOOKS_STATICS_VIA_DJANGO = True
 DEFAULT_BOOK_STATUS = 'Published'
@@ -29,10 +31,10 @@ ALLOW_PUBLIC_ADD_BOOKS = False
 SENDFILE_BACKEND = 'sendfile.backends.development'
 
 # Get current directory to get media and templates while developing:
-CUR_DIR = u'' + os.path.dirname(__file__)
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+# TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
@@ -43,7 +45,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(CUR_DIR, 'database.db'),
+        'NAME': os.path.join(BASE_DIR, 'database.db'),
     }
 }
 
@@ -55,16 +57,16 @@ SITE_ID = 1
 
 USE_I18N = True
 
-MEDIA_ROOT = os.path.join(CUR_DIR, 'static_media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static_media')
 
 MEDIA_URL = '/static_media/'
 
 SECRET_KEY = '7ks@b7+gi^c4adff)6ka228#rd4f62v*g_dtmo*@i62k)qn=cs'
 
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-)
+# TEMPLATE_LOADERS = (
+#     'django.template.loaders.filesystem.Loader',
+#     'django.template.loaders.app_directories.Loader',
+# )
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -78,14 +80,31 @@ ROOT_URLCONF = 'pathagar.urls'
 
 INTERNAL_IPS = ('127.0.0.1',)
 
-TEMPLATE_DIRS = (
-    os.path.join(os.path.dirname(__file__), 'templates'),
-)
+# TEMPLATE_DIRS = (
+#     os.path.join(os.path.dirname(__file__), 'templates'),
+# )
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
-STATIC_ROOT = os.path.join(CUR_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    os.path.join(CUR_DIR, 'static'),
+    os.path.join(BASE_DIR, 'static'),
 )
 
 ALLOW_USER_COMMENTS = False
@@ -99,8 +118,8 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'tagging', # TODO old
     'taggit',
-    'django.contrib.comments',
-    'pathagar.books'
+    # 'django.contrib.comments', # DEPRECATED, use https://github.com/django/django-contrib-comments
+    'books',
 )
 
 

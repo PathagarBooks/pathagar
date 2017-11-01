@@ -1,41 +1,11 @@
 Introduction
 ============
 
-Pathagar is a simple book server for schools where there is little or no internet. 
+Pathagar is a simple book server for schools where there is little or no internet.
 For more information, see [this presentation](http://www.slideshare.net/sverma/pathagar-a-book-server) by Prof. Sameer Verma.
-To get involved, please join our [mailing list](http://mail.archive.org/cgi-bin/mailman/listinfo/pathagar).
 For some of the history of the project, read this [blogpost at OLPC-SF](http://www.olpcsf.org/node/126)
 
-Setting up Pathagar using Fabric (BETA)
-=======================================
-
-Fabric is the most convenient way to setup Pathagar on your server.
-
-To setup pathagar using fabric you first need to install Fabric and Virtualenv. 
-
-Note: If you are running a red-hat based machine. Replace "ubuntu" in the following commands/paths to fedora and follow the same procedure.
-
-After installing edit `deploy/ubuntu/fabric.py` , `deploy/ubuntu/settings.conf` and `deploy/ubuntu/virtualhost.conf` to configure the server according to your needs.
-
-Great! Now you are ready to deploy.
-
-First we need to create the directories that will hold pathagar's code, logs and environment. To do this run the following command:
-
-`fab ubuntu bootstrap` 
-
-Now we need to configure apache and let it know about the location of the files. To do that run:
-
-`fab ubuntu deploy`
-
-Perfect! Now we have apache running our server through mod_wsgi. Now we need to setup our databases.
-
-`fab ubuntu create_db`
-
-`fab ubuntu setup_db`
-
-Done! You should now have a working instance of pathagar running on your server.
-
-Please note that our fabric scripts are still under beta. If you come across any problems please feel free to ask for help.
+Pathagar2 is a fork to keep simplicity of original project and keeping it alive.
 
 OPDS
 ====
@@ -44,24 +14,28 @@ It uses the OPDS spec:
 
 http://opds-spec.org
 
+It was tested successfully with Aldiko Book Reader on Android.
+
+
+# Adding Contents
+
 Books can be added via the admin interface, as well as via the command
 line, in batch (using CSV files, JSON files or a directory with EPUB
 files), through the command:
 
     python manage.py addbooks
-  
+
             OR
-            
+
     python manage.py addepub
 
-Pathagar runs on the python web app framework Django.  It is known to work in Django 1.3 and 1.4.
+Pathagar runs on the python web app framework Django.  It is known to work in Django 1.11
 
 
 ## Loading content
 
 Once installed, Pathagar contains no books. You can upload individual books
 through the UI or you can bulk load them by following the instructions below.
-
 
 ### From Internet Archive
 
@@ -131,7 +105,7 @@ You can add more fields.  Please refer to the Book model.
 Dependencies
 ============
 
-* Python
+* Python 2.7 or Python 3.5
 * Django
 * django-taggit
 * django-sendfile
@@ -139,7 +113,7 @@ Dependencies
 Quickstart
 ==========
 
-* Install mysql
+* Install mysql (optional)
 
 In Fedora
 
@@ -147,15 +121,17 @@ In Fedora
 
 * Install requirements
 
-    sudo pip install -r requirements.pip
-
+    python3 -m venv venv_pathagar
+    . ./venv_pathagar/bin/activate
+    pip install -r requirements.pip
 
 * In the Pathagar folder, copy `local_settings.example.py` to
   `local_settings.py` and edit it to suite your needs and environment.
 
 * In the Pathagar folder, run
 
-    python manage.py syncdb
+    python manage.py migrate
+    python manage.py createsuperuser
 
   You will be asked to create an admin user during this stage.
 
@@ -172,10 +148,10 @@ In Fedora
 * With your browser, access http://localhost:8000 and see if the index
   page comes up. If it comes up, click on "Add books" in the footer to
   start adding books. You will be asked for a username/password. This is
-  the admin username/password you supplied while running syncdb.
+  the admin username/password you supplied while running `createsuperuser`.
 
   NOTE: You can also mass add books via the command line through CSV files
   or by simply pointing to a directory with a set of EPUB files.
 
 * To run the server in a production environment, look at Django deployment
-  docs at : http://docs.djangoproject.com/en/1.4/howto/deployment/
+  docs at : https://docs.djangoproject.com/en/1.11/howto/deployment/

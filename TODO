@@ -1,2 +1,14 @@
-TODO
-----
+Export DB in JSON modes
+Allow import from calibre
+Add responsive mode
+    (should allow several books on same row ?)
+Allow list of author by letter when a lot of authors are available (forced or by config ?)
+Compute small thumbnail of cover (with link to real cover if needed ?) (needed for ebook reader or for low bandwidht connection)
+Add Catalog.atom link
+Add detection of language on summary
+Fix validate unique
+Tags are not saved form edit webpage
+Order Authors list on edit page (it looks like order by their internal ID)
+Improve Author check (suppress whitespaces, try to invert between ',', ...)
+Add webpage to perform action on multiple items like add tags or updating authors
+Add default 'anonymous' author if not fount in EPUB or in JSON import

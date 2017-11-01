@@ -16,14 +16,14 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from django.db.models import Q
-from models import Book
+from books.models import Book
 
 
 def simple_search(queryset, searchterms,
                   search_title=False, search_author=False):
     q_objects = []
     results = queryset
-    
+
     subterms = searchterms.split(' ')
     for subterm in subterms:
         word = subterm
@@ -31,7 +31,7 @@ def simple_search(queryset, searchterms,
             q_objects.append(Q(a_title__icontains = word))
         if search_author:
             q_objects.append(Q(a_author__icontains = word))
-    
+
     for q_object in q_objects:
         results = results.filter(q_object)
     return results
@@ -42,7 +42,7 @@ def advanced_search(queryset, searchterms):
     """
     q_objects = []
     results = queryset
-    
+
     subterms = searchterms.split('AND')
     for subterm in subterms:
         if ':' in subterm:
@@ -62,13 +62,13 @@ def advanced_search(queryset, searchterms):
             word = subterm
             try:
                 results = results.filter(Q(a_title__icontains = word) | \
-                    Q(a_author__icontains = word) | \
+                    Q(a_author__a_author__icontains = word) | \
                     Q(dc_publisher__icontains = word) | \
                     Q(dc_identifier__icontains = word) | \
                     Q(a_summary__icontains = word))
             except Book.DoesNotExist:
                 results = Book.objects.none()
-    
+
     for q_object in q_objects:
         results = results.filter(q_object)
     return results

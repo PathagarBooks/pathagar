@@ -9,7 +9,7 @@
   {% if q != None %}
   $('#search').val('{{ q }}');
   {% else %}
-  $('#search').example('Book Search...');
+  $('#search').example('Author Search...');
   {% endif %}
 {% endblock %}
 
@@ -34,13 +34,15 @@
 {% if list_by == 'most-downloaded' %}
     href="{% url 'most_downloaded_feed' %}{{ qstring }}"
 {% endif %}
-><img src="{% static 'images/feed.png' %}" alt="Feed Icon" />Subscribe to Feed</a>
+>
+<img src="{% static 'images/feed.png' %}" alt="Feed Icon" />Subscribe to Feed</a>
 {% endblock %}
 
 {% block content %}
 
 <div class="span-17 colborder" id="content">
-{% for book in book_list %}
+{% for author in author_list %}
+<!--
   <div class="span-3 cover">
   {% if book.cover_img %}
     <img src="{{ book.cover_img.url }}" alt="Cover" width=100px/>
@@ -48,28 +50,24 @@
     <img src="{% static 'images/generic_cover.png' %}" alt="Cover" width=100px/>
   {% endif %}
   </div>
+-->
   <div class="prepend-3">
-  <h1 class="bookname">
-    <a href="{% url 'book_detail' book.pk %}">{{ book.a_title }}</a>
-  </h1>
-  <h2 class="authorname">
-    <a href="{% url 'books_by_author' book.a_author.id %}">
-        <span class="alt">{{ book.a_author }}</span>
-    </a>
-  </h2>
-  {% tags_for_object book as tag_list %}
-  {% if book.tags.count != 0 %}
+  <h2 class="authorname"><a href="{% url 'books_by_author' author.id %}"><span class="alt">{{ author.a_author }}</span></a></h2>
+  <!--
+  { % tags_for_object book as tag_list %}
+  { % if book.tags.count != 0 %}
     <div class="span-10">
-    {% for tag in book.tags.all %}
-      <a class="button" href="{% url 'by_tag' tag.name %}">{{ tag.name }}</a>
-    {% endfor %}
+    { % for tag in book.tags.all %}
+      <a class="button" href="{ % url 'by_tag' tag.name %}">{{ tag.name }}</a>
+    { % endfor %}
     </div>
-  {% endif %}
+  { % endif %}
+  -->
   <div class="span-10"> 
   <p>{{ book.a_summary }}</p>
   </div>
   </div>
-  <div class="span-3 prepend-14 last"><em><a class="download" href="{% url 'book_download' book.pk %}">Download</a></em></div>
+  <!-- <div class="span-3 prepend-14 last"><em><a class="download" href="{ % url 'book_download' book.pk %}">Download</a></em></div> -->
   <hr/>
 {%  endfor %}
 

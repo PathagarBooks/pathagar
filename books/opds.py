@@ -15,11 +15,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-from cStringIO import StringIO
+# from cStringIO import StringIO
+from io import StringIO
+
 
 from django.core.urlresolvers import reverse
 
-from atom import AtomFeed
+from books.atom import AtomFeed
 import mimetypes
 
 import datetime
@@ -46,18 +48,18 @@ def __get_mimetype(item):
 def page_qstring(request, page_number=None):
     """
     Return the query string for the URL.
-    
+
     If page_number is given, modify the query for that page.
     """
     qdict = dict(request.GET.items())
     if page_number is not None:
         qdict['page'] = str(page_number)
-    
+
     if len(qdict) > 0:
         qstring = '?'+'&'.join(('%s=%s' % (k, v) for k, v in qdict.items()))
     else:
         qstring = ''
-    
+
     return qstring
 
 def generate_nav_catalog(subsections, is_root=False):
@@ -66,11 +68,11 @@ def generate_nav_catalog(subsections, is_root=False):
     if is_root:
         links.append({'type': 'application/atom+xml',
                       'rel': 'self',
-                      'href': reverse('pathagar.books.views.root')})
+                      'href': reverse('root_feed')})
 
     links.append({'title': 'Home', 'type': 'application/atom+xml',
                   'rel': 'start',
-                  'href': reverse('pathagar.books.views.root')})
+                  'href': reverse('root_feed')})
 
     feed = AtomFeed(title = 'Pathagar Bookserver OPDS feed', \
         atom_id = 'pathagar:full-catalog', subtitle = \
@@ -132,20 +134,20 @@ def generate_catalog(request, page_obj):
     links = []
     links.append({'title': 'Home', 'type': 'application/atom+xml',
                   'rel': 'start',
-                  'href': reverse('pathagar.books.views.root')})
+                  'href': reverse('root_feed')})
 
     if page_obj.has_previous():
         previous_page = page_obj.previous_page_number()
         links.append({'title': 'Previous results', 'type': 'application/atom+xml',
                       'rel': 'previous',
                       'href': page_qstring(request, previous_page)})
-    
+
     if page_obj.has_next():
         next_page = page_obj.next_page_number()
         links.append({'title': 'Next results', 'type': 'application/atom+xml',
                       'rel': 'next',
                       'href': page_qstring(request, next_page)})
-    
+
     feed = AtomFeed(title = 'Pathagar Bookserver OPDS feed', \
         atom_id = 'pathagar:full-catalog', subtitle = \
         'OPDS catalog for the Pathagar book server', \
@@ -155,31 +157,71 @@ def generate_catalog(request, page_obj):
         if book.cover_img:
             linklist = [{'rel': \
                     'http://opds-spec.org/acquisition', 'href': \
-                    reverse('pathagar.books.views.download_book',
+                    reverse('book_download',
                             kwargs=dict(book_id=book.pk)),
                     'type': __get_mimetype(book)}, {'rel': \
                     'http://opds-spec.org/cover', 'href': \
                     book.cover_img.url }]
         else:
-           linklist = [{'rel': \
+            linklist = [{'rel': \
                     'http://opds-spec.org/acquisition', 'href': \
-                    reverse('pathagar.books.views.download_book',
+                    reverse('book_download',
                             kwargs=dict(book_id=book.pk)),
                     'type': __get_mimetype(book)}]
-        
         add_kwargs = {
             'content': book.a_summary,
             'links': linklist,
-            'authors': [{'name' : book.a_author}],
+            'authors': [{'name' : str(book.a_author)}],
             'dc_publisher': book.dc_publisher,
             'dc_issued': book.dc_issued,
             'dc_identifier': book.dc_identifier,
         }
-           
+
         if book.dc_language is not None:
             add_kwargs['dc_language'] = book.dc_language.code
 
         feed.add_item(book.a_id, book.a_title, book.a_updated, **add_kwargs)
+
+    s = StringIO()
+    feed.write(s, 'UTF-8')
+    return s.getvalue()
+
+def generate_author_catalog(request, page_obj):
+    nav = 'application/atom+xml' #;profile=opds-catalog;kind=navigation'
+    links = []
+    links.append({'title': 'Home', 'type': nav, #'application/atom+xml',
+                  'rel': 'start',
+                  'href': reverse('root_feed')})
+
+    if page_obj.has_previous():
+        previous_page = page_obj.previous_page_number()
+        links.append({'title': 'Previous results', 'type': nav, #'application/atom+xml',
+                      'rel': 'previous',
+                      'href': page_qstring(request, previous_page)})
+
+    if page_obj.has_next():
+        next_page = page_obj.next_page_number()
+        links.append({'title': 'Next results', 'type': nav, #'application/atom+xml',
+                      'rel': 'next',
+                      'href': page_qstring(request, next_page)})
+
+    feed = AtomFeed(title = 'Pathagar Bookserver OPDS feed', \
+        atom_id = 'pathagar:full-catalog', subtitle = \
+        'OPDS catalog for the Pathagar book server', \
+        extra_attrs = ATTRS, hide_generator=True, links=links)
+
+    print("send ", len(page_obj.object_list))
+    for author in page_obj.object_list:
+        linklist = [{'rel': 'subsection',
+                     'href': reverse('by_title',
+                                     kwargs=dict(author_id=author.pk)),
+                     'type': nav}]
+        add_kwargs = {
+            'content': '', #book.a_summary,
+            'links': linklist,
+        }
+
+        feed.add_item(str(author.pk), author.a_author, datetime.datetime.now(), **add_kwargs)
 
     s = StringIO()
     feed.write(s, 'UTF-8')

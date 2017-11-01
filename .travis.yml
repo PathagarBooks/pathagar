@@ -1,0 +1,19 @@
+sudo: false
+language: python
+
+python:
+    - 2.7
+    - 3.5
+
+cache: pip
+
+install:
+    - pip install -r requirements.txt
+    - pip install -r test-requirements.txt
+
+script:
+    - scripts/run-pylint.sh
+    - coverage run --source='.' manage.py test
+
+after_script:
+    - codecov

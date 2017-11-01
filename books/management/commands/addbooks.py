@@ -28,7 +28,7 @@ import os
 import sys
 from optparse import make_option
 
-from books.models import Book, Status
+from books.models import Author, Book, Status
 
 logger = logging.getLogger(__name__)
 logging.basicConfig()
@@ -38,13 +38,14 @@ class Command(BaseCommand):
     help = "Adds a book collection (via a CSV file)"
     args = 'Absolute path to CSV file'
 
-    option_list = BaseCommand.option_list + (
-        make_option('--json',
-                    action='store_true',
-                    dest='is_json_format',
-                    default=False,
-                    help='The file is in JSON format'),
-        )
+    def add_arguments(self, parser):
+        parser.add_argument('--json',
+                      action='store_true',
+                      dest='is_json_format',
+                      default=False,
+                      help='The file is in JSON format')
+        parser.add_argument('filepath',
+                            help='PATH')
 
     def _handle_csv(self, csvpath):
         """
@@ -54,9 +55,11 @@ class Command(BaseCommand):
         """
 
         csvfile = open(csvpath)
-        dialect = csv.Sniffer().sniff(csvfile.read(1024))
-        csvfile.seek(0)
-        reader = csv.reader(csvfile, dialect)
+        # Sniffer fais to detect a CSV created with DictWriter with default Dialect (excel) !
+        # dialect = csv.Sniffer().sniff(csvfile.read(32000))
+        # csvfile.seek(0)
+        dialect = 'excel'
+        reader = csv.reader(csvfile) #, dialect)
 
         # TODO: Figure out if this is a valid CSV file
 
@@ -68,17 +71,25 @@ class Command(BaseCommand):
             author = row[2]
             summary = row[3]
 
+            if not os.path.exists(path):
+                # check if file is located in same directory as CSV
+                path = os.path.join(os.path.dirname(csvpath), path)
+
             if os.path.exists(path):
-                f = open(path)
-                book = Book(book_file=File(f), a_title=title, a_author=author,
+
+                f = open(path, 'rb')
+
+                a_author = Author.objects.get_or_create(a_author=author)[0]
+                book = Book(book_file=File(f), a_title=title, a_author=a_author,
                             a_summary=summary, a_status=status_published)
                 try:
+                    book.validate_unique()
                     book.save()
                 except:
-                    print "EXCEPTION SAVING FILE '%s': %s" % (
-                        path, sys.exc_info()[0])
+                    print("EXCEPTION SAVING FILE '%s': %s" % (
+                        path, sys.exc_info()[0]))
             else:
-                print "FILE NOT FOUND '%s'" % path
+                print("FILE NOT FOUND '%s'" % path)
 
     def _handle_json(self, jsonpath):
         """
@@ -106,12 +117,12 @@ class Command(BaseCommand):
                 continue
 
             # Get a Django File from the given path:
-            f = open(d['book_path'])
+            f = open(d['book_path'], 'rb')
             d['book_file'] = File(f)
             del d['book_path']
 
             if 'cover_path' in d:
-                f_cover = open(d['cover_path'])
+                f_cover = open(d['cover_path'], 'rb')
                 d['cover_img'] = File(f_cover)
                 del d['cover_path']
 
@@ -119,6 +130,10 @@ class Command(BaseCommand):
                 d['a_status'] = Status.objects.get(status=d['a_status'])
             else:
                 d['a_status'] = status_published
+
+            a_author = None
+            if 'a_author' in d:
+                d['a_author'] = Author.objects.get_or_create(a_author=d['a_author'])[0]
 
             tags = d.get('tags', [])
             if 'tags' in d:
@@ -128,7 +143,7 @@ class Command(BaseCommand):
             try:
                 book.validate_unique() # Throws ValidationError if not unique
 
-                with transaction.commit_on_success():
+                with transaction.atomic():
                     book.save() # must save item to generate Book.id before creating tags
                     [book.tags.add(tag) for tag in tags if tag]
                     book.save()  # save again after tags are generated
@@ -145,10 +160,12 @@ class Command(BaseCommand):
         logger.info("addbooks complete total=%(total)d imported=%(imported)d skipped=%(skipped)d errors=%(errors)d" % stats)
 
 
-    def handle(self, filepath='', *args, **options):
+    def handle(self, *args, **options):
+        filepath = options.get('filepath')
         if not os.path.exists(filepath):
             raise CommandError("%r is not a valid path" % filepath)
 
+        filepath = os.path.abspath(filepath)
         if options['is_json_format']:
             self._handle_json(filepath)
         else:
