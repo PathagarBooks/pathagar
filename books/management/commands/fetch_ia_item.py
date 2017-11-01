@@ -48,14 +48,16 @@ def load_user_bookmarks(user):
     print(user)
     url = 'http://archive.org/bookmarks/%s?output=json' % user
     f = urlopen(url)
-    return json.load(f)
+    data = f.read().decode('utf-8')
+    return json.loads(data)
 
 def get_item_meatadata(item_id):
     """Returns an object from the archive.org Metadata API"""
 
     url = 'http://archive.org/metadata/%s' % item_id
     f = urlopen(url)
-    return json.load(f)
+    data = f.read().decode('utf-8')
+    return json.loads(data)
 
 def get_download_url(item_id, file):
 
@@ -104,7 +106,7 @@ def download_item(item_id, mediatype, metadata, out_dir, formats):
         download_files(item_id, matching_files, item_dir)
         return
 
-    for key, format_list in formats.iteritems():
+    for key, format_list in formats.items():
         for format in format_list:
             matching_files = [x['name'] for x in files_list if x['format']==format]
             download_files(item_id, matching_files, item_dir)
