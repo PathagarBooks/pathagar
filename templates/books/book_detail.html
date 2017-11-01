@@ -15,7 +15,12 @@
 <div id="content">
 
 <h1 class="alt">{{ book.a_title }}</h1>
-<h2>by <span class="alt">{{ book.a_author }}</span></h2>
+<h2 class="authorname">by
+  <a href="{% url 'books_by_author' book.a_author.id %}">
+    <span class="alt">{{ book.a_author }}</span>
+  </a>
+</h2>
+
 <hr class="space">
 {% if user.is_authenticated %}
 <div class="span-3">

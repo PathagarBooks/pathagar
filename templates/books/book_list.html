@@ -59,7 +59,7 @@
   </h2>
   {% tags_for_object book as tag_list %}
   {% if book.tags.count != 0 %}
-    <div class="span-10"> 
+    <div class="span-10">
     {% for tag in book.tags.all %}
       <a class="button" href="{% url 'by_tag' tag.name %}">{{ tag.name }}</a>
     {% endfor %}
