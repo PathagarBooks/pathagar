@@ -55,7 +55,7 @@ class Command(BaseCommand):
         csvfile = open(csvpath)
         # Sniffer fais to detect a CSV created with DictWriter with default Dialect (excel) !
         # dialect = csv.Sniffer().sniff(csvfile.read(32000))
-        # csvfile.seek(0)
+        # csvfile.seek(0)
         dialect = 'excel'
         reader = csv.reader(csvfile) #, dialect)
 
