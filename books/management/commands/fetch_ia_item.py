@@ -51,7 +51,7 @@ def load_user_bookmarks(user):
     data = f.read().decode('utf-8')
     return json.loads(data)
 
-def get_item_meatadata(item_id):
+def get_item_metadata(item_id):
     """Returns an object from the archive.org Metadata API"""
 
     url = 'http://archive.org/metadata/%s' % item_id
@@ -210,7 +210,7 @@ class Command(BaseCommand):
         pathagar_books = []
         for item in bookmarks:
             item_id = item['identifier']
-            metadata = get_item_meatadata(item_id)
+            metadata = get_item_metadata(item_id)
 
             download_item(item_id, item['mediatype'], metadata, download_directory, requested_formats)
 

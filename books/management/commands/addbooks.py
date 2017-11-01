@@ -44,6 +44,8 @@ class Command(BaseCommand):
                       dest='is_json_format',
                       default=False,
                       help='The file is in JSON format')
+        parser.add_argument('filepath',
+                            help='PATH')
 
     def _handle_csv(self, csvpath):
         """
@@ -75,7 +77,7 @@ class Command(BaseCommand):
 
             if os.path.exists(path):
 
-                f = open(path)
+                f = open(path, 'rb')
 
                 a_author = Author.objects.get_or_create(a_author=author)[0]
                 book = Book(book_file=File(f), a_title=title, a_author=a_author,
@@ -115,12 +117,12 @@ class Command(BaseCommand):
                 continue
 
             # Get a Django File from the given path:
-            f = open(d['book_path'])
+            f = open(d['book_path'], 'rb')
             d['book_file'] = File(f)
             del d['book_path']
 
             if 'cover_path' in d:
-                f_cover = open(d['cover_path'])
+                f_cover = open(d['cover_path'], 'rb')
                 d['cover_img'] = File(f_cover)
                 del d['cover_path']
 
@@ -128,6 +130,10 @@ class Command(BaseCommand):
                 d['a_status'] = Status.objects.get(status=d['a_status'])
             else:
                 d['a_status'] = status_published
+
+            a_author = None
+            if 'a_author' in d:
+                d['a_author'] = Author.objects.get_or_create(a_author=d['a_author'])[0]
 
             tags = d.get('tags', [])
             if 'tags' in d:
@@ -154,7 +160,8 @@ class Command(BaseCommand):
         logger.info("addbooks complete total=%(total)d imported=%(imported)d skipped=%(skipped)d errors=%(errors)d" % stats)
 
 
-    def handle(self, filepath='', *args, **options):
+    def handle(self, *args, **options):
+        filepath = options.get('filepath')
         if not os.path.exists(filepath):
             raise CommandError("%r is not a valid path" % filepath)
 
