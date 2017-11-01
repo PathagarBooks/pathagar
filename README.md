@@ -1,11 +1,21 @@
+[![Gitter](https://badges.gitter.im/murlock/pathagar.png)](https://gitter.im/murlock/Lobby)
+[![Travis](https://api.travis-ci.org/murlock/pathagar.svg?branch=master)](https://travis-ci.org/murlock/pathagar)
+[![CodeCov](https://codecov.io/gh/murlock/pathagar/branch/master/graph/badge.svg)](https://codecov.io/gh/murlock/pathagar/)
+
 Introduction
 ============
 
 Pathagar is a simple book server for schools where there is little or no internet.
+
 For more information, see [this presentation](http://www.slideshare.net/sverma/pathagar-a-book-server) by Prof. Sameer Verma.
+
 For some of the history of the project, read this [blogpost at OLPC-SF](http://www.olpcsf.org/node/126)
 
 Pathagar2 is a fork to keep simplicity of original project and keeping it alive.
+
+Join the chat at https://gitter.im/murlock/Lobby
+
+Report issues at https://github.com/murlock/pathagar/issues
 
 OPDS
 ====
