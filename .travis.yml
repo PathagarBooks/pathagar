@@ -4,7 +4,7 @@ addons:
 firefox: latest
 
 python:
-    - 2.7
+    # - 2.7
     - 3.5
 
 cache: pip
