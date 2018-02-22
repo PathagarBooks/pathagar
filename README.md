@@ -5,8 +5,6 @@ Pathagar is a simple book server for schools where there is little or no interne
 For more information, see [this presentation](http://www.slideshare.net/sverma/pathagar-a-book-server) by Prof. Sameer Verma.
 For some of the history of the project, read this [blogpost at OLPC-SF](http://www.olpcsf.org/node/126)
 
-Pathagar2 is a fork to keep simplicity of original project and keeping it alive.
-
 OPDS
 ====
 
