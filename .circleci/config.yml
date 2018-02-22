@@ -23,6 +23,10 @@ jobs:
             . venv/bin/activate
             scripts/run-pylint.sh
             coverage run --source='.' manage.py test
+      - run:
+          command: codecov
+
+
   build-python3:
     working_directory: ~/pathagar
     docker:
@@ -47,6 +51,8 @@ jobs:
             . venv/bin/activate
             scripts/run-pylint.sh
             coverage run --source='.' manage.py test
+      - run:
+          command: codecov
 
 workflows:
   version: 2
