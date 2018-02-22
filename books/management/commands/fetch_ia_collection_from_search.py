@@ -42,7 +42,7 @@ def load_search_results(searchterm, page, rows):
 
     print searchterm
 
-    url = 'https://archive.org/advancedsearch.php?q=collection%3A{searchterm}&fl%5B%5D=collection&fl%5B%5D=contributor&fl%5B%5D=coverage&fl%5B%5D=creator&fl%5B%5D=date&fl%5B%5D=description&fl%5B%5D=item&fl%5B%5D=format&fl%5B%5D=identifier&fl%5B%5D=mediatype&fl%5B%5D=subject&fl%5B%5D=description&fl%5B%5D=title&fl%5B%5D=media:title&fl%5B%5D=type&fl%5B%5D=volume&fl%5B%5D=week&fl%5B%5D=year&sort%5B%5D=&sort%5B%5D=&sort%5B%5D=&rows={rows}&page={page}&output=json'.format(searchterm=searchterm, page=str(page), rows=str(rows))
+    url = 'https://archive.org/advancedsearch.php?q={searchterm}&fl%5B%5D=description&fl%5B%5D=contributor&fl%5B%5D=coverage&fl%5B%5D=creator&fl%5B%5D=date&fl%5B%5D=description&fl%5B%5D=item&fl%5B%5D=format&fl%5B%5D=identifier&fl%5B%5D=mediatype&fl%5B%5D=subject&fl%5B%5D=description&fl%5B%5D=title&fl%5B%5D=media:title&fl%5B%5D=type&fl%5B%5D=volume&fl%5B%5D=week&fl%5B%5D=year&sort%5B%5D=&sort%5B%5D=&sort%5B%5D=&rows={rows}&page={page}&output=json'.format(searchterm=searchterm, page=str(page), rows=str(rows))
 
     f = urllib.urlopen(url)
     return json.load(f)
