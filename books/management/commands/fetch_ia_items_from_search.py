@@ -77,7 +77,7 @@ def download_files(item_id, matching_files, item_dir):
         print "    Downloading", file, "to", download_path
         download_url= get_download_url(item_id, file)
         ret = subprocess.call(['wget', download_url, '-O', download_path,
-                               '--limit-rate=1000k', '--user-agent=fetch_ia_collection_from_search.py', '-q'])
+                               '--limit-rate=1000k', '--user-agent=fetch_ia_items_from_search.py', '-q'])
 
         if 0 != ret:
             print "    ERROR DOWNLOADING", download_path
@@ -217,15 +217,21 @@ class Command(BaseCommand):
         if not os.path.exists(download_directory):
             os.mkdir(download_directory, 0o755)
 	
+        max_num_results = None
+        if options['maxnumresults']:
+            max_num_results = int(options['maxnumresults'])
+
 	page = 1
-	rows = 50
+	rows = min(50, max_num_results)
 	row_count = 0
 	pathagar_books = []
 	while True:
+	        rows = min(50, max_num_results - row_count)
 		response = load_search_results(options['searchterm'], page, rows)['response']
         	bookmarks = response['docs']
 		numFound = response['numFound']
 	        row_count += len(bookmarks)
+
 		for item in bookmarks:
 		    print(item)
 		    item_id = item['identifier']
@@ -240,7 +246,7 @@ class Command(BaseCommand):
 
 		    add_to_pathagar(pathagar_books, metadata, cover_image)
                 page += 1
-                if row_count >= numFound:
+                if row_count >= numFound or row_count >= max_num_results:
                    break
 
         if pathagar_books:
