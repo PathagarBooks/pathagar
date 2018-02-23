@@ -224,17 +224,21 @@ class Command(BaseCommand):
         max_num_results = None
         if options['maxnumresults']:
             max_num_results = int(options['maxnumresults'])
-
+        
 	page = 1
-	rows = min(50, max_num_results)
+        rows = 50
+        if max_num_results is not None:
+            rows = min(50, max_num_results)
 	row_count = 0
 	pathagar_books = []
 	while True:
-	        rows = min(50, max_num_results - row_count)
-		response = load_search_results(options['searchterm'], page, rows)['response']
-        	bookmarks = response['docs']
-		numFound = response['numFound']
-	        row_count += len(bookmarks)
+            if max_num_results is not None:
+                rows = min(50, max_num_results - row_count)
+
+            response = load_search_results(options['searchterm'], page, rows)['response']
+            bookmarks = response['docs']
+            numFound = response['numFound']
+            row_count += len(bookmarks)
 
 		for item in bookmarks:
 		    print(item)
