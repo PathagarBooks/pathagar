@@ -65,7 +65,7 @@ def download_files(item_id, matching_files, item_dir):
 
     for file in matching_files:
         download_path = os.path.join(item_dir, file)
-	print("Download_path: %s" % download_path)
+        print("Download_path: %s" % download_path)
         if os.path.exists(download_path):
             print "    Already downloaded", file
             continue
@@ -88,7 +88,7 @@ def download_files(item_id, matching_files, item_dir):
 def download_item(item_id, mediatype, metadata, out_dir, formats):
     """Download an archive.org item into the specified directory"""
     if isinstance(item_id, list):
-	item_id = item_id[0] 
+        item_id = item_id[0] 
     print "Downloading", item_id
     item_dir = os.path.join(out_dir, item_id)
 
@@ -157,9 +157,9 @@ def add_to_pathagar(pathagar_books, mdata, cover_image):
     item_dir = os.path.join(download_directory, metadata['identifier'])
     print(item_dir)
     if isinstance(book_paths, list):
-	book_path = os.path.abspath(os.path.join(item_dir, book_paths[0]))
+        book_path = os.path.abspath(os.path.join(item_dir, book_paths[0]))
     else:
-	book_path = os.path.abspath(os.path.join(item_dir, book_paths))
+        book_path = os.path.abspath(os.path.join(item_dir, book_paths))
     print(book_path)
     print('')
     # Some fields are not required
@@ -220,18 +220,18 @@ class Command(BaseCommand):
 
         if not os.path.exists(download_directory):
             os.mkdir(download_directory, 0o755)
-	
+        
         max_num_results = None
         if options['maxnumresults']:
             max_num_results = int(options['maxnumresults'])
         
-	page = 1
+        page = 1
         rows = 50
         if max_num_results is not None:
             rows = min(50, max_num_results)
-	row_count = 0
-	pathagar_books = []
-	while True:
+        row_count = 0
+        pathagar_books = []
+        while True:
             if max_num_results is not None:
                 rows = min(50, max_num_results - row_count)
 
@@ -240,19 +240,19 @@ class Command(BaseCommand):
             numFound = response['numFound']
             row_count += len(bookmarks)
 
-		for item in bookmarks:
-		    print(item)
-		    item_id = item['identifier']
-		    metadata = get_item_meatadata(item_id)
+            for item in bookmarks:
+                print(item)
+                item_id = item['identifier']
+                metadata = get_item_meatadata(item_id)
 
-		    download_item(item_id, item['mediatype'], metadata, download_directory, requested_formats)
+                download_item(item_id, item['mediatype'], metadata, download_directory, requested_formats)
 
-		    if should_download_cover:
-			cover_image = download_cover(item_id, metadata, download_directory)
-		    else:
-			cover_image = None
+                if should_download_cover:
+                    cover_image = download_cover(item_id, metadata, download_directory)
+                else:
+                    cover_image = None
 
-		    add_to_pathagar(pathagar_books, metadata, cover_image)
+                add_to_pathagar(pathagar_books, metadata, cover_image)
                 page += 1
                 if row_count >= numFound or row_count >= max_num_results:
                    break
