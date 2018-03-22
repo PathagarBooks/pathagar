@@ -7,7 +7,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: v1-python2-{{ checksum "requirements.txt" }}-{{ checksum "test-requirements.txt" }}
+          key: v2-python2-{{ checksum "requirements.txt" }}-{{ checksum "test-requirements.txt" }}
       - run:
           command: |
             virtualenv venv
@@ -40,7 +40,7 @@ jobs:
           key: v1-python3-{{ checksum "requirements.txt" }}-{{ checksum "test-requirements.txt" }}
       - run:
           command: |
-            python3 -m venv venv
+            python -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
             pip install -r test-requirements.txt
