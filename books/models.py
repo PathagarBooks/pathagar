@@ -28,9 +28,9 @@ from hashlib import sha256
 
 from taggit.managers import TaggableManager #NEW
 
-from uuidfield import UUIDField
-from langlist import langs
-from epub import Epub
+from books.uuidfield import UUIDField
+from books.langlist import langs
+from books.epub import Epub
 
 def sha256_sum(_file): # used to generate sha256 sum of book files
     s = sha256()
@@ -43,6 +43,9 @@ class Language(models.Model):
     code = models.CharField(max_length=4, blank=True)
 
     def __unicode__(self):
+        return self.label
+
+    def __str__(self):
         return self.label
 
     def save(self, *args, **kwargs):
@@ -72,6 +75,9 @@ class TagGroup(models.Model):
     def __unicode__(self):
         return self.name
 
+    def __str__(self):
+        return self.name
+
 
 class Status(models.Model):
     status = models.CharField(max_length=200, blank=False)
@@ -81,6 +87,19 @@ class Status(models.Model):
 
     def __unicode__(self):
         return self.status
+
+    def __str__(self):
+        return self.status
+
+
+class Author(models.Model):
+    a_author = models.CharField('atom:author', max_length=200, unique=True)
+
+    def __unicode__(self):
+        return self.a_author
+
+    def __str__(self):
+        return self.a_author
 
 
 class Book(models.Model):
@@ -99,10 +118,9 @@ class Book(models.Model):
     tags = TaggableManager(blank=True)
     downloads = models.IntegerField(default=0)
     a_id = UUIDField('atom:id')
-    a_status = models.ForeignKey(Status, blank=False, null=False,
-                                 default=settings.DEFAULT_BOOK_STATUS)
+    a_status = models.ForeignKey(Status, blank=False, null=False, default=settings.DEFAULT_BOOK_STATUS)
     a_title = models.CharField('atom:title', max_length=200)
-    a_author = models.CharField('atom:author', max_length=200)
+    a_author = models.ForeignKey(Author, blank=False, null=False)
     a_updated = models.DateTimeField('atom:updated', auto_now=True)
     a_summary = models.TextField('atom:summary', blank=True)
     a_category = models.CharField('atom:category', max_length=200, blank=True)
@@ -117,21 +135,24 @@ class Book(models.Model):
     def validate_unique(self, *args, **kwargs):
         if not self.file_sha256sum:
             self.file_sha256sum = sha256_sum(self.book_file)
-        if (self.__class__.objects.filter(
-                file_sha256sum=self.file_sha256sum).exists()):
+        unicity = self.__class__.objects.filter(file_sha256sum=self.file_sha256sum)
+        if self.pk is not None:
+            unicity = unicity.exclude(pk=self.pk)
+        if unicity.exists():
             raise ValidationError({
                 NON_FIELD_ERRORS:['The book already exists in the server.',]})
 
     def save(self, *args, **kwargs):
         assert self.file_sha256sum
         if not self.cover_img:
+            # FIXME: we should use mimetype
             if self.book_file.name.endswith('.epub'):
                 # get the cover path from the epub file
                 epub_file = Epub(self.book_file)
                 cover_path = epub_file.get_cover_image_path()
                 if cover_path is not None and os.path.exists(cover_path):
-                    cover_file = File(open(cover_path))
-                    self.cover_img.save(os.path.basename(cover_path),
+                    cover_file = File(open(cover_path, "rb"))
+                    self.cover_img.save(os.path.basename(cover_path), # pylint: disable=no-member
                                         cover_file)
                 epub_file.close()
 
@@ -144,6 +165,9 @@ class Book(models.Model):
     def __unicode__(self):
         return self.a_title
 
+    def __str__(self):
+        return self.a_title
+
     @models.permalink
     def get_absolute_url(self):
-        return ('pathagar.books.views.book_detail', [self.pk])
+        return ('book_detail', [self.pk])

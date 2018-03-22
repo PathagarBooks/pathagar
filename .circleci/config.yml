@@ -1,0 +1,66 @@
+jobs:
+  build-python2:
+    working_directory: ~/pathagar
+    docker:
+      - image: circleci/python:2.7.14
+      - image: circleci/postgres:9.6.2
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-python2-{{ checksum "requirements.txt" }}-{{ checksum "test-requirements.txt" }}
+      - run:
+          command: |
+            virtualenv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+            pip install -r test-requirements.txt
+      - save_cache:
+          key: v1-python2-{{ checksum "requirements.txt" }}-{{ checksum "test-requirements.txt" }}
+          paths:
+            - "venv"
+      - run:
+          command: |
+            . venv/bin/activate
+            scripts/run-pylint.sh
+            coverage run --source='.' manage.py test
+      - run:
+          command: |
+            . venv/bin/activate
+            codecov
+
+
+  build-python3:
+    working_directory: ~/pathagar
+    docker:
+      - image: circleci/python:3.5.3
+      - image: circleci/postgres:9.6.2
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-python3-{{ checksum "requirements.txt" }}-{{ checksum "test-requirements.txt" }}
+      - run:
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+            pip install -r test-requirements.txt
+      - save_cache:
+          key: v1-python3-{{ checksum "requirements.txt" }}-{{ checksum "test-requirements.txt" }}
+          paths:
+            - "venv"
+      - run:
+          command: |
+            . venv/bin/activate
+            scripts/run-pylint.sh
+            coverage run --source='.' manage.py test
+      - run:
+          command: |
+            . venv/bin/activate
+            codecov
+
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - build-python2
+      - build-python3

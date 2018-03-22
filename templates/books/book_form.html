@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}{% if action == 'add' %}
 Add Book
@@ -19,14 +20,14 @@ $(document).ready(function()
 });
 {% endblock %}
 
-{% block head %}<script type="text/javascript" src="{{ STATIC_URL }}js/RelatedObjectLookups.js"></script>{% endblock %}
+{% block head %}<script type="text/javascript" src="{% static 'js/RelatedObjectLookups.js' %}"></script>{% endblock %}
 
 {% block content %}
 <form  enctype="multipart/form-data"
 {% if action == 'add' %}
-  action="{% url pathagar.books.views.add_book %}"
+  action="{% url 'book_add' %}"
 {% else %}
-  action="{% url pathagar.books.views.edit_book book.pk %}"
+  action="{% url 'book_edit' book.pk %}"
 {% endif %}
 method="POST">{% csrf_token %}
 <fieldset>
@@ -45,7 +46,7 @@ Edit Book
 {% endif %}
 
 <div class="span-3 required"><label for="id_book_file">File:</label></div>
-<div class="span-4">{{ form.book_file }}</div>
+<div>{{ form.book_file }}</div>
 {{ form.book_file.errors }}
 <hr class="space">
 <div class="span-3 required"><label for="id_a_title">Title:</label></div>
@@ -101,7 +102,7 @@ Edit Book
 
 <div class="span-4 prepend-21 last">
 <input type="submit"
-{% if action = 'add' %}
+{% if action == 'add' %}
   value="Add">
 {% else %}
   value="Edit">

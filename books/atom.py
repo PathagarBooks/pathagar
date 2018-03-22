@@ -175,11 +175,16 @@ class AtomFeed(object):
 
 
     def __init__(self, atom_id, title, updated=None, icon=None, logo=None, rights=None, subtitle=None,
-        authors=[], categories=[], contributors=[], links=[], extra_attrs={}, hide_generator=False):
+        authors=None, categories=None, contributors=None, links=None, extra_attrs=None, hide_generator=False):
         if atom_id is None:
             raise LookupError('Feed has no feed_id field')
         if title is None:
             raise LookupError('Feed has no feed_title field')
+        authors = authors or []
+        categories = categories or []
+        contributors = contributors or []
+        links = links or []
+        extra_attrs = extra_attrs or {}
         # if updated == None, we'll calculate it
         self.feed = {
             'id': atom_id,
@@ -200,7 +205,7 @@ class AtomFeed(object):
 
 
     def add_item(self, atom_id, title, updated, content=None, published=None, rights=None, source=None, summary=None,
-        authors=[], categories=[], contributors=[], links=[], extra_attrs={}, dc_language=None, dc_publisher=None,
+        authors=None, categories=None, contributors=None, links=None, extra_attrs=None, dc_language=None, dc_publisher=None,
         dc_issued=None, dc_identifier=None):
         if atom_id is None:
             raise LookupError('Feed has no item_id method')
@@ -208,6 +213,11 @@ class AtomFeed(object):
             raise LookupError('Feed has no item_title method')
         if updated is None:
             raise LookupError('Feed has no item_updated method')
+        authors = authors or []
+        categories = categories or []
+        contributors = contributors or []
+        links = links or []
+        extra_attrs = extra_attrs or {}
         self.items.append({
             'id': atom_id,
             'title': title,
@@ -515,11 +525,12 @@ class LegacySyndicationFeed(AtomFeed):
     """
 
     def __init__(self, title, link, description, language=None, author_email=None,
-            author_name=None, author_link=None, subtitle=None, categories=[],
+            author_name=None, author_link=None, subtitle=None, categories=None,
             feed_url=None, feed_copyright=None):
 
         atom_id = link
         title = title
+        categories = categories or []
         updated = None # will be calculated
         rights = feed_copyright
         subtitle = subtitle
@@ -547,7 +558,7 @@ class LegacySyndicationFeed(AtomFeed):
 
     def add_item(self, title, link, description, author_email=None,
             author_name=None, author_link=None, pubdate=None, comments=None,
-            unique_id=None, enclosure=None, categories=[], item_copyright=None):
+            unique_id=None, enclosure=None, categories=None, item_copyright=None):
 
         if unique_id:
             atom_id = unique_id
@@ -555,6 +566,7 @@ class LegacySyndicationFeed(AtomFeed):
             atom_id = get_tag_uri(link, pubdate)
         title = title
         updated = pubdate
+        categories = categories or []
         if item_copyright:
             rights = item_copyright
         else:

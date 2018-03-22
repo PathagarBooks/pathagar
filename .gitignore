@@ -3,3 +3,5 @@ database.db
 staticfiles/
 static_media/
 local_settings.py
+.coverage
+htmlcov

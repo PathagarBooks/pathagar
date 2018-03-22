@@ -21,6 +21,7 @@ from django.conf import settings
 # pages:
 
 BOOKS_PER_PAGE = getattr(settings, 'BOOKS_PER_PAGE', 2) 
+AUTHORS_PER_PAGE = getattr(settings, 'AUTHORS_PER_PAGE', 10)
 
 # If True, serve static media via Django.  Note that this is not
 # recommended for production:

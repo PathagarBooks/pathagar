@@ -5,6 +5,8 @@
 
 a[href$=".epub"]   {
     background-image: url(blueprint/plugins/link-icons/icons/epub.png);
+    padding-left: 20px;
+    background-repeat: no-repeat;
 }
 
 .footer {
@@ -192,9 +194,19 @@ div.hidden_body {
     font-family: serif;
 }
 
-
-
 .bookname a:hover {
+    color: white;
+    background: gray;
+}
+
+.authorname a {
+    -moz-border-radius: 9px;
+    border-radius: 9px;
+    line-height:1;
+    text-decoration: none;
+}
+
+.authorname a:hover {
     color: white;
     background: gray;
 }

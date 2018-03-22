@@ -1,6 +1,7 @@
 {% extends "base.html" %}
+{% load static %}
 {% load tagging_tags %}
-{% load comments %}
+{# {% load comments %} #}
 
 {% block title %}{{ book.a_title }} :: Pathagar Book Server{% endblock %}
 
@@ -14,12 +15,17 @@
 <div id="content">
 
 <h1 class="alt">{{ book.a_title }}</h1>
-<h2>by <span class="alt">{{ book.a_author }}</span></h2>
+<h2 class="authorname">by
+  <a href="{% url 'books_by_author' book.a_author.id %}">
+    <span class="alt">{{ book.a_author }}</span>
+  </a>
+</h2>
+
 <hr class="space">
 {% if user.is_authenticated %}
 <div class="span-3">
-<a class="button" href="{% url pathagar.books.views.edit_book book.pk %}">Edit</a>
-<a class="button" href="{% url pathagar.books.views.remove_book book.pk %}">Remove</a>
+<a class="button" href="{% url 'book_edit' book.pk %}">Edit</a>
+<a class="button" href="{% url 'book_remove' book.pk %}">Remove</a>
 </div>
 <hr class="space">
 <hr class="space">
@@ -32,7 +38,7 @@
   <div class="span-2"><label>Tags:</label></div>
   <div class="span-10">
   {% for tag in book.tags.all %}
-    <a class="button" href="{% url by_tag tag.name %}">{{ tag.name }}</a>
+    <a class="button" href="{% url 'by_tag' tag.name %}">{{ tag.name }}</a>
   {% endfor %}
   </div>
   <hr class="space">
@@ -63,6 +69,7 @@
 </p>
 </div>
 <hr>
+{% comment %}
 {% if allow_user_comments %}
 
 <div class="span-16">
@@ -90,7 +97,7 @@
 {{ form.object_pk }}
 {{ form.timestamp }}
 {{ form.security_hash }}
-<input type="hidden" name="next" value="{% url pathagar.books.views.book_detail book.pk %}" />
+<input type="hidden" name="next" value="{% url 'book_detail' book.pk %}" />
 
 <div class="span-4"><label for="id_your_name">Your name:</label></div>
 {{ form.name }}
@@ -108,16 +115,17 @@
 
 
 {% endif %}
+{% endcomment %}
 </div>
 
 <div class="span-6 last" id="sidebar">
 {% if  book.cover_img %}
 <img src="{{ book.cover_img.url }}" alt="Cover" width=150px/>
 {% else %}
-<img src="{{ STATIC_URL }}images/generic_cover.png" alt="Cover" width=150px/>
+<img src="{% static 'images/generic_cover.png' %}" alt="Cover" width=150px/>
 {% endif %}
 <hr class="space">
-<a class="download" href="{% url pathagar.books.views.download_book book.pk %}">Download book</a>
+<a class="download" href="{% url 'book_download' book.pk %}">Download book</a>
 </div>
 
 

@@ -1,23 +1,39 @@
-"""
-This file demonstrates two different styles of tests (one doctest and one
-unittest). These will both pass when you run "manage.py test".
-
-Replace these with more appropriate tests for your application.
-"""
-
 from django.test import TestCase
+from django.core.management import call_command, CommandError
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.failUnlessEqual(1 + 1, 2)
+from books.epub import Epub
+from books.models import Book, Author
 
-__test__ = {"doctest": """
-Another way to test that 1 + 1 is equal to 2.
 
->>> 1 + 1 == 2
-True
-"""}
+class EpubTest(TestCase):
+    def test_simple_import(self):
+        epub = Epub("examples/The Dunwich Horror.epub")
+        info = epub.get_info()
+        self.assertEqual(info.title, "The Dunwich Horror")
+        self.assertEqual(info.creator, "H. P. Lovecraft")
+        epub.close()
 
+
+class AddEpubTest(TestCase):
+    def test_01_import_commandline(self):
+        nb_book = len(Book.objects.all())
+        self.assertEqual(nb_book, 0)
+
+        args = ["examples/"]
+        opts = {}
+        call_command('addepub', *args, **opts)
+
+        nb_book = len(Book.objects.all())
+        self.assertEqual(nb_book, 1)
+
+        book = Book.objects.get(pk=1)
+        self.assertEqual(str(book.a_author), "H. P. Lovecraft")
+        self.assertEqual(str(book.a_title), "The Dunwich Horror")
+
+    def test_02_import_duplicated(self):
+        # try to import duplicated epub
+        args = ["examples/"]
+        opts = {}
+        call_command('addepub', *args, **opts)
+        self.assertRaises(CommandError, call_command,
+            ('addepub'), opts)

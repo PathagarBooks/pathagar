@@ -21,17 +21,19 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.http import Http404
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.views.generic.list_detail import object_detail
-from django.views.generic.create_update import create_object, update_object, \
-  delete_object
-from django.template import RequestContext, resolve_variable
 
-from app_settings import BOOKS_PER_PAGE
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import UpdateView
+from django.views.generic.edit import CreateView
+from django.views.generic.edit import FormView
+from django.views.generic.edit import DeleteView
+
+from pathagar.settings import BOOKS_PER_PAGE, AUTHORS_PER_PAGE
 from django.conf import settings
 
 # OLD ---------------
@@ -41,66 +43,50 @@ from taggit.models import Tag as tTag
 
 from sendfile import sendfile
 
-from search import simple_search, advanced_search
-from forms import BookForm, AddLanguageForm
-from models import TagGroup, Book
-from popuphandler import handlePopAdd
-from opds import page_qstring
-from opds import generate_catalog
-from opds import generate_root_catalog
-from opds import generate_tags_catalog
-from opds import generate_taggroups_catalog
+from books.search import simple_search, advanced_search
+from books.forms import BookForm, AddLanguageForm
+from books.models import TagGroup, Book, Author
+from books.popuphandler import handlePopAdd
+# FIXME: move opds in dedicated app
+from books.opds import page_qstring
+from books.opds import generate_catalog
+from books.opds import generate_author_catalog
+from books.opds import generate_root_catalog
+from books.opds import generate_tags_catalog
+from books.opds import generate_taggroups_catalog
 
-from pathagar.books.app_settings import BOOK_PUBLISHED
-
+from books.app_settings import BOOK_PUBLISHED
 
 @login_required
 def add_language(request):
     return handlePopAdd(request, AddLanguageForm, 'language')
 
-def add_book(request):
-    context_instance = RequestContext(request)
-    user = resolve_variable('user', context_instance)
-    if not settings.ALLOW_PUBLIC_ADD_BOOKS and not user.is_authenticated():
-        next = reverse('pathagar.books.views.add_book')
-        return redirect('/accounts/login/?next=%s' % next)
+class BookDetailView(DetailView):
+    model = Book
+    form_class = BookForm
 
-    extra_context = {'action': 'add'}
-    return create_object(
-        request,
-        form_class = BookForm,
-        extra_context = extra_context,
-    )
+class BookEditView(UpdateView):
+    model = Book
+    form_class = BookForm
 
-@login_required
-def edit_book(request, book_id):
-    extra_context = {'action': 'edit'}
-    return update_object(
-        request,
-        form_class = BookForm,
-        object_id = book_id,
-        template_object_name = 'book',
-        extra_context = extra_context,
-    )
+    def get_context_data(self, **kwargs):
+        context = super(BookEditView, self).get_context_data(**kwargs)
+        context['action'] = 'edit'
+        return context
 
-@login_required
-def remove_book(request, book_id):
-    return delete_object(
-        request,
-        model = Book,
-        object_id = book_id,
-        template_object_name = 'book',
-        post_delete_redirect = '/',
-    )
+class BookAddView(CreateView):
+    model = Book
+    form_class = BookForm
 
-def book_detail(request, book_id):
-    return object_detail(
-        request,
-        queryset = Book.objects.all(),
-        object_id = book_id,
-        template_object_name = 'book',
-        extra_context = {'allow_user_comments': settings.ALLOW_USER_COMMENTS}
-    )
+    def get_context_data(self, **kwargs):
+        context = super(BookAddView, self).get_context_data(**kwargs)
+        context['action'] = 'add'
+        return context
+
+class BookDeleteView(DeleteView):
+    model = Book
+    form_class = BookForm
+    success_url = '/'
 
 def download_book(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
@@ -130,18 +116,16 @@ def tags(request, qtype=None, group_slug=None):
     # Return OPDS Atom Feed:
     if qtype == 'feed':
         catalog = generate_tags_catalog(context['tag_list'])
-        return HttpResponse(catalog, mimetype='application/atom+xml')
+        return HttpResponse(catalog, content_type='application/atom+xml')
 
     # Return HTML page:
-    return render_to_response(
-        'books/tag_list.html', context,
-        context_instance = RequestContext(request),
-    )
+    return render(request, 'books/tag_list.html',
+                  context)
 
 def tags_listgroups(request):
     tag_groups = TagGroup.objects.all()
     catalog = generate_taggroups_catalog(tag_groups)
-    return HttpResponse(catalog, mimetype='application/atom+xml')
+    return HttpResponse(catalog, content_type='application/atom+xml')
 
 def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     """
@@ -154,8 +138,7 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     search_title = request.GET.get('search-title') == 'on'
     search_author = request.GET.get('search-author') == 'on'
 
-    context_instance = RequestContext(request)
-    user = resolve_variable('user', context_instance)
+    user = request.user
     if not user.is_authenticated():
         queryset = queryset.filter(a_status = BOOK_PUBLISHED)
 
@@ -190,7 +173,7 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
     # Return OPDS Atom Feed:
     if qtype == 'feed':
         catalog = generate_catalog(request, page_obj)
-        return HttpResponse(catalog, mimetype='application/atom+xml')
+        return HttpResponse(catalog, content_type='application/atom+xml')
 
     # Return HTML page:
     extra_context = dict(kwargs)
@@ -206,11 +189,76 @@ def _book_list(request, queryset, qtype=None, list_by='latest', **kwargs):
         'qstring': qstring,
         'allow_public_add_book': settings.ALLOW_PUBLIC_ADD_BOOKS
     })
-    return render_to_response(
-        'books/book_list.html',
-        extra_context,
-        context_instance = RequestContext(request),
-    )
+    return render(request, 'books/book_list.html',
+                  context=extra_context)
+
+def _author_list(request, queryset, qtype=None, list_by='latest', **kwargs):
+    """
+    Filter the books, paginate the result, and return either a HTML
+    book list, or a atom+xml OPDS catalog.
+
+    """
+    q = request.GET.get('q')
+    # search_all = request.GET.get('search-all') == 'on'
+    # search_title = request.GET.get('search-title') == 'on'
+    search_author = request.GET.get('search-author') == 'on'
+
+    # context_instance = RequestContext(request)
+    # user = resolve_variable('user', context_instance)
+    # if not user.is_authenticated():
+    #     queryset = queryset.filter(a_status = BOOK_PUBLISHED)
+
+    # published_books_count = Book.objects.filter(a_status = BOOK_PUBLISHED).count()
+    # unpublished_books_count = Book.objects.exclude(a_status = BOOK_PUBLISHED).count()
+
+    # If no search options are specified, assumes search all, the
+    # advanced search will be used:
+    # if not search_all and not search_title and not search_author:
+    #     search_all = True
+
+    # FIXME
+    # If search queried, modify the queryset with the result of the
+    # search:
+    # if q is not None:
+    #     if search_all:
+    #         queryset = advanced_search(queryset, q)
+    #     else:
+    #         queryset = simple_search(queryset, q,
+    #                                  search_title, search_author)
+
+    paginator = Paginator(queryset, BOOKS_PER_PAGE)
+    page = int(request.GET.get('page', '1'))
+
+    try:
+        page_obj = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        page_obj = paginator.page(paginator.num_pages)
+
+    # Build the query string:
+    qstring = page_qstring(request)
+
+    # Return OPDS Atom Feed:
+    if qtype == 'feed':
+        catalog = generate_author_catalog(request, page_obj)
+        return HttpResponse(catalog, content_type='application/atom+xml')
+
+    # Return HTML page:
+    extra_context = dict(kwargs)
+    extra_context.update({
+        'author_list': page_obj.object_list,
+        # 'published_books': published_books_count,
+        # 'unpublished_books': unpublished_books_count,
+        'q': q,
+        'paginator': paginator,
+        'page_obj': page_obj,
+        # 'search_title': search_title,
+        'search_author': search_author,
+        'list_by': list_by,
+        'qstring': qstring,
+        # 'allow_public_add_book': settings.ALLOW_PUBLIC_ADD_BOOKS
+    })
+    return render(request, 'authors/author_list.html',
+                  context=extra_context)
 
 def home(request):
     return redirect('latest')
@@ -218,19 +266,24 @@ def home(request):
 def root(request, qtype=None):
     """Return the root catalog for navigation"""
     root_catalog = generate_root_catalog()
-    return HttpResponse(root_catalog, mimetype='application/atom+xml')
+    return HttpResponse(root_catalog, content_type='application/atom+xml')
 
 def latest(request, qtype=None):
     queryset = Book.objects.all()
     return _book_list(request, queryset, qtype, list_by='latest')
 
-def by_title(request, qtype=None):
+def by_title(request, qtype=None, author_id=None):
     queryset = Book.objects.all().order_by('a_title')
+    if author_id:
+        queryset = queryset.filter(a_author=author_id)
     return _book_list(request, queryset, qtype, list_by='by-title')
 
 def by_author(request, qtype=None):
-    queryset = Book.objects.all().order_by('a_author')
-    return _book_list(request, queryset, qtype, list_by='by-author')
+    #queryset = Book.objects.all().order_by('a_author')
+    #return _book_list(request, queryset, qtype, list_by='by-author')
+    queryset = Author.objects.all().order_by('a_author')
+    print("stuff")
+    return _author_list(request, queryset, qtype, list_by='by-author')
 
 def by_tag(request, tag, qtype=None):
     """ displays a book list by the tag argument """
