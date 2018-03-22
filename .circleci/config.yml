@@ -24,7 +24,9 @@ jobs:
             scripts/run-pylint.sh
             coverage run --source='.' manage.py test
       - run:
-          command: codecov
+          command: |
+            . venv/bin/activate
+            codecov
 
 
   build-python3:
@@ -52,7 +54,9 @@ jobs:
             scripts/run-pylint.sh
             coverage run --source='.' manage.py test
       - run:
-          command: codecov
+          command: |
+            . venv/bin/activate
+            codecov
 
 workflows:
   version: 2
