@@ -90,7 +90,8 @@ class Command(BaseCommand):
                         dc_issued = info.date,
                         a_status = pub_status, mimetype="application/epub+zip")
                 try:
-                    book.book_file.save(os.path.basename(name), File(f))
+                    # Not sure why this errors, book_file.save exists
+                    book.book_file.save(os.path.basename(name), File(f)) #pylint: disable=no-member
                     book.validate_unique()
                     book.save()
                 # FIXME: Find a better way to do this.

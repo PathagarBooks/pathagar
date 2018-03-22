@@ -7,7 +7,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: v2-python2-{{ checksum "requirements.txt" }}-{{ checksum "test-requirements.txt" }}
+          key: v1-python2-{{ checksum "requirements.txt" }}-{{ checksum "test-requirements.txt" }}
       - run:
           command: |
             virtualenv venv
