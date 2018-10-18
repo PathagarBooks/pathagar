@@ -2,4 +2,4 @@ pylint==1.7.4
 pylint-django==2.0.2
 codecov
 coverage
-selenium==3.6.0
+selenium==3.14.0
