@@ -12,8 +12,7 @@ jobs:
           command: |
             virtualenv venv
             . venv/bin/activate
-            pip install -r requirements.txt
-            pip install -r test-requirements.txt
+            make setup
       - save_cache:
           key: v1-python2-{{ checksum "requirements.txt" }}-{{ checksum "test-requirements.txt" }}
           paths:
@@ -21,8 +20,7 @@ jobs:
       - run:
           command: |
             . venv/bin/activate
-            scripts/run-pylint.sh
-            coverage run --source='.' manage.py test
+            make test
       - run:
           command: |
             . venv/bin/activate
@@ -42,8 +40,7 @@ jobs:
           command: |
             python -m venv venv
             . venv/bin/activate
-            pip install -r requirements.txt
-            pip install -r test-requirements.txt
+            make setup
       - save_cache:
           key: v1-python3-{{ checksum "requirements.txt" }}-{{ checksum "test-requirements.txt" }}
           paths:
@@ -51,8 +48,7 @@ jobs:
       - run:
           command: |
             . venv/bin/activate
-            scripts/run-pylint.sh
-            coverage run --source='.' manage.py test
+            make test
       - run:
           command: |
             . venv/bin/activate
