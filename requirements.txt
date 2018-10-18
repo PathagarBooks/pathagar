@@ -4,3 +4,4 @@ django-tagging==0.4.6
 django-sendfile==0.3.11
 lxml==3.4.4
 django-taggit==0.22.1
+future==0.16.0

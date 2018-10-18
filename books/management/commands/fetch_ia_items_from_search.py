@@ -5,20 +5,23 @@
 """
 This script will download results matching a search term. .
 """
+from future.standard_library import install_aliases
+install_aliases()
 
 from django.core.management.base import BaseCommand, CommandError
 from optparse import make_option
 from django.conf import settings
 
+import logging
 import re
 import os
 import sys
 import json
 import time
-import urllib
+from urllib.request import urlopen
 import subprocess
 
-
+logger = logging.getLogger('fetch_ia_items_from_search')
 # Customize this script by editing global variables below
 # uncomment formats below to download more data
 # formats are listed in order of preference, i.e. prefer 'Text' over 'DjVuTXT'
@@ -40,11 +43,9 @@ def load_search_results(searchterm, page, rows):
     An example for a search term is: kahnacademy
     """
 
-    print searchterm
-
     url = 'https://archive.org/advancedsearch.php?q={searchterm}&fl%5B%5D=description&fl%5B%5D=contributor&fl%5B%5D=coverage&fl%5B%5D=creator&fl%5B%5D=date&fl%5B%5D=description&fl%5B%5D=item&fl%5B%5D=format&fl%5B%5D=identifier&fl%5B%5D=mediatype&fl%5B%5D=subject&fl%5B%5D=description&fl%5B%5D=title&fl%5B%5D=media:title&fl%5B%5D=type&fl%5B%5D=volume&fl%5B%5D=week&fl%5B%5D=year&sort%5B%5D=&sort%5B%5D=&sort%5B%5D=&rows={rows}&page={page}&output=json'.format(searchterm=searchterm, page=str(page), rows=str(rows))
 
-    f = urllib.urlopen(url)
+    f = urlopen(url)
     return json.load(f)
 
 def get_item_meatadata(item_id):
@@ -53,7 +54,7 @@ def get_item_meatadata(item_id):
         item_id = item_id[0]
 
     url = 'http://archive.org/metadata/%s' % item_id
-    f = urllib.urlopen(url)
+    f = urlopen(url)
     return json.load(f)
 
 def get_download_url(item_id, file):
@@ -65,22 +66,22 @@ def download_files(item_id, matching_files, item_dir):
 
     for file in matching_files:
         download_path = os.path.join(item_dir, file)
-        print("Download_path: %s" % download_path)
+        logger.info("Download_path: %s" % download_path)
         if os.path.exists(download_path):
-            print "    Already downloaded", file
+            logger.info("    Already downloaded file=%s" % file)
             continue
 
         parent_dir = os.path.dirname(download_path)
         if not os.path.exists(parent_dir):
             os.makedirs(parent_dir)
 
-        print "    Downloading", file, "to", download_path
+        logger.info("    Downloading file=%s path=%s" % (file, download_path))
         download_url= get_download_url(item_id, file)
         ret = subprocess.call(['wget', download_url, '-O', download_path,
                                '--limit-rate=1000k', '--user-agent=fetch_ia_items_from_search.py', '-q'])
 
         if 0 != ret:
-            print "    ERROR DOWNLOADING", download_path
+            logger.error("    ERROR DOWNLOADING path=%s" % download_path)
             sys.exit(-1)
 
         time.sleep(0.5)
@@ -89,14 +90,13 @@ def download_item(item_id, mediatype, metadata, out_dir, formats):
     """Download an archive.org item into the specified directory"""
     if isinstance(item_id, list):
         item_id = item_id[0] 
-    print "Downloading", item_id
+    logger.info("Downloading item=%s" % item_id)
     item_dir = os.path.join(out_dir, item_id)
 
     if not os.path.exists(item_dir):
         os.mkdir(item_dir)
 
-    print("metadata")
-    print(metadata)
+    logger.debug("Downloading item=%s metadata=%s" % (item_id, metadata))
     files_list = metadata['files']
 
     if 'gutenberg' == metadata['metadata']['collection']:
@@ -155,13 +155,12 @@ def add_to_pathagar(pathagar_books, mdata, cover_image):
         return
     
     item_dir = os.path.join(download_directory, metadata['identifier'])
-    print(item_dir)
+    logger.debug("item=%s" % item_dir)
     if isinstance(book_paths, list):
         book_path = os.path.abspath(os.path.join(item_dir, book_paths[0]))
     else:
         book_path = os.path.abspath(os.path.join(item_dir, book_paths))
-    print(book_path)
-    print('')
+    logger.debug("path=%s" % book_path)
     # Some fields are not required
     if 'description' in metadata:
         summary = metadata['description']
@@ -241,7 +240,7 @@ class Command(BaseCommand):
             row_count += len(bookmarks)
 
             for item in bookmarks:
-                print(item)
+                logger.debug("item=%s" % item)
                 item_id = item['identifier']
                 metadata = get_item_meatadata(item_id)
 
@@ -262,4 +261,4 @@ class Command(BaseCommand):
                 fh = open(options['out_json_path'], 'w')
                 json.dump(pathagar_books, fh, indent=4)
             else:
-                print json.dumps(pathagar_books, indent = 4)
+                print(json.dumps(pathagar_books, indent = 4))

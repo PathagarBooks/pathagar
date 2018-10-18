@@ -1,3 +1,6 @@
+# TODO pylint-django is creating no-member false positives here
+# pylint: disable=no-member
+
 from django.core.management.base import BaseCommand, CommandError
 from django.core.files import File
 from django.db.utils import IntegrityError
