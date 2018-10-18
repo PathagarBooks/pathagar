@@ -1,3 +1,4 @@
+version: '2'
 jobs:
   build-python2:
     working_directory: ~/pathagar

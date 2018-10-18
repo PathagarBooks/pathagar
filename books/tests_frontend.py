@@ -26,7 +26,7 @@ class PathagarBook(StaticLiveServerTestCase): #LiveServerTestCase):
     AUTHOR = "Anonymous"
 
     def setUp(self):
-        self.driver = webdriver.Firefox()
+        self.driver = webdriver.Chrome()
         self.driver.implicitly_wait(2)
 
         self.adminuser = User.objects.create_user(self.ADMIN_USER, 'admin@test.com', self.ADMIN_PASS)
