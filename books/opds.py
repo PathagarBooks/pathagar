@@ -210,10 +210,9 @@ def generate_author_catalog(request, page_obj):
         'OPDS catalog for the Pathagar book server', \
         extra_attrs = ATTRS, hide_generator=True, links=links)
 
-    print("send ", len(page_obj.object_list))
     for author in page_obj.object_list:
         linklist = [{'rel': 'subsection',
-                     'href': reverse('by_title',
+                     'href': reverse('by_title_author_feed',
                                      kwargs=dict(author_id=author.pk)),
                      'type': nav}]
         add_kwargs = {

@@ -153,7 +153,6 @@ a[href$=".epub"]   {
     background-color: gray;
     position: absolute;
     right: 0;
-    top: 35px;
     width: 150px;
     -moz-border-radius-bottomright: 10px;
     border-bottom-right-radius: 10px;
@@ -182,7 +181,7 @@ div.hidden_body {
 
 .bookname a {
     display: inline-block;
-    margin-left: -0.4em; 
+    margin-left: -0.4em;
     padding: 5px 10px;
     -moz-border-radius: 10px;
     border-radius: 10px;

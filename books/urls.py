@@ -40,7 +40,7 @@ urlpatterns = [
     url(r'^by-author.atom$', views.by_author,
      {'qtype': u'feed'}, 'by_author_feed'),
     url(r'^by-author/(?P<author_id>\d+).atom$', views.by_title,
-     {'qtype': u'feed'}, 'by_author_feed'),
+     {'qtype': u'feed'}, 'by_title_author_feed'),
     url(r'^tags/(?P<tag>.+).atom$', views.by_tag,
      {'qtype': u'feed'}, 'by_tag_feed'),
     url(r'^by-popularity.atom$', views.most_downloaded,

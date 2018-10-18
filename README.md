@@ -135,3 +135,15 @@ docs](https://docs.djangoproject.com/en/1.11/howto/deployment/).
 
 [pathagar.info](http://pathagar.info/get-pathagar/) also contains some common
 options for deploying Pathagar.
+
+
+## Contributing
+
+Bugfix or enhancement are welcome.
+
+Please drop me a message or issue for big feature to avoid duplicate efforts.
+
+The unittest must be working for Python 2.7 and Python 3.5.
+
+To run selenium tests, the tool (geckodriver)[https://github.com/mozilla/geckodriver/releases]
+must be downloaded and put somewhere in PATH.

@@ -55,8 +55,7 @@ class Epub(object):
         #self._zobject.extractall(path = self._tempdir) # This is broken upto python 2.7
         for name in self._zobject.namelist():
             # Some weird zip file entries start with a slash, and we don't want to write to the root directory
-            if name.startswith(os.path.sep):
-                name = name[1:]
+            name = name.lstrip(os.path.sep)
             if name.endswith(os.path.sep) or name.endswith('\\'):
                 os.makedirs(os.path.join(self._tempdir, name))
             else:
