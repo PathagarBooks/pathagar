@@ -96,6 +96,8 @@ If you need to add more fields, please use the JSON file.
 ## Dependencies
 
 * Python 2.7 or Python 3.5
+* libxml2-dev
+* libxslt-dev
 
 
 ## Quickstart
