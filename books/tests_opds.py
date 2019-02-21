@@ -8,7 +8,7 @@ from books.epub import Epub
 from books.models import Book, Author
 
 
-class OpfsTest(TestCase):
+class OpdsTest(TestCase):
     def setUp(self):
         nb_book = len(Book.objects.all())
         self.assertEqual(nb_book, 0)
@@ -20,7 +20,7 @@ class OpfsTest(TestCase):
     def test_01_full_import_commandline(self):
         c = Client()
 
-        for opds in ('latest_feed', 'root_feed', 'by_author_feed', 'by_title_feed', 'most_downloaded_feed'):
+        for opds in (u'latest_feed', u'root_feed', u'by_author_feed', u'by_title_feed', u'most_downloaded_feed'):
             d = c.get(reverse_lazy(opds))
             d = d.content
             parser = etree.fromstring(d)
