@@ -1,4 +1,6 @@
 database.db
+geckodriver
+geckodriver.log
 *pyc
 staticfiles/
 static_media/
