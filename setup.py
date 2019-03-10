@@ -7,4 +7,6 @@ setup(
     url='http://github.com/PathagarBooks/pathagar',
     license='AGPL-3.0',
     packages=['books', 'pathagar'],
-    zip_safe=False)
+    include_package_data=True,
+    zip_safe=False,
+    )
