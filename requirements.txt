@@ -2,5 +2,5 @@ Django==1.11.20
 #django-tagging==0.3.1
 django-tagging==0.4.6
 django-sendfile==0.3.11
-lxml==3.4.4
+lxml==4.6.5
 django-taggit==0.22.1
